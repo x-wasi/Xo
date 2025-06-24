@@ -119,12 +119,12 @@ let up = `*╭┈───────────────•*
 *╭┈───────────────•*
 *│  ◦* *ᴘʀᴇғɪx: ${config.PREFIX}*
 *│  ◦* *ᴏᴡɴᴇʀ-ɴᴀᴍᴇ: ➩ ${config.OWNER_NAME}*
-*│  ◦* *ᴍᴏᴅᴇ: ➩ ${.config.MODE}*
+*│  ◦* *ᴍᴏᴅᴇ: ➩ ${config.MODE}*
 *│  ◦* *ᴏᴡɴᴇʀ-ɴᴜᴍᴇʀ: ➩ ${config.OWNER_NUMBER}*
 *│  ◦* *ᴛʏᴘᴇ : ➩ ${config.PREFIX}menu* 
 *╰┈───────────────•*
 > *ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅʏʙʏ ᴛᴇᴄʜ*`;
-    conn.sendMessage(conn.user.id, { image: { url: `https://files.catbox.moe/vmqovi.jpg` }, caption: up })
+    conn.sendMessage(conn.user.id, { image: { url: `https://files.catbox.moe/w1l8b0.jpg` }, caption: up })
   }
   })
   conn.ev.on('creds.update', saveCreds)
