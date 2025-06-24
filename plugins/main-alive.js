@@ -19,7 +19,7 @@ async (conn, mek, m, { from, sender, reply }) => {
         const time = moment().tz("America/Port-au-Prince").format("HH:mm:ss");
         const date = moment().tz("America/Port-au-Prince").format("DD/MM/YYYY");
 
-        const imagePath = './DybyTech/alive.jpg';
+        const imagePath = './media/alive.jpg';
         if (!fs.existsSync(imagePath)) return reply("❌ Image 'alive.jpg' introuvable dans /DybyTech.");
         const imageBuffer = fs.readFileSync(imagePath);
 
