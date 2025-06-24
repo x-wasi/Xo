@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const config = require('../settings')
-const {malvin , commands} = require('../malvin')
+const { cmd } = require('../command')
 
 //auto reply 
 malvin({
