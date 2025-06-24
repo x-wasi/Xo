@@ -1,1 +1,74 @@
-const a67_0x52ba2a=a67_0x2936;(function(_0x1f4dc0,_0x51dd7b){const _0x3c5650=a67_0x2936,_0x3f25a3=_0x1f4dc0();while(!![]){try{const _0x4ed962=parseInt(_0x3c5650(0x1f6))/0x1*(parseInt(_0x3c5650(0x1f3))/0x2)+-parseInt(_0x3c5650(0x21d))/0x3+-parseInt(_0x3c5650(0x206))/0x4*(parseInt(_0x3c5650(0x1fb))/0x5)+parseInt(_0x3c5650(0x225))/0x6*(parseInt(_0x3c5650(0x201))/0x7)+parseInt(_0x3c5650(0x1f2))/0x8+parseInt(_0x3c5650(0x226))/0x9*(-parseInt(_0x3c5650(0x222))/0xa)+parseInt(_0x3c5650(0x1fa))/0xb*(parseInt(_0x3c5650(0x204))/0xc);if(_0x4ed962===_0x51dd7b)break;else _0x3f25a3['push'](_0x3f25a3['shift']());}catch(_0x1981b8){_0x3f25a3['push'](_0x3f25a3['shift']());}}}(a67_0x46f4,0xcfcc8));const fetch=require(a67_0x52ba2a(0x22a)),FormData=require(a67_0x52ba2a(0x1f9)),{cmd}=require(a67_0x52ba2a(0x214));function a67_0x2936(_0x471ac7,_0x38331d){const _0x46f4dd=a67_0x46f4();return a67_0x2936=function(_0x2936f5,_0xe6ce91){_0x2936f5=_0x2936f5-0x1ee;let _0x4dcd8f=_0x46f4dd[_0x2936f5];return _0x4dcd8f;},a67_0x2936(_0x471ac7,_0x38331d);}function a67_0x46f4(){const _0x231844=['quoted','Enhance\x20photo\x20quality\x20using\x20AI\x20(like\x20Remini)','node-fetch','❌\x20Failed\x20to\x20fetch\x20enhanced\x20image.','RjgHE','sendMessage','❌\x20Invalid\x20response\x20from\x20API.','EukHr','POST','❌\x20Error\x20accessing\x20the\x20Remini\x20API.','HFYlx','wZzwW','11508176huyjGA','1873804bSbdaQ','image.jpg','result','1DcpLrk','buffer','pquyY','form-data','33202697YgErFM','90qlRYqn','text','Tbwco','tools','status','fileupload','665iXzhbW','tohd','DhNqd','12tXaXeX','json','324172luODEu','reqtype','then','rKgqM','BDEsA','remoteJid','✅\x20*Image\x20enhanced\x20successfully!*','❌\x20An\x20error\x20occurred.\x20Please\x20try\x20again\x20later.','remini','test','BRRtI','*\x20is\x20not\x20supported.','ZFmMD','error','../command','key','result_url','WufUv','append','.hd\x20(reply\x20to\x20an\x20image)','lYtZC','sUefq','chat','4879260ISCTei','mediaType','📷\x20Please\x20send\x20or\x20reply\x20to\x20an\x20image\x20first.','mimetype','https://zenz.biz.id/tools/remini?url=','2520idGJXw','❌\x20Error\x20while\x20uploading\x20image\x20to\x20Catbox.','❌\x20The\x20format\x20*','4062cpSvxJ','54351Tdqjfy','https://catbox.moe/user/api.php'];a67_0x46f4=function(){return _0x231844;};return a67_0x46f4();}cmd({'pattern':'hd','alias':[a67_0x52ba2a(0x20e),a67_0x52ba2a(0x202)],'desc':a67_0x52ba2a(0x229),'category':a67_0x52ba2a(0x1fe),'filename':__filename,'use':a67_0x52ba2a(0x219)},async(_0x1bb9c7,_0x1bd8b9,_0x378966,{reply:_0x3e2747})=>{const _0x514c1b=a67_0x52ba2a,_0x5cab78={'wZzwW':_0x514c1b(0x21f),'yNIdy':'❌\x20Failed\x20to\x20download\x20the\x20image.','BDEsA':function(_0xd4fb62,_0x343f3a){return _0xd4fb62(_0x343f3a);},'KxoAy':_0x514c1b(0x1ef),'lKhnK':_0x514c1b(0x22e),'RjgHE':_0x514c1b(0x22b),'HFYlx':_0x514c1b(0x20c),'LxiJJ':function(_0x4989b7,_0x1cdf45){return _0x4989b7(_0x1cdf45);},'WuAOo':function(_0x339519,_0xa7c448){return _0x339519===_0xa7c448;},'DhNqd':'string','Tbwco':_0x514c1b(0x20d)};await _0x1bb9c7['sendMessage'](_0x1bd8b9['key'][_0x514c1b(0x20b)],{'react':{'text':'⏳','key':_0x1bd8b9[_0x514c1b(0x215)]}});try{let _0x2e27d=_0x1bd8b9[_0x514c1b(0x228)]||_0x1bd8b9,_0x2cf5b3=(_0x2e27d['msg']||_0x2e27d)['mimetype']||_0x2e27d[_0x514c1b(0x220)]||_0x2e27d[_0x514c1b(0x21e)]||'';if(!_0x2cf5b3)throw _0x5cab78[_0x514c1b(0x1f1)];if(!/image\/(jpe?g|png)/[_0x514c1b(0x20f)](_0x2cf5b3))throw _0x514c1b(0x224)+_0x2cf5b3+_0x514c1b(0x211);let _0xa0e704=await _0x2e27d['download']?.();if(!_0xa0e704)throw _0x5cab78['yNIdy'];const _0x353902=await _0x5cab78[_0x514c1b(0x20a)](uploadToCatbox,_0xa0e704),_0x709ae5=_0x514c1b(0x221)+encodeURIComponent(_0x353902),_0x342dfc=await _0x5cab78['BDEsA'](fetch,_0x709ae5);if(!_0x342dfc['ok'])throw _0x5cab78['KxoAy'];const _0x3b5fb4=await _0x342dfc[_0x514c1b(0x205)]();if(!_0x3b5fb4[_0x514c1b(0x1ff)]||!_0x3b5fb4[_0x514c1b(0x1f5)]?.[_0x514c1b(0x216)])throw _0x5cab78['lKhnK'];const _0x4d1b85=await _0x5cab78['BDEsA'](fetch,_0x3b5fb4[_0x514c1b(0x1f5)][_0x514c1b(0x216)])[_0x514c1b(0x208)](_0x309b76=>_0x309b76[_0x514c1b(0x1f7)]());if(!_0x4d1b85||_0x4d1b85['length']===0x0)throw _0x5cab78[_0x514c1b(0x22c)];await _0x1bb9c7['sendMessage'](_0x1bd8b9[_0x514c1b(0x21c)],{'image':_0x4d1b85,'caption':_0x5cab78[_0x514c1b(0x1f0)]},{'quoted':_0x1bd8b9});}catch(_0x26d503){await _0x1bb9c7[_0x514c1b(0x22d)](_0x1bd8b9[_0x514c1b(0x21c)],{'react':{'text':'❌','key':_0x1bd8b9['key']}}),console[_0x514c1b(0x213)](_0x26d503),_0x5cab78['LxiJJ'](_0x3e2747,_0x5cab78['WuAOo'](typeof _0x26d503,_0x5cab78[_0x514c1b(0x203)])?_0x26d503:_0x5cab78[_0x514c1b(0x1fd)]);}});async function uploadToCatbox(_0x1a7c1d){const _0x26021f=a67_0x52ba2a,_0x41267d={'EukHr':_0x26021f(0x207),'rKgqM':_0x26021f(0x200),'WufUv':'fileToUpload','pquyY':_0x26021f(0x1f4),'BRRtI':function(_0x353905,_0x6092b6,_0x1a81ab){return _0x353905(_0x6092b6,_0x1a81ab);},'ZFmMD':_0x26021f(0x1ee),'sUefq':'https://','lYtZC':_0x26021f(0x223)},_0x4ce8a8=new FormData();_0x4ce8a8[_0x26021f(0x218)](_0x41267d[_0x26021f(0x22f)],_0x41267d[_0x26021f(0x209)]),_0x4ce8a8[_0x26021f(0x218)](_0x41267d[_0x26021f(0x217)],_0x1a7c1d,_0x41267d[_0x26021f(0x1f8)]);const _0x457ad0=await _0x41267d[_0x26021f(0x210)](fetch,_0x26021f(0x227),{'method':_0x41267d[_0x26021f(0x212)],'body':_0x4ce8a8}),_0x59a56c=await _0x457ad0[_0x26021f(0x1fc)]();if(!_0x59a56c['startsWith'](_0x41267d[_0x26021f(0x21b)]))throw _0x41267d[_0x26021f(0x21a)];return _0x59a56c['trim']();}
+const fetch = require('node-fetch');
+const FormData = require('form-data');
+const { cmd } = require('../command');
+
+// Commande : .hd (ou .tohd / .remini)
+cmd({
+  pattern: 'hd',
+  alias: ['tohd', 'remini'],
+  desc: 'Enhance photo quality using AI (like Remini)',
+  category: 'tools',
+  filename: __filename,
+  use: '.hd (reply to an image)'
+}, async (conn, m, msg, { reply }) => {
+  await conn.sendMessage(m.key.remoteJid, {
+    react: { text: '⏳', key: m.key }
+  });
+
+  try {
+    const message = m.quoted || m;
+    const mime = (message.msg || message).mimetype || message.mimetype || '';
+
+    if (!mime) throw '📷 Please send or reply to an image first.';
+    if (!/image\/(jpe?g|png)/.test(mime)) throw `❌ The format *${mime}* is not supported.`;
+
+    const buffer = await message.download?.();
+    if (!buffer) throw '❌ Failed to download the image.';
+
+    // 1. Upload to Catbox
+    const imageURL = await uploadToCatbox(buffer);
+
+    // 2. Send to enhancement API
+    const apiURL = `https://zenz.biz.id/tools/remini?url=${encodeURIComponent(imageURL)}`;
+    const apiResponse = await fetch(apiURL);
+    if (!apiResponse.ok) throw '❌ Invalid response from API.';
+
+    const json = await apiResponse.json();
+    const resultURL = json.result?.result_url;
+    if (!resultURL) throw '❌ Error accessing the Remini API.';
+
+    // 3. Fetch enhanced image
+    const finalImage = await fetch(resultURL).then(r => r.buffer());
+    if (!finalImage || finalImage.length === 0) throw '❌ Failed to fetch enhanced image.';
+
+    // 4. Send back the result
+    await conn.sendMessage(m.key.remoteJid, {
+      image: finalImage,
+      caption: '✅ *ɪᴍᴀɢᴇ ᴇɴʜᴀɴᴄᴇᴅ sᴜᴄᴄᴇssғᴜʟʟʏ!*\n\n> *ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅʏʙʏ ᴛᴇᴄʜ*'
+    }, { quoted: m });
+
+  } catch (err) {
+    await conn.sendMessage(m.key.remoteJid, {
+      react: { text: '❌', key: m.key }
+    });
+    console.error(err);
+    reply(typeof err === 'string' ? err : '❌ An error occurred. Please try again later.');
+  }
+});
+
+// 📤 Fonction d’upload vers Catbox
+async function uploadToCatbox(imageBuffer) {
+  const form = new FormData();
+  form.append('reqtype', 'fileupload');
+  form.append('userhash', 'test'); // Peut être remplacé par une clé Catbox si nécessaire
+  form.append('fileToUpload', imageBuffer, 'image.jpg');
+
+  const response = await fetch('https://catbox.moe/user/api.php', {
+    method: 'POST',
+    body: form
+  });
+
+  const result = await response.text();
+  if (!result.startsWith('https://')) throw '❌ Error while uploading image to Catbox.';
+  return result.trim();
+}
