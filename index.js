@@ -84,7 +84,7 @@ const port = process.env.PORT || 9090;
   
 async function connectToWA() {
 console.log("CONNECTING MEGALODON-MD🧬...");
-const { state, saveCreds } = await useMultiFileAuthState(__dirname + '/connect/')
+const { state, saveCreds } = await useMultiFileAuthState(__dirname + '/sessions/')
 var { version } = await fetchLatestBaileysVersion()
 
 const conn = makeWASocket({
