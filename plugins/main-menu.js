@@ -14,11 +14,11 @@ function toSmallCaps(str) {
 
 cmd({
   pattern: "menu",
-  alias: ["❄️", "mega", "allmenu"],
+  alias: ["💫", "mega", "allmenu"],
   use: '.menu',
   desc: "Show all bot commands",
   category: "menu",
-  react: "❄️",
+  react: "💫",
   filename: __filename
 },
 async (dyby, mek, m, { from, reply }) => {
@@ -37,13 +37,13 @@ async (dyby, mek, m, { from, reply }) => {
 
     let dybymenu = `
 *╭══〘 𝐌𝐄𝐆𝐀𝐋𝐎𝐃𝐎𝐍-𝐌𝐃 〙*
-*┃❍* *ᴜsᴇʀ* : @${sender.split("@")[0]}
-*┃❍* *ʀᴜɴᴛɪᴍᴇ* : ${uptime()}
-*┃❍* *ᴍᴏᴅᴇ* : *${config.MODE}*
-*┃❍* *ᴘʀᴇғɪx* : [${config.PREFIX}]
-*┃❍* *ᴩʟᴜɢɪɴ* :  ${totalCommands}
-*┃❍* *ᴅᴇᴠ* : *ᴅʏʙʏ ᴛᴇᴄʜ*
-*┃❍* *ᴠᴇʀsɪᴏɴ* : *1.0.0*
+*┃◆* *ᴜsᴇʀ* : @${sender.split("@")[0]}
+*┃◆* *ʀᴜɴᴛɪᴍᴇ* : ${uptime()}
+*┃◆* *ᴍᴏᴅᴇ* : *${config.MODE}*
+*┃◆* *ᴘʀᴇғɪx* : [${config.PREFIX}]
+*┃◆* *ᴩʟᴜɢɪɴ* :  ${totalCommands}
+*┃◆* *ᴅᴇᴠ* : *ᴅʏʙʏ ᴛᴇᴄʜ*
+*┃◆* *ᴠᴇʀsɪᴏɴ* : *1.0.0*
 *╰════════════════⊷*`;
 
     // Organise commands by category
@@ -57,7 +57,7 @@ async (dyby, mek, m, { from, reply }) => {
     // Build command list
     const keys = Object.keys(category).sort();
     for (let k of keys) {
-      dybymenu += `\n\n┌── 『 ${k.toUpperCase()} MENU 』`;
+      dybymenu += `\n\n┌── 『 *${k.toUpperCase()} MENU* 』`;
       const cmds = category[k].filter(c => c.pattern).sort((a, b) => a.pattern.localeCompare(b.pattern));
       cmds.forEach((cmd) => {
         const usage = cmd.pattern.split('|')[0];
@@ -68,14 +68,14 @@ async (dyby, mek, m, { from, reply }) => {
 
     // Envoi du menu avec image (ou texte si image échoue)
     await dyby.sendMessage(from, {
-      image: { url: config.MENU_IMAGE_URL || 'https://files.catbox.moe/wgxjam.jpg' },
+      image: { url: config.MENU_IMAGE_URL || 'https://files.catbox.moe/w1l8b0.jpg' },
       caption: dybymenu,
       contextInfo: {
         mentionedJid: [sender],
         forwardingScore: 999,
         isForwarded: true,
         forwardedNewsletterMessageInfo: {
-          newsletterJid: config.newsletterJid || '120363401051937059@newsletter',
+          newsletterJid: '120363401051937059@newsletter',
           newsletterName: '𝐌𝐄𝐆𝐀𝐋𝐎𝐃𝐎𝐍-𝐌𝐃',
           serverMessageId: 143
         }
