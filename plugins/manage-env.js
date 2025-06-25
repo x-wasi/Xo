@@ -29,7 +29,7 @@ async (conn, mek, m, { from, args, isOwner, reply }) => {
         config.ADMIN_EVENTS = "false";
         return reply("❌ ᴀᴅᴍɪɴ ᴇᴠᴇɴᴛ ɴᴏᴛɪғɪᴄᴀᴛɪᴏɴs ᴀʀᴇ ɴᴏᴡ ᴅɪ.");
     } else {
-        return reply(`Example: .admin-events on`);
+        return reply(`Example: .ᴀᴅᴍɪɴ-ᴇᴠᴇɴᴛs ᴏɴ`);
     }
 });
 
@@ -69,7 +69,7 @@ cmd({
 
     // Si aucun argument n'est fourni, afficher le mode actuel et l'usage
     if (!args[0]) {
-        return reply(`📌 Current mode: *${config.MODE}*\n\nUsage: .mode private OR .mode public`);
+        return reply(`📌 Current mode: *${config.MODE}*\n\nᴜsᴀɢᴇ: .ᴍᴏᴅᴇ ᴘʀɪᴠᴀᴛᴇ ᴏʀ .ᴍᴏᴅᴇ ᴘᴜʙʟɪᴄ`);
     }
 
     const modeArg = args[0].toLowerCase();
@@ -121,12 +121,12 @@ async (conn, mek, m, { from, args, isOwner, reply }) => {
     // Check the argument for enabling or disabling the anticall feature
     if (args[0] === "on") {
         config.MENTION_REPLY = "true";
-        return reply("Mention Reply feature is now enabled.");
+        return reply("ᴍᴇɴᴛɪᴏɴ ʀᴇᴘʟʏ ғᴇᴀᴛᴜʀᴇ ɪs ɴᴏᴡ ᴇɴᴀʙʟᴇᴅ.");
     } else if (args[0] === "off") {
         config.MENTION_REPLY = "false";
-        return reply("Mention Reply feature is now disabled.");
+        return reply("ᴍᴇɴᴛɪᴏɴ ʀᴇᴘʟʏ ғᴇᴀᴛᴜʀᴇ ɪs ɴᴏᴡ ᴅɪsᴀʙʟᴇᴅ.");
     } else {
-        return reply(`_example:  .mee on_`);
+        return reply(`_example:  .ᴍᴇᴇ ᴏɴ_`);
     }
 });
 
@@ -213,7 +213,7 @@ async (conn, mek, m, { from, args, isOwner, reply }) => {
 //--------------------------------------------
 cmd({
     pattern: "status-react",
-    alias: ["statusreact"],
+    alias: ["statusreact", "autoreactstatus", "auto-status-react"],
     desc: "Enable or disable auto-liking of statuses",
     category: "settings",
     filename: __filename
@@ -225,12 +225,12 @@ async (conn, mek, m, { from, args, isOwner, reply }) => {
     // Default value for AUTO_LIKE_STATUS is "false"
     if (args[0] === "on") {
         config.AUTO_STATUS_REACT = "true";
-        return reply("Auto-liking of statuses is now enabled.");
+        return reply("ᴀᴜᴛᴏ-ʟɪᴋɪɴɢ ᴏғ sᴛᴀᴛᴜsᴇs is ɴᴏᴡ ᴇɴᴀʙʟᴇᴅ.");
     } else if (args[0] === "off") {
         config.AUTO_STATUS_REACT = "false";
-        return reply("Auto-liking of statuses is now disabled.");
+        return reply("ᴀᴜᴛᴏ-ʟɪᴋɪɴɢ ᴏғ sᴛᴀᴛᴜsᴇs ɪs ɴᴏᴡ ᴅɪsᴀʙʟᴇᴅ.");
     } else {
-        return reply(`Example: . status-react on`);
+        return reply(`Example: . sᴛᴀᴛᴜs-ʀᴇᴀᴄᴛ ᴏɴ`);
     }
 });
 
@@ -251,12 +251,12 @@ async (conn, mek, m, { from, args, isOwner, reply }) => {
     // Check the argument for enabling or disabling the anticall feature
     if (args[0] === "on") {
         config.READ_MESSAGE = "true";
-        return reply("readmessage feature is now enabled.");
+        return reply("ʀᴇᴀᴅᴍᴇssᴀɢᴇ ғᴇᴀᴛᴜʀᴇ ɪs ɴᴏᴡ ᴇɴᴀʙʟᴇᴅ.");
     } else if (args[0] === "off") {
         config.READ_MESSAGE = "false";
-        return reply("readmessage feature is now disabled.");
+        return reply("ʀᴇᴀᴅᴍᴇssᴀɢᴇ ғᴇᴀᴛᴜʀᴇ ɪs ɴᴏᴡ ᴅɪsᴀʙʟᴇᴅ.");
     } else {
-        return reply(`_example:  .readmessage on_`);
+        return reply(`_ᴇxᴀᴍᴘʟᴇ:  .ʀᴇᴀᴅᴍᴇssᴀɢᴇ ᴏɴ_`);
     }
 });
 
@@ -282,59 +282,9 @@ async (conn, mek, m, { from, args, isOwner, reply }) => {
         return reply("*anti bad word is now enabled.*");
     } else if (args[0] === "off") {
         config.ANTI_BAD_WORD = "false";
-        return reply("*anti bad word feature is now disabled*");
+        return reply("*ᴀɴᴛɪ ʙᴀᴅ ᴡᴏʀᴅ ғᴇᴀᴛᴜʀᴇ ɪs ɴᴏᴡ ᴅɪsᴀʙʟᴇᴅ*");
     } else {
-        return reply(`_example:  .antibad on_`);
-    }
-});
-//--------------------------------------------
-//  AUTO-STICKER COMMANDS
-//--------------------------------------------
-cmd({
-    pattern: "auto-sticker",
-    alias: ["autosticker"],
-    desc: "enable or disable auto-sticker.",
-    category: "settings",
-    filename: __filename
-},    
-async (conn, mek, m, { from, args, isOwner, reply }) => {
-    if (!isOwner) return reply("*📛 ᴏɴʟʏ ᴛʜᴇ ᴏᴡɴᴇʀ ᴄᴀɴ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ!*");
-
-    const status = args[0]?.toLowerCase();
-    // Check the argument for enabling or disabling the anticall feature
-    if (args[0] === "on") {
-        config.AUTO_STICKER = "true";
-        return reply("auto-sticker feature is now enabled.");
-    } else if (args[0] === "off") {
-        config.AUTO_STICKER = "false";
-        return reply("auto-sticker feature is now disabled.");
-    } else {
-        return reply(`_example:  .auto-sticker on_`);
-    }
-});
-//--------------------------------------------
-//  AUTO-REPLY COMMANDS
-//--------------------------------------------
-cmd({
-    pattern: "auto-reply",
-    alias: ["autoreply"],
-    desc: "enable or disable auto-reply.",
-    category: "settings",
-    filename: __filename
-},    
-async (conn, mek, m, { from, args, isOwner, reply }) => {
-    if (!isOwner) return reply("*📛 ᴏɴʟʏ ᴛʜᴇ ᴏᴡɴᴇʀ ᴄᴀɴ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ!*");
-
-    const status = args[0]?.toLowerCase();
-    // Check the argument for enabling or disabling the anticall feature
-    if (args[0] === "on") {
-        config.AUTO_REPLY = "true";
-        return reply("*auto-reply  is now enabled.*");
-    } else if (args[0] === "off") {
-        config.AUTO_REPLY = "false";
-        return reply("auto-reply feature is now disabled.");
-    } else {
-        return reply(`*🫟 ᴇxᴀᴍᴘʟᴇ: . ᴀᴜᴛᴏ-ʀᴇᴘʟʏ ᴏɴ*`);
+        return reply(`_ᴇxᴀᴍᴘʟᴇ:  .ᴀɴᴛɪʙᴀᴅ ᴏɴ_`);
     }
 });
 
@@ -355,10 +305,10 @@ async (conn, mek, m, { from, args, isOwner, reply }) => {
     // Check the argument for enabling or disabling the anticall feature
     if (args[0] === "on") {
         config.AUTO_REACT = "true";
-        await reply("*autoreact feature is now enabled.*");
+        await reply("*ᴀᴜᴛᴏʀᴇᴀᴄᴛ ғᴇᴀᴛᴜʀᴇ ɪs ɴᴏᴡ ᴇɴᴀʙʟᴇᴅ.*");
     } else if (args[0] === "off") {
         config.AUTO_REACT = "false";
-        await reply("autoreact feature is now disabled.");
+        await reply("ᴀᴜᴛᴏʀᴇᴀᴄᴛ ғᴇᴀᴛᴜʀᴇ ɪs ɴᴏᴡ ᴅɪsᴀʙʟᴇᴅ.");
     } else {
         await reply(`*🫟 ᴇxᴀᴍᴘʟᴇ: .ᴀᴜᴛᴏ-ʀᴇᴀᴄᴛ ᴏɴ*`);
     }
@@ -380,10 +330,10 @@ async (conn, mek, m, { from, args, isOwner, reply }) => {
     // Check the argument for enabling or disabling the anticall feature
     if (args[0] === "on") {
         config.AUTO_STATUS_REPLY = "true";
-        return reply("status-reply feature is now enabled.");
+        return reply("sᴛᴀᴛᴜs-ʀᴇᴘʟʏ ғᴇᴀᴛᴜʀᴇ ɪs ɴᴏᴡ ᴇɴᴀʙʟᴇᴅ.");
     } else if (args[0] === "off") {
         config.AUTO_STATUS_REPLY = "false";
-        return reply("status-reply feature is now disabled.");
+        return reply("sᴛᴀᴛᴜs-ʀᴇᴘʟʏ ғᴇᴀᴛᴜʀᴇ ɪs ɴᴏᴡ ᴅɪsᴀʙʟᴇᴅ.");
     } else {
         return reply(`*🫟 ᴇxᴀᴍᴘʟᴇ:  .sᴛᴀᴛᴜs-ʀᴇᴘʟʏ ᴏɴ*`);
     }
@@ -402,18 +352,18 @@ cmd({
   filename: __filename
 }, async (conn, mek, m, { isGroup, isAdmins, isBotAdmins, args, reply }) => {
   try {
-    if (!isGroup) return reply('This command can only be used in a group.');
-    if (!isBotAdmins) return reply('Bot must be an admin to use this command.');
-    if (!isAdmins) return reply('You must be an admin to use this command.');
+    if (!isGroup) return reply('ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ can ᴏɴʟʏ ʙᴇ ᴜsᴇᴅ ɪɴ ᴀ ɢʀᴏᴜᴘ.');
+    if (!isBotAdmins) return reply('ʙᴏᴛ ᴍᴜsᴛ ʙᴇ ᴀɴ ᴀᴅᴍɪɴ to use ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ.');
+    if (!isAdmins) return reply('ʏᴏᴜ ᴍᴜsᴛ ʙᴇ ᴀɴ ᴀᴅᴍɪɴ ᴛᴏ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ.');
 
     if (args[0] === "on") {
       config.ANTI_LINK = "true";
-      reply("✅ ANTI_LINK has been enabled.");
+      reply("✅ ᴀɴᴛɪ_ʟɪɴᴋ ʜᴀs ʙᴇᴇɴ ᴇɴᴀʙʟᴇᴅ.");
     } else if (args[0] === "off") {
       config.ANTI_LINK = "false";
-      reply("❌ ANTI_LINK has been disabled.");
+      reply("❌ ᴀɴᴛɪ_ʟɪɴᴋ ʜᴀs ʙᴇᴇɴ ᴅɪsᴀʙʟᴇᴅ.");
     } else {
-      reply("Usage: *.antilink on/off*");
+      reply("Usage: *.ᴀɴᴛɪʟɪɴᴋ ᴏɴ/ᴏғғ*");
     }
   } catch (e) {
     reply(`Error: ${e.message}`);
@@ -429,18 +379,18 @@ cmd({
   filename: __filename
 }, async (conn, mek, m, { isGroup, isAdmins, isBotAdmins, args, reply }) => {
   try {
-    if (!isGroup) return reply('This command can only be used in a group.');
-    if (!isBotAdmins) return reply('Bot must be an admin to use this command.');
-    if (!isAdmins) return reply('You must be an admin to use this command.');
+    if (!isGroup) return reply('This ᴄᴏᴍᴍᴀɴᴅ ᴄᴀɴ ᴏɴʟʏ ʙᴇ ᴜsᴇᴅ ɪɴ ᴀ ɢʀᴏᴜᴘ.');
+    if (!isBotAdmins) return reply('Bot ᴍᴜsᴛ ʙᴇ ᴀɴ ᴀᴅᴍɪɴ ᴛᴏ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ.');
+    if (!isAdmins) return reply('You ᴍᴜsᴛ ʙᴇ ᴀɴ ᴀᴅᴍɪɴ ᴛᴏ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ.');
 
     if (args[0] === "on") {
       config.ANTI_LINK_KICK = "true";
       reply("✅ ANTI_LINK_KICK has been enabled.");
     } else if (args[0] === "off") {
       config.ANTI_LINK_KICK = "false";
-      reply("❌ ANTI_LINK_KICK has been disabled.");
+      reply("❌ ᴀɴᴛɪ_ʟɪɴᴋ_ᴋɪᴄᴋ ʜᴀs ʙᴇᴇɴ ᴅɪsᴀʙʟᴇᴅ.");
     } else {
-      reply("Usage: *.antilinkkick on/off*");
+      reply("Usage: *.ᴀɴᴛɪʟɪɴᴋᴋɪᴄᴋ ᴏɴ/ᴏғғ*");
     }
   } catch (e) {
     reply(`Error: ${e.message}`);
@@ -457,18 +407,18 @@ cmd({
   filename: __filename
 }, async (conn, mek, m, { isGroup, isAdmins, isBotAdmins, args, reply }) => {
   try {
-    if (!isGroup) return reply('This command can only be used in a group.');
-    if (!isBotAdmins) return reply('Bot must be an admin to use this command.');
-    if (!isAdmins) return reply('You must be an admin to use this command.');
+    if (!isGroup) return reply('This ᴄᴏᴍᴍᴀɴᴅ ᴄᴀɴ ᴏɴʟʏ ʙᴇ ᴜsᴇᴅ ɪɴ a ɢʀᴏᴜᴘ.');
+    if (!isBotAdmins) return reply('Bot ᴍᴜsᴛ ʙᴇ ᴀɴ ᴀᴅᴍɪɴ ᴛᴏ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ.');
+    if (!isAdmins) return reply('You ᴍᴜsᴛ ʙᴇ ᴀɴ ᴀᴅᴍɪɴ ᴛᴏ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ.');
 
     if (args[0] === "on") {
       config.DELETE_LINKS = "true";
-      reply("✅ DELETE_LINKS is now enabled.");
+      reply("✅ ᴅᴇʟᴇᴛᴇ_ʟɪɴᴋs ɪs ɴᴏᴡ ᴇɴᴀʙʟᴇᴅ.");
     } else if (args[0] === "off") {
       config.DELETE_LINKS = "false";
-      reply("❌ DELETE_LINKS is now disabled.");
+      reply("❌ ᴅᴇʟᴇᴛᴇ_ʟɪɴᴋs ɪs ɴᴏᴡ ᴅɪsᴀʙʟᴇᴅ.");
     } else {
-      reply("Usage: *.deletelink on/off*");
+      reply("Usage: *.ᴅᴇʟᴇᴛᴇʟɪɴᴋ ᴏɴ/ᴏғғ*");
     }
   } catch (e) {
     reply(`Error: ${e.message}`);
