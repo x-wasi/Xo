@@ -13,19 +13,19 @@ cmd({
 }, async (conn, mek, m, { args, q, reply }) => {
     try {
         if (!q.includes(",")) {
-            return reply("❌ *Usage:* .emix 😂,🙂\n_Send two emojis separated by a comma._");
+            return reply("❌ *Usage:* .ᴇᴍɪx 😂,🙂\n_sᴇɴᴅ ᴛᴡᴏ ᴇᴍᴏᴊɪs sᴇᴘᴀʀᴀᴛᴇᴅ ʙʏ ᴀ ᴄᴏᴍᴍᴀ._");
         }
 
         let [emoji1, emoji2] = q.split(",").map(e => e.trim());
 
         if (!emoji1 || !emoji2) {
-            return reply("❌ Please provide two emojis separated by a comma.");
+            return reply("❌ ᴘʟᴇᴀsᴇ ᴘʀᴏᴠɪᴅᴇ ᴛᴡᴏ ᴇᴍᴏᴊɪs sᴇᴘᴀʀᴀᴛᴇᴅ ʙʏ ᴀ ᴄᴏᴍᴍᴀ.");
         }
 
         let imageUrl = await fetchEmix(emoji1, emoji2);
 
         if (!imageUrl) {
-            return reply("❌ Could not generate emoji mix. Try different emojis.");
+            return reply("❌ ᴄᴏᴜʟᴅ ɴᴏᴛ ɢᴇɴᴇʀᴀᴛᴇ ᴇᴍᴏᴊɪ ᴍɪx. ᴛʀʏ ᴅɪғғᴇʀᴇɴᴛ ᴇᴍᴏᴊɪs.");
         }
 
         let buffer = await getBuffer(imageUrl);
