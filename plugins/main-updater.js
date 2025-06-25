@@ -19,7 +19,7 @@ cmd({
         await reply("🔍 ᴄʜᴇᴄᴋɪɴɢ ғᴏʀ ᴍᴇɢᴀʟᴏᴅᴏɴ-ᴍᴅ ᴜᴘᴅᴀᴛᴇs...");
 
         // Fetch the latest commit hash from GitHub
-        const { data: commitData } = await axios.get("https://api.github.com/repos/gotartech/GOTAR-XMD/commits/main");
+        const { data: commitData } = await axios.get("https://api.github.com/repos/DybyTech/MEGALODON-MD/commits/main");
         const latestCommitHash = commitData.sha;
 
         // Get the stored commit hash from the database
