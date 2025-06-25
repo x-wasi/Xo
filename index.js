@@ -82,7 +82,7 @@ const port = process.env.PORT || 9090;
   
   //=============================================
   
-  async function connectToWA() {
+async function connectToWA() {
   console.log("Connecting to WhatsApp ⏳️...");
   const { state, saveCreds } = await useMultiFileAuthState(__dirname + '/sessions/')
   var { version } = await fetchLatestBaileysVersion()
@@ -96,35 +96,24 @@ const port = process.env.PORT || 9090;
           version
           })
       
-      const { connection, lastDisconnect } = update;
-
-    if (connection === 'close') {
-      const shouldReconnect = lastDisconnect?.error?.output?.statusCode !== DisconnectReason.loggedOut;
-      if (shouldReconnect) {
-        console.log("Reconnecting...");
-        connectToWA();
-      } else {
-        console.log("Logged out. Please scan again.");
-      }
-    }
-
-    if (connection === 'open') {
-      console.log('🧬 Installing Plugins');
-
-      fs.readdirSync('./plugins/').forEach((plugin) => {
-        if (path.extname(plugin).toLowerCase() === '.js') {
-          try {
-            require('./plugins/' + plugin);
-          } catch (err) {
-            console.error(`❌ Error loading plugin ${plugin}:`, err);
-          }
-        }
-      });
-
-      console.log('✅ Plugins installed');
-      console.log('✅ Bot connected to WhatsApp');
-
-      const up = `╔═◈『𝐌𝐄𝐆𝐀𝐋𝐎𝐃𝐎𝐍-𝐌𝐃』◈═╗
+  conn.ev.on('connection.update', (update) => {
+  const { connection, lastDisconnect } = update
+  if (connection === 'close') {
+  if (lastDisconnect.error.output.statusCode !== DisconnectReason.loggedOut) {
+  connectToWA()
+  }
+  } else if (connection === 'open') {
+  console.log('🧬 Installing Plugins')
+  const path = require('path');
+  fs.readdirSync("./plugins/").forEach((plugin) => {
+  if (path.extname(plugin).toLowerCase() == ".js") {
+  require("./plugins/" + plugin);
+  }
+  });
+  console.log('Plugins installed successful ✅')
+  console.log('Bot connected to whatsapp ✅')
+  
+  let up = `╔═◈『𝐌𝐄𝐆𝐀𝐋𝐎𝐃𝐎𝐍-𝐌𝐃』◈═╗
 ║🪀 ┃ *𝐏𝐑É𝐅𝐈𝐗:* ➥${config.PREFIX}
 ║
 ║♻️ ┃ *𝐌𝐎𝐃𝐄:* *[${config.MODE}]*
@@ -134,20 +123,10 @@ const port = process.env.PORT || 9090;
 ║
 ╚══════════════════╝
 > *ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅʏʙʏ ᴛᴇᴄʜ*`;
-
-      try {
-        await conn.sendMessage(conn.user.id, {
-          image: { url: 'https://files.catbox.moe/w1l8b0.jpg' },
-          caption: up
-        });
-      } catch (err) {
-        console.error("❌ Failed to send startup message:", err);
-      }
-    }
-  });
-
-  // Save credentials on update
-  conn.ev.on('creds.update', saveCreds);
+    conn.sendMessage(conn.user.id, { image: { url: `https://files.catbox.moe/w1l8b0.jpg` }, caption: up })
+  }
+  })
+  conn.ev.on('creds.update', saveCreds)
 
   //==============================
 
@@ -159,6 +138,7 @@ const port = process.env.PORT || 9090;
       }
     }
   });
+
   //============================== 
 
   conn.ev.on("group-participants.update", (update) => GroupEvents(conn, update));	  
