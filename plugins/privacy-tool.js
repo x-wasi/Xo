@@ -15,33 +15,33 @@ cmd({
 }, 
 async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
     try {
-        let privacyMenu = `╭━━〔 *Privacy Settings* 〕━━┈⊷
+        let privacyMenu = `╭━━〔 *ᴘʀɪᴠᴀᴄʏ sᴇᴛᴛɪɴɢs* 〕━━┈⊷
 ┃◈╭─────────────·๏
-┃◈┃• blocklist - View blocked users
-┃◈┃• getbio - Get user's bio
-┃◈┃• setppall - Set profile pic privacy
-┃◈┃• setonline - Set online privacy
-┃◈┃• setpp - Change bot's profile pic
-┃◈┃• setmyname - Change bot's name
-┃◈┃• updatebio - Change bot's bio
-┃◈┃• groupsprivacy - Set group add privacy
-┃◈┃• getprivacy - View current privacy settings
-┃◈┃• getpp - Get user's profile picture
+┃◈┃• ʙʟᴏᴄᴋʟɪsᴛ - ᴠɪᴇᴡ ʙʟᴏᴄᴋᴇᴅ ᴜsᴇʀs
+┃◈┃• ɢᴇᴛʙɪᴏ - ɢᴇᴛ ᴜsᴇʀ's ʙɪᴏ
+┃◈┃• sᴇᴛᴘᴘᴀʟʟ - sᴇᴛ ᴘʀᴏғɪʟᴇ ᴘɪᴄ ᴘʀɪᴠᴀᴄʏ
+┃◈┃• sᴇᴛᴏɴʟɪɴᴇ - sᴇᴛ ᴏɴʟɪɴᴇ ᴘʀɪᴠᴀᴄʏ
+┃◈┃• sᴇᴛᴘᴘ - ᴄʜᴀɴɢᴇ ʙᴏᴛ's ᴘʀᴏғɪʟᴇ ᴘɪᴄ
+┃◈┃• sᴇᴛᴍʏɴᴀᴍᴇ - ᴄʜᴀɴɢᴇ ʙᴏᴛ's ɴᴀᴍᴇ
+┃◈┃• ᴜᴘᴅᴀᴛᴇʙɪᴏ - ᴄʜᴀɴɢᴇ ʙᴏᴛ's ʙɪᴏ
+┃◈┃• ɢʀᴏᴜᴘsᴘʀɪᴠᴀᴄʏ - sᴇᴛ ɢʀᴏᴜᴘ ᴀᴅᴅ ᴘʀɪᴠᴀᴄʏ
+┃◈┃• ɢᴇᴛᴘʀɪᴠᴀᴄʏ - ᴠɪᴇᴡ ᴄᴜʀʀᴇɴᴛ ᴘʀɪᴠᴀᴄʏ sᴇᴛᴛɪɴɢs
+┃◈┃• ɢᴇᴛᴘᴘ - ɢᴇᴛ ᴜsᴇʀ's ᴘʀᴏғɪʟᴇ ᴘɪᴄᴛᴜʀᴇ
 ┃◈┃
-┃◈┃*Options for privacy commands:*
-┃◈┃• all - Everyone
-┃◈┃• contacts - My contacts only
-┃◈┃• contact_blacklist - Contacts except blocked
-┃◈┃• none - Nobody
-┃◈┃• match_last_seen - Match last seen
+┃◈┃*ᴏᴘᴛɪᴏɴs ғᴏʀ ᴘʀɪᴠᴀᴄʏ ᴄᴏᴍᴍᴀɴᴅs:*
+┃◈┃• ᴀʟʟ - ᴇᴠᴇʀʏᴏɴᴇ
+┃◈┃• ᴄᴏɴᴛᴀᴄᴛs - ᴍʏ ᴄᴏɴᴛᴀᴄᴛs ᴏɴʟʏ
+┃◈┃• ᴄᴏɴᴛᴀᴄᴛ_ʙʟᴀᴄᴋʟɪsᴛ - ᴄᴏɴᴛᴀᴄᴛs ᴇxᴄᴇᴘᴛ ʙʟᴏᴄᴋᴇᴅ
+┃◈┃• ɴᴏɴᴇ - ɴᴏʙᴏᴅʏ
+┃◈┃• ᴍᴀᴛᴄʜ_ʟᴀsᴛ_sᴇᴇɴ - ᴍᴀᴛᴄʜ ʟᴀsᴛ sᴇᴇɴ
 ┃◈└───────────┈⊷
 ╰──────────────┈⊷
-*Note:* Most commands are owner-only`;
+*ɴᴏᴛᴇ:* ᴍᴏsᴛ ᴄᴏᴍᴍᴀɴᴅs ᴀʀᴇ ᴏᴡɴᴇʀ-ᴏɴʟʏ`;
 
         await conn.sendMessage(
             from,
             {
-                image: { url: `https://files.catbox.moe/rful77.jpg` }, // Replace with privacy-themed image if available
+                image: { url: `https://files.catbox.moe/w1l8b0.jpg` }, // Replace with privacy-themed image if available
                 caption: privacyMenu,
                 contextInfo: {
                     mentionedJid: [m.sender],
