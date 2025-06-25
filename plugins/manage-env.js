@@ -287,31 +287,7 @@ async (conn, mek, m, { from, args, isOwner, reply }) => {
         return reply(`_ᴇxᴀᴍᴘʟᴇ:  .ᴀɴᴛɪʙᴀᴅ ᴏɴ_`);
     }
 });
-//--------------------------------------------
-//  AUTO-STICKER COMMANDS
-//--------------------------------------------
-cmd({
-    pattern: "auto-sticker",
-    alias: ["autosticker"],
-    desc: "enable or disable auto-sticker.",
-    category: "settings",
-    filename: __filename
-},    
-async (conn, mek, m, { from, args, isOwner, reply }) => {
-    if (!isOwner) return reply("*📛 ᴏɴʟʏ ᴛʜᴇ ᴏᴡɴᴇʀ ᴄᴀɴ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ!*");
 
-    const status = args[0]?.toLowerCase();
-    // Check the argument for enabling or disabling the anticall feature
-    if (args[0] === "on") {
-        config.AUTO_STICKER = "true";
-        return reply("auto-sticker feature is now enabled.");
-    } else if (args[0] === "off") {
-        config.AUTO_STICKER = "false";
-        return reply("auto-sticker feature is now disabled.");
-    } else {
-        return reply(`_ᴇxᴀᴍᴘʟᴇ:  .ᴀᴜᴛᴏ-sᴛɪᴄᴋᴇʀ on_`);
-    }
-});
 //--------------------------------------------
 //  AUTO-REPLY COMMANDS
 //--------------------------------------------
