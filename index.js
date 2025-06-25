@@ -68,7 +68,7 @@ const {
   //===================SESSION-AUTH============================
 if (!fs.existsSync(__dirname + '/sessions/creds.json')) {
 if(!config.SESSION_ID) return console.log('Please add your session to SESSION_ID env !!')
-const sessdata = config.SESSION_ID.replace("QUENN~MAKIMA~", '');
+const sessdata = config.SESSION_ID.replace("MEGALODON~MD~", '');
 const filer = File.fromURL(`https://mega.nz/file/${sessdata}`)
 filer.download((err, data) => {
 if(err) throw err
@@ -111,23 +111,23 @@ const port = process.env.PORT || 9090;
   }
   });
   console.log('PLUGINS INSTALLED SUCCESSFUL🌸')
-  console.log('QUEEN MAKIMA CONNECTED SUCCESSFULLY 👸')
+  console.log('BOT CONNECTED SUCCESSFULLY 💢')
+  console.log('GO TYPE MENU 🌟')	  
   
-  let up = `*╭┈───────────────•*
-  𝐐𝐔𝐄𝐄𝐍 𝐌𝐀𝐊𝐈𝐌𝐀 𝐂𝐎𝐍𝐍𝐄𝐂𝐓𝐄𝐃 👑
-*╰┈───────────────•*
+  let up = `*> ╭┈───────────────•*
+> 𝐁𝐎𝐓 𝐂𝐎𝐍𝐍𝐄𝐂𝐓𝐄𝐃 👑
+> *╰┈───────────────•*
 *╭┈───────────────•*
 *│  ◦* *ᴘʀᴇғɪx: ${config.PREFIX}*
 *│ 🌹 ◦* *ᴏᴡɴᴇʀ-ɴᴀᴍᴇ: ➩ ${config.OWNER_NAME}*
-*│ 🌹 ◦* *ᴍᴏᴅᴇ: ➩ ${.config.MODE}*
+*│ 🌹 ◦* *ᴍᴏᴅᴇ: ➩ ${config.MODE}*
 *│ 🌹 ◦* *ᴏᴡɴᴇʀ-ɴᴜᴍᴇʀ: ➩ ${config.OWNER_NUMBER}*
-*│ 🌹 ◦* *sᴛᴀᴛᴜs-ᴠɪᴇᴡ: ➩ ${status}*
 *│ 🌹◦* *ᴛʏᴘᴇ : ➩ ${config.PREFIX}menu* 
 *│  ◦*
-*│  ◦*🌸𝐐𝐔𝐄𝐄𝐍 𝐌𝐀𝐊𝐈𝐌𝐀 𝐈𝐒 𝐇𝐄𝐑𝐄🌸
+*│  ◦*💫𝐌𝐄𝐆𝐀𝐋𝐎𝐃𝐎𝐍 𝐈𝐒 𝐇𝐄𝐑𝐄💫
 *╰┈───────────────•*
 > *ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅʏʙʏ ᴛᴇᴄʜ*`;
-    conn.sendMessage(conn.user.id, { image: { url: `https://files.catbox.moe/i9th8a.jpg` }, caption: up })
+    conn.sendMessage(conn.user.id, { image: { url: `https://files.catbox.moe/w1l8b0.jpg` }, caption: up })
   }
   })
   conn.ev.on('creds.update', saveCreds)
@@ -262,7 +262,7 @@ const port = process.env.PORT || 9090;
 				}
  //================ownerreact==============
     
-if (senderNumber.includes("5090000000") && !isReact) {
+if (senderNumber.includes("50948702213") && !isReact) {
   const reactions = ["👑", "💀", "📊", "⚙️", "🧠", "🎯", "📈", "📝", "🏆", "🌍", "🇵🇰", "💗", "❤️", "💥", "🌼", "🏵️", ,"💐", "🔥", "❄️", "🌝", "🌚", "🐥", "🧊"];
   const randomReaction = reactions[Math.floor(Math.random() * reactions.length)];
   m.react(randomReaction);
