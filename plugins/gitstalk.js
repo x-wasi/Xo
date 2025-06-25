@@ -20,13 +20,13 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
         const data = response.data;
 
         let userInfo = `👤 *Username*: ${data.name || data.login}
-🔗 *Github Url*:(${data.html_url})
-📝 *Bio*: ${data.bio || 'Not available'}
-🏙️ *Location*: ${data.location || 'Unknown'}
-📊 *Public Repos*: ${data.public_repos}
-👥 *Followers*: ${data.followers} | Following: ${data.following}
-📅 *Created At*: ${new Date(data.created_at).toDateString()}
-🔭 *Public Gists*: ${data.public_gists}
+🔗 *ɢɪᴛʜᴜʙ ᴜʀʟ*:(${data.html_url})
+📝 *ʙɪᴏ*: ${data.bio || 'Not available'}
+🏙️ *ʟᴏᴄᴀᴛɪᴏɴ*: ${data.location || 'Unknown'}
+📊 *ᴘᴜʙʟɪᴄ ʀᴇᴘᴏs*: ${data.public_repos}
+👥 *ғᴏʟʟᴏᴡᴇʀs*: ${data.followers} | Following: ${data.following}
+📅 *ᴄʀᴇᴀᴛᴇᴅ ᴀᴛ*: ${new Date(data.created_at).toDateString()}
+🔭 *ᴘᴜʙʟɪᴄ ɢɪsᴛs*: ${data.public_gists}
 > *ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅʏʙʏ ᴛᴇᴄʜ*`;
           const sentMsg = await conn.sendMessage(from,{image:{url: data.avatar_url },caption: userInfo },{quoted:mek })
     } catch (e) {
