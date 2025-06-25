@@ -32,16 +32,16 @@ END:VCARD
 
         const caption = `╭━━〔 𝐌𝐄𝐆𝐀𝐋𝐎𝐃𝐎𝐍-𝐌𝐃 〕━━┈⊷
 ┃◈╭─────────────·๏
-┃◈┃• *Here is the owner details*
-┃◈┃• *Name* - ${ownerName}
-┃◈┃• *Number* ${ownerNumber}
-┃◈┃• *Version*: 1.0.0 Beta
+┃◈┃• *ʜᴇʀᴇ ɪs ᴛʜᴇ ᴏᴡɴᴇʀ ᴅᴇᴛᴀɪʟs*
+┃◈┃• *𝐍𝐚𝐦𝐞* - ${ownerName}
+┃◈┃• *𝐍𝐮𝐦𝐛𝐞𝐫* ${ownerNumber}
+┃◈┃• *𝐕𝐞𝐫𝐬𝐢𝐨𝐧*: 1.0.0 Beta
 ┃◈└───────────┈⊷
 ╰──────────────┈⊷
 > *ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅʏʙʏ ᴛᴇᴄʜ*`;
 
         await conn.sendMessage(from, {
-            image: { url: 'https://files.catbox.moe/5vehos.jpg' },
+            image: { url: 'https://files.catbox.moe/w1l8b0.jpg' },
             caption,
             contextInfo: {
                 mentionedJid: [`${ownerNumber.replace('+', '')}@s.whatsapp.net`], 
