@@ -97,23 +97,30 @@ async function connectToWA() {
           })
       
   conn.ev.on('connection.update', (update) => {
-  const { connection, lastDisconnect } = update
+  const { connection, lastDisconnect } = update;
+
   if (connection === 'close') {
-  if (lastDisconnect.error.output.statusCode !== DisconnectReason.loggedOut) {
-  connectToWA()
-  }
+    const statusCode = lastDisconnect?.error?.output?.statusCode;
+
+    if (statusCode !== DisconnectReason.loggedOut) {
+      connectToWA(); // Reconnect only if not logged out
+    } else {
+      console.log("❌ You have been logged out.");
+    }
+
   } else if (connection === 'open') {
-  console.log('🧬 Installing Plugins')
-  const path = require('path');
-  fs.readdirSync("./plugins/").forEach((plugin) => {
-  if (path.extname(plugin).toLowerCase() == ".js") {
-  require("./plugins/" + plugin);
-  }
-  });
-  console.log('Plugins installed successful ✅')
-  console.log('Bot connected to whatsapp ✅')
-  
-  let up = `╔═◈『𝐌𝐄𝐆𝐀𝐋𝐎𝐃𝐎𝐍-𝐌𝐃』◈═╗
+    console.log('🧬 Installing Plugins');
+    const path = require('path');
+    fs.readdirSync("./plugins/").forEach((plugin) => {
+      if (path.extname(plugin).toLowerCase() == ".js") {
+        require("./plugins/" + plugin);
+      }
+    });
+
+    console.log('Plugins installed✅');
+    console.log('Bot connected ✅');
+
+    let up = `╔═◈『𝐌𝐄𝐆𝐀𝐋𝐎𝐃𝐎𝐍-𝐌𝐃』◈═╗
 ║🪀 ┃ *𝐏𝐑É𝐅𝐈𝐗:* ➥${config.PREFIX}
 ║
 ║♻️ ┃ *𝐌𝐎𝐃𝐄:* *[${config.MODE}]*
@@ -123,9 +130,10 @@ async function connectToWA() {
 ║
 ╚══════════════════╝
 > *ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅʏʙʏ ᴛᴇᴄʜ*`;
-    conn.sendMessage(conn.user.id, { image: { url: `https://files.catbox.moe/w1l8b0.jpg` }, caption: up })
+
+    conn.sendMessage(conn.user.id, { image: { url: `https://files.catbox.moe/w1l8b0.jpg` }, caption: up });
   }
-  })
+});
   conn.ev.on('creds.update', saveCreds)
 
   //==============================
