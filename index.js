@@ -83,42 +83,37 @@ const port = process.env.PORT || 9090;
   //=============================================
   
 async function connectToWA() {
-  console.log("Connecting to WhatsApp ⏳️...");
-  const { state, saveCreds } = await useMultiFileAuthState(__dirname + '/sessions/')
-  var { version } = await fetchLatestBaileysVersion()
-  
-  const conn = makeWASocket({
-          logger: P({ level: 'silent' }),
-          printQRInTerminal: false,
-          browser: Browsers.macOS("Firefox"),
-          syncFullHistory: true,
-          auth: state,
-          version
-          })
-      
-  conn.ev.on('connection.update', (update) => {
-  const { connection, lastDisconnect } = update;
+console.log("CONNECTING MEGALODON-MD🧬...");
+const { state, saveCreds } = await useMultiFileAuthState(__dirname + '/connect/')
+var { version } = await fetchLatestBaileysVersion()
 
-  if (connection === 'close') {
-    const statusCode = lastDisconnect?.error?.output?.statusCode;
-
-    if (statusCode !== DisconnectReason.loggedOut) {
-      connectToWA(); // Reconnect only if not logged out
-    } else {
-      console.log("❌ You have been logged out.");
-    }
-
-  } else if (connection === 'open') {
-    console.log('🧬 Installing Plugins');
-    const path = require('path');
-    fs.readdirSync("./plugins/").forEach((plugin) => {
-      if (path.extname(plugin).toLowerCase() == ".js") {
-        require("./plugins/" + plugin);
-      }
-    });
-
-    console.log('Plugins installed✅');
-    console.log('Bot connected ✅');
+const conn = makeWASocket({
+        logger: P({ level: 'silent' }),
+        printQRInTerminal: false,
+        browser: Browsers.macOS("Firefox"),
+        syncFullHistory: true,
+        auth: state,
+        version
+        })
+    
+conn.ev.on('connection.update', (update) => {
+const { connection, lastDisconnect } = update
+if (connection === 'close') {
+if (lastDisconnect.error.output.statusCode !== DisconnectReason.loggedOut) {
+connectToWA()
+}
+} else if (connection === 'open') {
+console.log('♻️ INSTALLING PLUGINS FILES PLEASE WAIT... 🪄')
+const path = require('path');
+fs.readdirSync("./plugins/").forEach((plugin) => {
+if (path.extname(plugin).toLowerCase() == ".js") {
+require("./plugins/" + plugin);
+}
+});
+console.log('PLUGINS FILES INSTALL SUCCESSFULLY ✅')
+console.log('BOT CONNECTED TO WHATSAPP ENJOY ✅')
+ console.log('GO TYPE MENU ✅');
+ console.log('ENJOY YOUR BOT ✅');
 
     let up = `╔═◈『𝐌𝐄𝐆𝐀𝐋𝐎𝐃𝐎𝐍-𝐌𝐃』◈═╗
 ║🪀 ┃ *𝐏𝐑É𝐅𝐈𝐗:* ➥${config.PREFIX}
