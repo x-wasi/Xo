@@ -7,15 +7,15 @@ initializeAntiDeleteSettings();
 cmd({
     pattern: "antidelete",
     alias: ['antidel', 'antid'],
-    desc: "Configure le système AntiDelete",
+    desc: "Configure the AntiDelete system",
     category: "misc",
     filename: __filename
 },
-async (conn, mek, m, { reply, q, isOwner }) => {
+async (conn, mek, m, { reply, q, isOwner, from }) => {
     if (!isOwner) {
-      return await client.sendMessage(from, {
-        text: "*📛 This is an owner command.*"
-      }, { quoted: message });
+      return await conn.sendMessage(from, {
+        text: "*📛 ᴛʜɪs ɪs ᴀɴ ᴏᴡɴᴇʀ-ᴏɴʟʏ ᴄᴏᴍᴍᴀɴᴅ.*"
+      }, { quoted: mek });
     }
     try {
         const command = q?.toLowerCase();
@@ -24,48 +24,48 @@ async (conn, mek, m, { reply, q, isOwner }) => {
             case 'on':
                 await setAnti('gc', true);
                 await setAnti('dm', true);
-                return reply('_AntiDelete activé pour les groupes et messages privés._');
+                return reply('_ᴀɴᴛɪᴅᴇʟᴇᴛᴇ ᴇɴᴀʙʟᴇᴅ ғᴏʀ ɢʀᴏᴜᴘs ᴀɴᴅ ᴘʀɪᴠᴀᴛᴇ ᴍᴇssᴀɢᴇs._');
 
             case 'off gc':
                 await setAnti('gc', false);
-                return reply('_AntiDelete désactivé pour les groupes._');
+                return reply('_ᴀɴᴛɪᴅᴇʟᴇᴛᴇ ᴅɪsᴀʙʟᴇᴅ ғᴏʀ ɢʀᴏᴜᴘs._');
 
             case 'off dm':
                 await setAnti('dm', false);
-                return reply('_AntiDelete désactivé pour les messages privés._');
+                return reply('_ᴀɴᴛɪᴅᴇʟᴇᴛᴇ ᴅɪsᴀʙʟᴇᴅ ғᴏʀ ᴘʀɪᴠᴀᴛᴇ ᴍᴇssᴀɢᴇs._');
 
             case 'set gc':
                 const gcStatus = await getAnti('gc');
                 await setAnti('gc', !gcStatus);
-                return reply(`_AntiDelete groupe maintenant ${!gcStatus ? 'activé' : 'désactivé'}._`);
+                return reply(`_ɢʀᴏᴜᴘ ᴀɴᴛɪᴅᴇʟᴇᴛᴇ ɪs ɴᴏᴡ ${!gcStatus ? 'enabled' : 'disabled'}._`);
 
             case 'set dm':
                 const dmStatus = await getAnti('dm');
                 await setAnti('dm', !dmStatus);
-                return reply(`_AntiDelete DM maintenant ${!dmStatus ? 'activé' : 'désactivé'}._`);
+                return reply(`_ᴅᴍ ᴀɴᴛɪᴅᴇʟᴇᴛᴇ ɪs ɴᴏᴡ ${!dmStatus ? 'enabled' : 'disabled'}._`);
 
             case 'set all':
                 await setAnti('gc', true);
                 await setAnti('dm', true);
-                return reply('_AntiDelete activé pour tous les chats._');
+                return reply('_ᴀɴᴛɪᴅᴇʟᴇᴛᴇ ᴇɴᴀʙʟᴇᴅ ғᴏʀ ᴀʟʟ ᴄʜᴀᴛs._');
 
             case 'status':
                 const currentDmStatus = await getAnti('dm');
                 const currentGcStatus = await getAnti('gc');
-                return reply(`_Statut AntiDelete_\n\n*DM:* ${currentDmStatus ? 'Activé' : 'Désactivé'}\n*Groupes:* ${currentGcStatus ? 'Activé' : 'Désactivé'}`);
+                return reply(`_ᴀɴᴛɪᴅᴇʟᴇᴛᴇ sᴛᴀᴛᴜs_\n\n*ᴅᴍ:* ${currentDmStatus ? 'Enabled' : 'Disabled'}\n*ɢʀᴏᴜᴘs:* ${currentGcStatus ? 'Enabled' : 'Disabled'}`);
 
             default:
-                return reply(`-- *Guide des commandes AntiDelete* --
-• \`\`.antidelete on\`\` – Active AntiDelete globalement
-• \`\`.antidelete off gc\`\` – Desactivate for group
-• \`\`.antidelete off dm\`\` – Desactivat for DM
-• \`\`.antidelete set gc\`\` – Activate/Desactivate for groups
-• \`\`.antidelete set dm\`\` – Activate/Desactivate for DM
-• \`\`.antidelete set all\`\` – Activate for all chats
-• \`\`.antidelete status\`\` – Vérifie le statut actuel`);
+                return reply(`-- *αηтι∂єℓєтє ¢σммαη∂ gυι∂є* --
+• \`\`.ᴀɴᴛɪᴅᴇʟᴇᴛᴇ ᴏɴ\`\` – ᴇɴᴀʙʟᴇ αηтι∂єℓєтє gℓσвαℓℓу
+• \`\`.ᴀɴᴛɪᴅᴇʟᴇᴛᴇ ᴏғғ ɢᴄ\`\` – ∂ιѕαвℓє ƒσя gяσυρ ¢нαтѕ
+• \`\`.ᴀɴᴛɪᴅᴇʟᴇᴛᴇ ᴏғғ ᴅᴍ\`\` – Disable for DMs
+• \`\`.ᴀɴᴛɪᴅᴇʟᴇᴛᴇ sᴇᴛ ɢᴄ\`\` – Toggle for groups
+• \`\`.ᴀɴᴛɪᴅᴇʟᴇᴛᴇ sᴇᴛ ᴅᴍ\`\` – Toggle for DMs
+• \`\`.ᴀɴᴛɪᴅᴇʟᴇᴛᴇ sᴇᴛ ᴀʟʟ\`\` – ᴇɴᴀʙʟᴇ ғᴏʀ ᴀʟʟ ᴄʜᴀᴛs
+• \`\`.ᴀɴᴛɪᴅᴇʟᴇᴛᴇ sᴛᴀᴛᴜs\`\` – ᴄʜᴇᴄᴋ ᴄᴜʀʀᴇɴᴛ sᴛᴀᴛᴜs`);
         }
     } catch (e) {
-        console.error("Erreur antidelete:", e);
-        return reply("Une erreur est survenue.");
+        console.error("AntiDelete error:", e);
+        return reply("An error occurred while processing the command.");
     }
 });
