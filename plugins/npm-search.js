@@ -33,14 +33,14 @@ cmd({
 
     // Create the response message
     const message = `
-*MEGALODON-MD NPM SEARCH*
+*𝐌𝐄𝐆𝐀𝐋𝐎𝐃𝐎𝐍-𝐌𝐃 𝐍𝐏𝐌 𝐒𝐄𝐀𝐑𝐂𝐇*
 
-*🔰 NPM PACKAGE:* ${packageName}
-*📄 DESCRIPTION:* ${description}
-*⏸️ LAST VERSION:* ${latestVersion}
-*🪪 LICENSE:* ${license}
-*🪩 REPOSITORY:* ${repository}
-*🔗 NPM URL:* ${npmUrl}
+*🔰 𝐍𝐏𝐌 𝐏𝐀𝐂𝐊𝐀𝐆𝐄:* ${packageName}
+*📄 𝐃𝐄𝐒𝐂𝐑𝐈𝐏𝐓𝐈𝐎𝐍:* ${description}
+*⏸️ 𝐋𝐀𝐒𝐓 𝐕𝐄𝐑𝐒𝐈𝐎𝐍:* ${latestVersion}
+*🪪 𝐋𝐈𝐂𝐄𝐍𝐒𝐄:* ${license}
+*🪩 𝐑𝐄𝐏𝐎𝐒𝐈𝐓𝐎𝐑𝐘:* ${repository}
+*🔗 𝐍𝐏𝐌 𝐔𝐑𝐋:* ${npmUrl}
 `;
 
     // Send the message
