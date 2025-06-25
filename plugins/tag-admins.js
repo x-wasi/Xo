@@ -13,7 +13,7 @@ cmd({
 },
 async (conn, mek, m, { from, participants, reply, isGroup, senderNumber, groupAdmins, prefix, command, args, body }) => {
     try {
-        if (!isGroup) return reply("❌ This command can only be used in groups.");
+        if (!isGroup) return reply("❌ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ ᴄᴀɴ ᴏɴʟʏ ʙᴇ ᴜsᴇᴅ ɪɴ ɢʀᴏᴜᴘs.");
         
         const botOwner = conn.user.id.split(":")[0]; // Extract bot owner's number
         const senderJid = senderNumber + "@s.whatsapp.net";
@@ -32,7 +32,7 @@ async (conn, mek, m, { from, participants, reply, isGroup, senderNumber, groupAd
 
         // Proper message extraction
         let message = body.slice(body.indexOf(command) + command.length).trim();
-        if (!message) message = "Attention Admins"; // Default message
+        if (!message) message = "ᴀᴛᴛᴇɴᴛɪᴏɴ ᴀᴅᴍɪɴs"; // Default message
 
         let teks = `▢ Group : *${groupName}*\n▢ Admins : *${totalAdmins}*\n▢ Message: *${message}*\n\n┌───⊷ *ADMIN MENTIONS*\n`;
 
@@ -41,7 +41,7 @@ async (conn, mek, m, { from, participants, reply, isGroup, senderNumber, groupAd
             teks += `${randomEmoji} @${admin.split('@')[0]}\n`;
         }
 
-        teks += "└──✪ MEGALODON ┃ MD ✪──";
+        teks += "└──𝐌𝐄𝐆𝐀𝐋𝐎𝐃𝐎𝐍 𝐌𝐃──";
 
         conn.sendMessage(from, { text: teks, mentions: admins }, { quoted: mek });
 
