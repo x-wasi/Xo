@@ -42,11 +42,11 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
 
         if (!isOwner) return reply("❌ Owner only command");
 
-        if (!q) return reply(`Usage:\n${command} https://whatsapp.com/channel/1234567890 hello`);
+        if (!q) return reply(`ᴜsᴀɢᴇ:\n${command} https://whatsapp.com/channel/1234567890 hello`);
 
         const [link, ...textParts] = q.split(' ');
 
-        if (!link.includes("whatsapp.com/channel/")) return reply("Invalid channel link format");
+        if (!link.includes("whatsapp.com/channel/")) return reply("ɪɴᴠᴀʟɪᴅ ᴄʜᴀɴɴᴇʟ ʟɪɴᴋ ғᴏʀᴍᴀᴛ");
 
         
 
@@ -78,10 +78,10 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
 
         await conn.newsletterReactMessage(channelMeta.id, messageId, emoji);
 
-        return reply(`╭━━〔 *MEGALODON-MD* 〕━┈⊷
-┃▸ *Success!* Reaction sent
-┃▸ *Channel:* ${channelMeta.name}
-┃▸ *Reaction:* ${emoji}
+        return reply(`╭━━〔 *𝐌𝐄𝐆𝐀𝐋𝐎𝐃𝐎𝐍-𝐌𝐃* 〕━┈⊷
+┃▸ *sᴜᴄᴄᴇss!* Reaction sent
+┃▸ *ᴄʜᴀɴɴᴇʟ:* ${channelMeta.name}
+┃▸ *ʀᴇᴀᴄᴛɪᴏɴ:* ${emoji}
 ╰────────────────┈⊷
 
 > *© ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅʏʙʏ ᴛᴇᴄʜ*`);
