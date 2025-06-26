@@ -1,80 +1,65 @@
-const fs = require("fs");
 const { cmd } = require("../command");
-const path = "./data/antivv.json";
+const config = require("../config");
+const fs = require("fs");
 
-// Ensure the data file exists
-if (!fs.existsSync("./data")) fs.mkdirSync("./data");
-if (!fs.existsSync(path)) fs.writeFileSync(path, JSON.stringify({ enabled: true }));
-
-// Helpers to read/write status
-const getStatus = () => {
-  try {
-    return JSON.parse(fs.readFileSync(path));
-  } catch {
-    return { enabled: true };
-  }
-};
-const setStatus = (status) => {
-  fs.writeFileSync(path, JSON.stringify({ enabled: status }, null, 2));
-};
-
-// Command: .antivv on / .antivv off
+// 📌 Commande .antivv on / off
 cmd({
-  pattern: "antivv",
-  alias: [],
-  desc: "Toggle view-once auto-opening",
-  category: "owner",
-  use: ".antivv on / off",
-  filename: __filename
-}, async (client, m, match) => {
-  const args = match?.[1]?.toLowerCase();
-  if (!args || !["on", "off"].includes(args)) {
-    const current = getStatus().enabled;
-    return m.reply(`📍 Anti View Once is currently: ${current ? "✅ ENABLED" : "❌ DISABLED"}\nUsage: *.antivv on* or *.antivv off*`);
-  }
+    pattern: "antivv",
+    alias: ["anti-viewonce", "antiviewonce"],
+    desc: "Enable or disable automatic view-once opening",
+    category: "settings",
+    filename: __filename
+}, async (conn, mek, m, { from, args, isCreator, reply }) => {
+    if (!isCreator) return reply("*📛 ᴏɴʟʏ ᴛʜᴇ ʙᴏᴛ ᴏᴡɴᴇʀ ᴄᴀɴ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ!*");
 
-  const newStatus = args === "on";
-  setStatus(newStatus);
-  return m.reply(`✅ Anti View Once is now *${args.toUpperCase()}*`);
+    const status = args[0]?.toLowerCase();
+    if (status === "on") {
+        config.ANTIVV = "true";
+        return reply("✅ ᴀɴᴛɪ ᴠɪᴇᴡ ᴏɴᴄᴇ ɪs ɴᴏᴡ *ᴇɴᴀʙʟᴇᴅ*.");
+    } else if (status === "off") {
+        config.ANTIVV = "false";
+        return reply("❌ ᴀɴᴛɪ ᴠɪᴇᴡ ᴏɴᴄᴇ ɪs ɴᴏᴡ *ᴅɪsᴀʙʟᴇᴅ*.");
+    } else {
+        return reply(`❓ ᴇxᴀᴍᴘʟᴇ: *.ᴀɴᴛɪᴠᴠ ᴏɴ* / *.ᴀɴᴛɪᴠᴠ ᴏғғ*\n📌 ᴄᴜʀʀᴇɴᴛ: ${config.ANTIVV === "true" ? "✅ ᴇɴᴀʙʟᴇᴅ" : "❌ ᴅɪsᴀʙʟᴇᴅ"}`);
+    }
 });
 
-// Auto trigger to open view-once
+// 📌 Auto-ouverture des vues uniques
 module.exports = {
-  name: "antivv_auto_open",
-  event: "messages.upsert",
-  async handler(client, update) {
-    const { enabled } = getStatus();
-    if (!enabled) return;
+    name: "antivv_auto",
+    event: "messages.upsert",
+    async handler(client, update) {
+        if (config.ANTIVV !== "true") return;
 
-    try {
-      const msg = update.messages?.[0];
-      if (!msg || !msg.message) return;
+        try {
+            const msg = update.messages?.[0];
+            if (!msg?.message) return;
 
-      const viewOnceMsg = msg.message?.viewOnceMessageV2 || msg.message?.viewOnceMessage;
-      if (!viewOnceMsg) return;
+            const viewOnceMsg = msg.message?.viewOnceMessageV2 || msg.message?.viewOnceMessage;
+            if (!viewOnceMsg) return;
 
-      const innerMsg = viewOnceMsg.message;
-      const type = Object.keys(innerMsg || {})[0];
-      if (!["imageMessage", "videoMessage"].includes(type)) return;
+            const innerMsg = viewOnceMsg.message;
+            const type = Object.keys(innerMsg)[0];
+            if (!["imageMessage", "videoMessage"].includes(type)) return;
 
-      const { downloadMediaMessage } = require("@whiskeysockets/baileys");
-      const buffer = await downloadMediaMessage(
-        { message: { message: innerMsg }, key: msg.key },
-        "buffer",
-        {},
-        { reuploadRequest: client.updateMediaMessage }
-      );
+            const { downloadMediaMessage } = require("@whiskeysockets/baileys");
+            const buffer = await downloadMediaMessage(
+                { message: { message: innerMsg }, key: msg.key },
+                "buffer",
+                {},
+                { reuploadRequest: client.updateMediaMessage }
+            );
 
-      const caption = `👀 *View Once Opened by AntiVV*\n👤 From: @${msg.key.participant?.split("@")[0] || msg.key.remoteJid.split("@")[0]}`;
-      const mentionJid = [msg.key.participant || msg.key.remoteJid];
+            const caption = `👀 *View Once Opened Automatically*\n👤 From: @${msg.key.participant?.split("@")[0] || msg.key.remoteJid.split("@")[0]}`;
+            const mentions = [msg.key.participant || msg.key.remoteJid];
 
-      if (type === "imageMessage") {
-        await client.sendMessage(msg.key.remoteJid, { image: buffer, caption, mentions: mentionJid }, { quoted: msg });
-      } else {
-        await client.sendMessage(msg.key.remoteJid, { video: buffer, caption, mentions: mentionJid }, { quoted: msg });
-      }
-    } catch (e) {
-      console.error("❌ AntiVV Error:", e);
+            if (type === "imageMessage") {
+                await client.sendMessage(msg.key.remoteJid, { image: buffer, caption, mentions }, { quoted: msg });
+            } else {
+                await client.sendMessage(msg.key.remoteJid, { video: buffer, caption, mentions }, { quoted: msg });
+            }
+        } catch (err) {
+            console.error("❌ AntiVV Error:", err);
+        }
     }
-  }
 };
