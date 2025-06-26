@@ -30,21 +30,21 @@ async (conn, mek, m, { from, reply, prefix }) => {
 
         // Create the complete message
         const message = `
-📧 *TEMPORARY EMAIL GENERATED*
+📧 *𝐓𝐄𝐌𝐏𝐎𝐑𝐀𝐑𝐘 𝐄𝐌𝐀𝐈𝐋 𝐆𝐄𝐍𝐄𝐑𝐀𝐓𝐄𝐃*
 
-✉️ *Email Address:*
+✉️ *ᴇᴍᴀɪʟ ᴀᴅᴅʀᴇss:*
 ${email}
 
-⏳ *Expires:*
+⏳ *ᴇxᴘɪʀᴇs:*
 ${timeString} • ${dateString}
 
-🔑 *Session ID:*
+🔑 *sᴇssɪᴏɴ ɪᴅ:*
 \`\`\`${session_id}\`\`\`
 
-📥 *Check Inbox:*
-.inbox ${session_id}
+📥 *ᴄʜᴇᴄᴋ ɪɴʙᴏx:*
+.ɪɴʙᴏx ${session_id}
 
-_Email will expire after 24 hours_
+_ᴇᴍᴀɪʟ ᴡɪʟʟ ᴇxᴘɪʀᴇ ᴀғᴛᴇʀ 24 ʜᴏᴜʀs_
 `;
 
         await conn.sendMessage(
@@ -55,8 +55,8 @@ _Email will expire after 24 hours_
                     forwardingScore: 999,
                     isForwarded: true,
                     forwardedNewsletterMessageInfo: {
-                        newsletterJid: '120363372853772240@newsletter',
-                        newsletterName: 'TempMail Service',
+                        newsletterJid: '120363401051937059@newsletter',
+                        newsletterName: 'ᴛᴇᴍᴘᴀɪʟ sᴇʀᴠɪᴄᴇ',
                         serverMessageId: 101
                     }
                 }
@@ -80,13 +80,13 @@ cmd({
 async (conn, mek, m, { from, reply, args }) => {
     try {
         const sessionId = args[0];
-        if (!sessionId) return reply('🔑 Please provide your session ID\nExample: .checkmail YOUR_SESSION_ID');
+        if (!sessionId) return reply('🔑 ᴘʟᴇᴀsᴇ ᴘʀᴏᴠɪᴅᴇ ʏᴏᴜʀ sᴇssɪᴏɴ ɪᴅ\nExample: .ᴄʜᴇᴄᴋᴍᴀɪʟ ʏᴏᴜʀ_sᴇssɪᴏɴ_ɪᴅ');
 
         const inboxUrl = `https://apis.davidcyriltech.my.id/temp-mail/inbox?id=${encodeURIComponent(sessionId)}`;
         const response = await axios.get(inboxUrl);
 
         if (!response.data.success) {
-            return reply('❌ Invalid session ID or expired email');
+            return reply('❌ ɪɴᴠᴀʟɪᴅ sᴇssɪᴏɴ ɪᴅ ᴏʀ ᴇxᴘɪʀᴇᴅ ᴇᴍᴀɪʟ');
         }
 
         const { inbox_count, messages } = response.data;
@@ -98,11 +98,11 @@ async (conn, mek, m, { from, reply, args }) => {
         let messageList = `📬 *You have ${inbox_count} message(s)*\n\n`;
         messages.forEach((msg, index) => {
             messageList += `━━━━━━━━━━━━━━━━━━\n` +
-                          `📌 *Message ${index + 1}*\n` +
-                          `👤 *From:* ${msg.from}\n` +
-                          `📝 *Subject:* ${msg.subject}\n` +
-                          `⏰ *Date:* ${new Date(msg.date).toLocaleString()}\n\n` +
-                          `📄 *Content:*\n${msg.body}\n\n`;
+                          `📌 *ᴍᴇssᴀɢᴇ ${index + 1}*\n` +
+                          `👤 *ғʀᴏᴍ:* ${msg.from}\n` +
+                          `📝 *sᴜʙᴊᴇᴄᴛ:* ${msg.subject}\n` +
+                          `⏰ *ᴅᴀᴛᴇ:* ${new Date(msg.date).toLocaleString()}\n\n` +
+                          `📄 *ᴄᴏɴᴛᴇɴᴛ:*\n${msg.body}\n\n`;
         });
 
         await reply(messageList);
