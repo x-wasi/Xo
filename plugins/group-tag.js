@@ -1,6 +1,6 @@
 const { cmd } = require('../command');
 
-// Fixed & Created By JawadTechX
+// Fixed & Created By dyby
 cmd({
   pattern: "hidetag",
   alias: ["tag", "h"],  
@@ -19,14 +19,14 @@ async (conn, mek, m, {
       return /https?:\/\/(www\.)?[\w\-@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([\w\-@:%_\+.~#?&//=]*)/.test(url);
     };
 
-    if (!isGroup) return reply("❌ This command can only be used in groups.");
-    if (!isAdmins && !isOwner) return reply("❌ Only group admins can use this command.");
+    if (!isGroup) return reply("❌ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ ᴄᴀɴ ᴏɴʟʏ ʙᴇ ᴜsᴇᴅ ɪɴ ɢʀᴏᴜᴘs.");
+    if (!isAdmins && !isOwner) return reply("❌ ᴏɴʟʏ ɢʀᴏᴜᴘ ᴀᴅᴍɪɴs ᴄᴀɴ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ.");
 
     const mentionAll = { mentions: participants.map(u => u.id) };
 
     // If no message or reply is provided
     if (!q && !m.quoted) {
-      return reply("❌ Please provide a message or reply to a message to tag all members.");
+      return reply("❌ ᴘʟᴇᴀsᴇ ᴘʀᴏᴠɪᴅᴇ ᴀ ᴍᴇssᴀɢᴇ ᴏʀ ʀᴇᴘʟʏ ᴛᴏ ᴀ ᴍᴇssᴀɢᴇ ᴛᴏ ᴛᴀɢ ᴀʟʟ ᴍᴇᴍʙᴇʀs.");
     }
 
     // If a reply to a message
@@ -93,7 +93,7 @@ async (conn, mek, m, {
 
       // Fallback for any other message type
       return await conn.sendMessage(from, {
-        text: m.quoted.text || "📨 Message",
+        text: m.quoted.text || "📨 ᴍᴇssᴀɢᴇ",
         ...mentionAll
       }, { quoted: mek });
     }
