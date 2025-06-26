@@ -141,16 +141,50 @@ const port = process.env.PORT || 9090;
       if (update.update.message === null) {
         console.log("Delete Detected:", JSON.stringify(update, null, 2));
      await AntiDelete(conn, updates);
-	      if (m.message.viewOnceMessage) {
-    await ViewOnceMessage(conn, m);
-	      }
+	      
       }
     }
   });
   //============================== 
 
   conn.ev.on("group-participants.update", (update) => GroupEvents(conn, update));	  
-	  
+	
+	  // =============view once=======
+		
+
+conn.ev.on('messages.upsert', async ({ messages }) => {
+  const m = messages[0];
+  if (!m?.message) return;
+
+  // Anti View Once
+  if (config.ANTIVV === "true" && (m.message.viewOnceMessage || m.message.viewOnceMessageV2)) {
+    const viewOnce = m.message.viewOnceMessageV2 || m.message.viewOnceMessage;
+    const innerMessage = viewOnce.message;
+    const type = Object.keys(innerMessage)[0];
+
+    if (!["imageMessage", "videoMessage"].includes(type)) return;
+
+    try {
+      const buffer = await downloadMediaMessage(
+        { message: { message: innerMessage }, key: m.key },
+        "buffer",
+        {},
+        { reuploadRequest: conn.updateMediaMessage }
+      );
+
+      const caption = `👀 *View Once Opened Automatically*\n👤 From: @${m.key.participant?.split("@")[0] || m.key.remoteJid.split("@")[0]}`;
+      const mentions = [m.key.participant || m.key.remoteJid];
+
+      if (type === "imageMessage") {
+        await conn.sendMessage(m.key.remoteJid, { image: buffer, caption, mentions }, { quoted: m });
+      } else {
+        await conn.sendMessage(m.key.remoteJid, { video: buffer, caption, mentions }, { quoted: m });
+      }
+    } catch (e) {
+      console.error("❌ AntiVV Error:", e);
+    }
+  }
+});
   //=============readstatus=======
         
   conn.ev.on('messages.upsert', async(mek) => {
