@@ -43,12 +43,9 @@ const {
   const Crypto = require('crypto')
   const path = require('path')
   const prefix = config.PREFIX
-const { ViewOnceMessage } = require('./plugins/anti-viewonce.js');
+ const { antiviewonce } = require('./plugins/anti-viewonce');
+ const ownerNumber = ['50948702213']
 
-
-
-  
-  const ownerNumber = ['50948702213']
   
   const tempDir = path.join(os.tmpdir(), 'cache-temp')
   if (!fs.existsSync(tempDir)) {
