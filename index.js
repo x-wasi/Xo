@@ -43,7 +43,7 @@ const {
   const Crypto = require('crypto')
   const path = require('path')
   const prefix = config.PREFIX
-const { ViewOnceMessage } = require('./plugins/antiviewonce');
+const { ViewOnceMessage } = require('./plugins/anti-viewonce.js');
 
 
 
