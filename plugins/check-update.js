@@ -50,37 +50,37 @@ cmd({
         const repoURL = 'https://github.com/DybyTech/MEGALODON-MD';
 
         // 🔄 Statut de mise à jour
-        let updateNote = '✅ Your MEGALODON-MD bot is up-to-date!';
+        let updateNote = '✅ уσυя вσт ιѕ υρ-тσ-∂αтє!';
         if (currentVersion !== latestVersion) {
             updateNote =
-                `🚀 Your MEGALODON-MD bot is *outdated!*\n\n` +
-                `🔹 *Current Version:* ${currentVersion}\n` +
-                `🔹 *Latest Version:* ${latestVersion}\n\n` +
-                `Use *.update* to update.`;
+                `🚀 ʏᴏᴜʀ ʙᴏᴛ ɪs *ᴏᴜᴛᴅᴀᴛᴇᴅ!*\n\n` +
+                `🔹 *ᴄᴜʀʀᴇɴᴛ ᴠᴇʀsɪᴏɴ:* ${currentVersion}\n` +
+                `🔹 *ʟᴀᴛᴇsᴛ ᴠᴇʀsɪᴏɴ:* ${latestVersion}\n\n` +
+                `ᴜsᴇ *.ᴜᴘᴅᴀᴛᴇ* ᴛᴏ ᴜᴘᴅᴀᴛᴇ.`;
         }
 
-        const greeting = new Date().getHours() < 12 ? "🌞 Good Morning" : "🌙 Good Night";
+        const greeting = new Date().getHours() < 12 ? "🌞 ɢᴏᴏᴅ ᴍᴏʀɴɪɴɢ" : "🌙 ɢᴏᴏᴅ ɴɪɢʜᴛ";
 
         // ✉️ Construction du message
         const caption =
             `${greeting}, ${pushname}!\n\n` +
-            `📌 *Bot Name:* MEGALODON-MD\n` +
-            `🔖 *Current Version:* ${currentVersion}\n` +
-            `📢 *Latest Version:* ${latestVersion}\n` +
-            `📂 *Total Plugins:* ${pluginCount}\n` +
-            `🧩 *Total Commands:* ${commandCount}\n\n` +
-            `💾 *System Info:*\n` +
-            `⏳ *Uptime:* ${uptime}\n` +
-            `📟 *RAM Usage:* ${usedRAM} MB / ${totalRAM} MB\n` +
-            `🖥️ *Host Name:* ${hostname}\n` +
-            `📅 *Last Update:* ${lastUpdate}\n\n` +
-            `📝 *Changelog:*\n${latestChangelog}\n\n` +
-            `⭐ *GitHub Repo:* ${repoURL}\n\n` +
+            `📌 *ʙᴏᴛ ɴᴀᴍᴇ:* MEGALODON-MD\n` +
+            `🔖 *ᴄᴜʀʀᴇɴᴛ ᴠᴇʀsɪᴏɴ:* ${currentVersion}\n` +
+            `📢 *ʟᴀᴛᴇsᴛ ᴠᴇʀsɪᴏɴ:* ${latestVersion}\n` +
+            `📂 *ᴛᴏᴛᴀʟ ᴘʟᴜɢɪɴs:* ${pluginCount}\n` +
+            `🧩 *ᴛᴏᴛᴀʟ ᴄᴏᴍᴍᴀɴᴅs:* ${commandCount}\n\n` +
+            `💾 *sʏsᴛᴇᴍ ɪɴғᴏ:*\n` +
+            `⏳ *ᴜᴘᴛɪᴍᴇ:* ${uptime}\n` +
+            `📟 *ʀᴀᴍ ᴜsᴀɢᴇ:* ${usedRAM} MB / ${totalRAM} MB\n` +
+            `🖥️ *ʜᴏsᴛ ɴᴀᴍᴇ:* ${hostname}\n` +
+            `📅 *ʟᴀsᴛ ᴜᴘᴅᴀᴛᴇ:* ${lastUpdate}\n\n` +
+            `📝 *ᴄʜᴀɴɢᴇʟᴏɢ:*\n${latestChangelog}\n\n` +
+            `⭐ *ɢɪᴛʜᴜʙ ʀᴇᴘᴏ:* ${repoURL}\n\n` +
             `${updateNote}`;
 
         // 📤 Envoi du message avec image
         await conn.sendMessage(from, {
-            image: { url: 'https://files.catbox.moe/frns4k.jpg' },
+            image: { url: 'https://files.catbox.moe/phamfv.jpg' },
             caption,
             contextInfo: {
                 mentionedJid: [mdata.sender],
