@@ -1,60 +1,66 @@
-const { cmd } = require("../command");
+const { cmd } = require('../command')
 
-// In-memory settings
-const antiMentionSettings = new Map(); // {groupId: mode}
-const warnCounter = new Map();         // {groupId:userId => count}
+const antiMentionSettings = new Map() // Stores: groupId -> mode
+const warnCounter = new Map()         // Stores: groupId:userId -> count
 
-// 🔒 Enable command
+// Enable Anti Mention
 cmd({
   pattern: "antigpmention",
-  alias: ["agm"],
-  desc: "Anti group status mention (warn, remove, counter)",
+  alias: ["agpm"],
+  desc: "Enable anti group status mention system (warn, remove, counter).",
   react: "🔒",
   category: "group",
   filename: __filename
-}, async (conn, m, store, { args, isAdmin, metadata, reply }) => {
-  if (!metadata || !isAdmin) {
-    return reply("❌ Only group admins can use this command.");
-  }
+}, async (conn, mek, m, { from, isGroup, isAdmins, args, reply }) => {
+  try {
+    if (!isGroup) return reply("❌ This command can only be used in groups.");
+    if (!isAdmins) return reply("❌ Only group admins can use this command.");
 
-  const mode = (args[0] || "").toLowerCase();
-  if (!["warn", "remove", "counter"].includes(mode)) {
-    return reply("⚠️ Usage: .antigpmention [warn|remove|counter]");
-  }
+    const mode = (args[0] || "").toLowerCase();
+    if (!["warn", "remove", "counter"].includes(mode)) {
+      return reply("⚠️ Usage: .antigpmention [warn|remove|counter]");
+    }
 
-  antiMentionSettings.set(m.chat, mode);
-  return reply(`✅ Anti group mention has been enabled in *${mode.toUpperCase()}* mode.`);
+    antiMentionSettings.set(from, mode);
+    reply(`✅ Anti group mention system enabled in *${mode.toUpperCase()}* mode.`);
+  } catch (e) {
+    console.error("Error enabling AntiGPMention:", e);
+    reply("❌ Failed to enable anti group mention system.");
+  }
 });
 
-// ❌ Disable command
+// Disable Anti Mention
 cmd({
-  pattern: "antimsoff",
-  desc: "Disable anti group status mention",
+  pattern: "agpmoff",
+  desc: "Disable anti group status mention system.",
   react: "❌",
   category: "group",
   filename: __filename
-}, async (conn, m, store, { isAdmin, metadata, reply }) => {
-  if (!metadata || !isAdmin) return reply("❌ Only group admins can disable this.");
-  antiMentionSettings.delete(m.chat);
-  return reply("🚫 Anti group mention has been *disabled*.");
+}, async (conn, mek, m, { from, isGroup, isAdmins, reply }) => {
+  try {
+    if (!isGroup) return reply("❌ This command can only be used in groups.");
+    if (!isAdmins) return reply("❌ Only group admins can disable the system.");
+
+    antiMentionSettings.delete(from);
+    reply("🚫 Anti group mention system has been disabled.");
+  } catch (e) {
+    console.error("Error disabling AntiGPMention:", e);
+    reply("❌ Failed to disable anti group mention system.");
+  }
 });
 
-// 👁️ Message monitor
+// Monitor groupStatusMentionMessage
 cmd({
   on: "messages.upsert",
   filename: __filename
-}, async (conn, m, store, extras) => {
+}, async (conn, m, store, { ms, isGroup, sender, isAdmins }) => {
   try {
-    const { ms, verifGroupe, auteurMessage, verifAdmin, superUser } = extras;
-
-    if (!verifGroupe) return;
-    if (!ms?.message?.groupStatusMentionMessage) return;
-    if (verifAdmin || ms.key.fromMe || superUser) return;
+    if (!isGroup || !ms?.message?.groupStatusMentionMessage) return;
+    if (isAdmins || ms.key.fromMe) return;
 
     const mode = antiMentionSettings.get(m.chat);
     if (!mode) return;
 
-    const sender = auteurMessage;
     const keyMsg = {
       remoteJid: m.chat,
       fromMe: false,
@@ -75,7 +81,7 @@ cmd({
       case "warn":
         await conn.sendMessage(m.chat, { delete: keyMsg });
         await conn.sendMessage(m.chat, {
-          text: `⚠️ @${sender.split("@")[0]}, please avoid sending group status mentions.`,
+          text: `⚠️ @${sender.split("@")[0]} please do not send group status mentions.`,
           mentions: [sender]
         });
         break;
@@ -103,8 +109,7 @@ cmd({
         }
         break;
     }
-
-  } catch (e) {
-    console.error("❌ AntiGPMention Error:", e);
+  } catch (err) {
+    console.error("AntiGPMention error:", err);
   }
 });
