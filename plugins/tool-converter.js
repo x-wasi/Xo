@@ -4,7 +4,7 @@ const { cmd } = require('../command');
 
 cmd({
     pattern: 'convert',
-    alias: ['sticker2img', 'stoimg', 'stickertoimage', 's2i'],
+    alias: ['sticker2img', 'stoimg', 'stickertoimage', 'photo'],
     desc: 'Convert stickers to images',
     category: 'media',
     react: '🖼️',
@@ -13,7 +13,7 @@ cmd({
     // Input validation
     if (!message.quoted) {
         return await client.sendMessage(from, {
-            text: "✨ *Sticker Converter*\n\nPlease reply to a sticker message\n\nExample: `.convert` (reply to sticker)"
+            text: "✨ *sᴛɪᴄᴋᴇʀ ᴄᴏɴᴠᴇʀᴛᴇʀ*\n\nᴘʟᴇᴀsᴇ ʀᴇᴘʟʏ ᴛᴏ ᴀ sᴛɪᴄᴋᴇʀ ᴍᴇssᴀɢᴇ\n\nᴇxᴀᴍᴘʟᴇ: `.ᴄᴏɴᴠᴇʀᴛ` (ʀᴇᴘʟʏ ᴛᴏ sᴛɪᴄᴋᴇʀ)"
         }, { quoted: message });
     }
 
@@ -25,7 +25,7 @@ cmd({
 
     // Send processing message
     await client.sendMessage(from, {
-        text: "🔄 Converting sticker to image..."
+        text: "🔄 ᴄᴏɴᴠᴇʀᴛɪɴɢ sᴛɪᴄᴋᴇʀ ᴛᴏ ɪᴍᴀɢᴇ..."
     }, { quoted: message });
 
     try {
@@ -42,7 +42,7 @@ cmd({
     } catch (error) {
         console.error('Conversion error:', error);
         await client.sendMessage(from, {
-            text: "❌ Please try with a different sticker."
+            text: "❌ ᴘʟᴇᴀsᴇ ᴛʀʏ ᴡɪᴛʜ ᴀ ᴅɪғғᴇʀᴇɴᴛ sᴛɪᴄᴋᴇʀ."
         }, { quoted: message });
     }
 });
@@ -57,25 +57,25 @@ cmd({
     // Input validation
     if (!match.quoted) {
         return await client.sendMessage(from, {
-            text: "*🔊 Please reply to a video/audio message*"
+            text: "*🔊 ᴘʟᴇᴀsᴇ ʀᴇᴘʟʏ ᴛᴏ ᴀ ᴠɪᴅᴇᴏ/ᴀᴜᴅɪᴏ ᴍᴇssᴀɢᴇ*"
         }, { quoted: message });
     }
 
     if (!['videoMessage', 'audioMessage'].includes(match.quoted.mtype)) {
         return await client.sendMessage(from, {
-            text: "❌ Only video/audio messages can be converted"
+            text: "❌ ᴏɴʟʏ ᴠɪᴅᴇᴏ/ᴀᴜᴅɪᴏ ᴍᴇssᴀɢᴇs ᴄᴀɴ ʙᴇ ᴄᴏɴᴠᴇʀᴛᴇᴅ"
         }, { quoted: message });
     }
 
     if (match.quoted.seconds > 300) {
         return await client.sendMessage(from, {
-            text: "⏱️ Media too long (max 5 minutes)"
+            text: "⏱️ ᴍᴇᴅɪᴀ ᴛᴏᴏ ʟᴏɴɢ (ᴍᴀx 5 ᴍɪɴᴜᴛᴇs)"
         }, { quoted: message });
     }
 
     // Send processing message and store it
     await client.sendMessage(from, {
-        text: "🔄 Converting to audio..."
+        text: "🔄 ᴄᴏɴᴠᴇʀᴛɪɴɢ ᴛᴏ ᴀᴜᴅɪᴏ..."
     }, { quoted: message });
 
     try {
@@ -92,7 +92,7 @@ cmd({
     } catch (e) {
         console.error('Conversion error:', e.message);
         await client.sendMessage(from, {
-            text: "❌ Failed to process audio"
+            text: "❌ ғᴀɪʟᴇᴅ ᴛᴏ ᴘʀᴏᴄᴇss ᴀᴜᴅɪᴏ"
         }, { quoted: message });
     }
 });
@@ -107,25 +107,25 @@ cmd({
     // Input validation
     if (!match.quoted) {
         return await client.sendMessage(from, {
-            text: "*🗣️ Please reply to a video/audio message*"
+            text: "*🗣️ ᴘʟᴇᴀsᴇ ʀᴇᴘʟʏ ᴛᴏ ᴀ ᴠɪᴅᴇᴏ/ᴀᴜᴅɪᴏ ᴍᴇssᴀɢᴇ*"
         }, { quoted: message });
     }
 
     if (!['videoMessage', 'audioMessage'].includes(match.quoted.mtype)) {
         return await client.sendMessage(from, {
-            text: "❌ Only video/audio messages can be converted"
+            text: "❌ ᴏɴʟʏ ᴠɪᴅᴇᴏ/ᴀᴜᴅɪᴏ ᴍᴇssᴀɢᴇs ᴄᴀɴ ʙᴇ ᴄᴏɴᴠᴇʀᴛᴇᴅ"
         }, { quoted: message });
     }
 
     if (match.quoted.seconds > 60) {
         return await client.sendMessage(from, {
-            text: "⏱️ Media too long for voice (max 1 minute)"
+            text: "⏱️ ᴍᴇᴅɪᴀ ᴛᴏᴏ ʟᴏɴɢ ғᴏʀ ᴠᴏɪᴄᴇ (ᴍᴀx 1 ᴍɪɴᴜᴛᴇ)"
         }, { quoted: message });
     }
 
     // Send processing message
     await client.sendMessage(from, {
-        text: "🔄 Converting to voice message..."
+        text: "🔄 ᴄᴏɴᴠᴇʀᴛɪɴɢ ᴛᴏ ᴠᴏɪᴄᴇ ᴍᴇssᴀɢᴇ..."
     }, { quoted: message });
 
     try {
