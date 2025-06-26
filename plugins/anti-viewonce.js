@@ -1,86 +1,92 @@
-const { cmd } = require('../command');
-const fs = require('fs');
-const path = require('path');
-const config = require('../config');
+const { cmd } = require("../command");
+const fs = require("fs");
+const path = require("path");
+const config = require("../config");
 
-const dbPath = path.join(__dirname, '../data/antiviewonce.json');
-let antiViewData = fs.existsSync(dbPath) ? JSON.parse(fs.readFileSync(dbPath)) : {};
+const dbFile = path.join(__dirname, "../data/antivv.json");
+let antiVV = fs.existsSync(dbFile) ? JSON.parse(fs.readFileSync(dbFile)) : {};
 
-function saveData() {
-  fs.writeFileSync(dbPath, JSON.stringify(antiViewData, null, 2));
+function saveDB() {
+  fs.writeFileSync(dbFile, JSON.stringify(antiVV, null, 2));
 }
 
+// Command to toggle Anti-ViewOnce
 cmd({
   pattern: "antiviewonce",
-  alias: ["antiview"],
-  desc: "Enable/Disable Anti-ViewOnce feature",
-  category: "tools",
-  filename: __filename
-}, async (conn, m, msg, { from, args, isGroup, isAdmin, sender }) => {
-  console.log("🧩 .antiviewonce command triggered");
+  alias: ["antivv", "antiview"],
+  desc: "Owner/Admin only - Enable/Disable Anti-ViewOnce",
+  category: "owner",
+  filename: __filename,
+}, async (client, m, match, { from, args, isGroup, isAdmin, sender }) => {
+  const isOwner = config.owner.includes(sender.replace(/[^0-9]/g, ""));
 
-  const isOwner = config.owner.includes(sender.replace(/[^0-9]/g, ''));
-  const state = args[0] === 'on' ? true : args[0] === 'off' ? false : null;
+  const state = args[0] === "on" ? true : args[0] === "off" ? false : null;
+  if (state === null) return m.reply("Usage:\n.antiviewonce on\n.antiviewonce off");
 
-  if (state === null)
-    return msg.reply('🔁 Usage:\n.antiviewonce on\n.antiviewonce off');
+  if (isGroup && !isAdmin) return m.reply("❌ Only group admins can toggle this.");
+  if (!isGroup && !isOwner) return m.reply("❌ Only owner can toggle this in private chat.");
 
-  if (isGroup) {
-    if (!isAdmin) return msg.reply('❌ Only group admins can use this.');
-  } else {
-    if (!isOwner) return msg.reply('❌ Only the bot owner can enable this in private chat.');
-  }
+  antiVV[from] = state;
+  saveDB();
 
-  antiViewData[from] = state;
-  saveData();
-  return msg.reply(`✅ Anti-ViewOnce is now *${state ? 'enabled' : 'disabled'}* for this chat.`);
+  return m.reply(`✅ Anti-ViewOnce is now *${state ? "enabled" : "disabled"}* for this chat.`);
 });
 
-// This event handler listens for new messages and processes viewOnce messages automatically
+// Hook event inside plugin - automatically intercept viewOnce messages
 cmd({
-  pattern: '',
-  filename: __filename,
+  pattern: "",
   fromMe: false,
   dontAddCommandList: true,
-}, async (conn, m) => {
+  filename: __filename,
+}, async (client, m) => {
   try {
     if (!m.message || !m.message.viewOnceMessage) return;
 
     const { key, message, pushName } = m;
     const from = key.remoteJid;
     const sender = key.participant || from;
-    const isGroup = from.endsWith('@g.us');
-    const isOwner = config.owner.includes(sender.replace(/[^0-9]/g, ''));
+    const isGroup = from.endsWith("@g.us");
+    const isOwner = config.owner.includes(sender.replace(/[^0-9]/g, ""));
 
-    if (isGroup) {
-      if (!antiViewData[from]) return;
-    } else {
-      if (!antiViewData[from]) return;
-      if (!isOwner) return;
-    }
+    if (isGroup && !antiVV[from]) return;
+    if (!isGroup && (!antiVV[from] || !isOwner)) return;
 
     const viewOnce = message.viewOnceMessage.message;
-    const type = Object.keys(viewOnce)[0];
-    const buffer = await conn.downloadMediaMessage(m);
+    if (!viewOnce) return;
 
+    const type = Object.keys(viewOnce)[0];
+    const buffer = await client.downloadMediaMessage(m);
     if (!buffer) return;
 
-    let forwardData = {};
-    if (type === 'imageMessage') {
-      forwardData = {
-        image: buffer,
-        caption: `👁‍🗨 ViewOnce image received from ${pushName || 'Unknown'}`,
-      };
-    } else if (type === 'videoMessage') {
-      forwardData = {
-        video: buffer,
-        caption: `🎞️ ViewOnce video received from ${pushName || 'Unknown'}`,
-      };
-    } else return;
+    let messageContent = {};
+    switch (type) {
+      case "imageMessage":
+        messageContent = {
+          image: buffer,
+          caption: `👁‍🗨 ViewOnce image from ${pushName || "Unknown"}`,
+          mimetype: viewOnce.imageMessage?.mimetype || "image/jpeg",
+        };
+        break;
+      case "videoMessage":
+        messageContent = {
+          video: buffer,
+          caption: `🎞️ ViewOnce video from ${pushName || "Unknown"}`,
+          mimetype: viewOnce.videoMessage?.mimetype || "video/mp4",
+        };
+        break;
+      case "audioMessage":
+        messageContent = {
+          audio: buffer,
+          mimetype: viewOnce.audioMessage?.mimetype || "audio/mp4",
+          ptt: viewOnce.audioMessage?.ptt || false,
+        };
+        break;
+      default:
+        return;
+    }
 
-    await conn.sendMessage(from, forwardData, { quoted: m });
-
-  } catch (err) {
-    console.error('❌ AntiViewOnce Error:', err);
+    await client.sendMessage(from, messageContent, { quoted: m });
+  } catch (e) {
+    console.error("❌ AntiVV error:", e);
   }
 });
