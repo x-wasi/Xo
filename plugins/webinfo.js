@@ -3,7 +3,7 @@ const axios = require('axios');
 
 cmd({
     pattern: "webinfo",
-    alias: ["siteinfo", "web"],
+    alias: ["siteinfo"],
     desc: "Get website info using GTech API",
     category: "tools",
     react: "🌐",
@@ -26,12 +26,12 @@ async (conn, mek, m, { args, reply }) => {
         const info = data.data;
 
         const caption = `╭─❰ 🌐 𝗪𝗲𝗯𝘀𝗶𝘁𝗲 𝗜𝗻𝗳𝗼 ❱──➤
-┃ 🏷️ *Title:* ${info.title || 'N/A'}
-┃ 📃 *Description:* ${info.description || 'N/A'}
-┃ 🏢 *Publisher:* ${info.publisher || 'N/A'}
-┃ 🗓️ *Date:* ${info.date || 'N/A'}
-┃ 🖼️ *Image Size:* ${info.image?.size_pretty || 'N/A'}
-┃ 🌍 *URL:* ${info.url || url}
+┃ 🏷️ *ᴛɪᴛʟᴇ:* ${info.title || 'N/A'}
+┃ 📃 *ᴅᴇsᴄʀɪᴘᴛɪᴏɴ:* ${info.description || 'N/A'}
+┃ 🏢 *ᴘᴜʙʟɪsʜᴇʀ:* ${info.publisher || 'N/A'}
+┃ 🗓️ *ᴅᴀᴛᴇ:* ${info.date || 'N/A'}
+┃ 🖼️ *ɪᴍᴀɢᴇ sɪᴢᴇ:* ${info.image?.size_pretty || 'N/A'}
+┃ 🌍 *ᴜʀʟ:* ${info.url || url}
 ╰──────────────➤`;
 
         // Fixed image thumbnail
