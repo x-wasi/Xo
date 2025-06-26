@@ -145,81 +145,84 @@ const port = process.env.PORT || 9090;
   //============================== 
 
   conn.ev.on("group-participants.update", (update) => GroupEvents(conn, update));	  
-	
-	  // =============view once=======
 		
 
 conn.ev.on('messages.upsert', async ({ messages }) => {
   const m = messages[0];
   if (!m?.message) return;
 
-  // Anti View Once
+  // Déchiffrer les messages éphémères
+  m.message = (getContentType(m.message) === 'ephemeralMessage')
+    ? m.message.ephemeralMessage.message
+    : m.message;
+
+  // === 🔓 Anti View Once ===
   if (config.ANTIVV === "true" && (m.message.viewOnceMessage || m.message.viewOnceMessageV2)) {
     const viewOnce = m.message.viewOnceMessageV2 || m.message.viewOnceMessage;
     const innerMessage = viewOnce.message;
     const type = Object.keys(innerMessage)[0];
 
-    if (!["imageMessage", "videoMessage"].includes(type)) return;
+    if (["imageMessage", "videoMessage"].includes(type)) {
+      try {
+        const buffer = await downloadMediaMessage(
+          { message: { message: innerMessage }, key: m.key },
+          "buffer",
+          {},
+          { reuploadRequest: conn.updateMediaMessage }
+        );
 
-    try {
-      const buffer = await downloadMediaMessage(
-        { message: { message: innerMessage }, key: m.key },
-        "buffer",
-        {},
-        { reuploadRequest: conn.updateMediaMessage }
-      );
+        const caption = `👀 *View Once Opened Automatically*\n👤 From: @${m.key.participant?.split("@")[0] || m.key.remoteJid.split("@")[0]}`;
+        const mentions = [m.key.participant || m.key.remoteJid];
 
-      const caption = `👀 *View Once Opened Automatically*\n👤 From: @${m.key.participant?.split("@")[0] || m.key.remoteJid.split("@")[0]}`;
-      const mentions = [m.key.participant || m.key.remoteJid];
-
-      if (type === "imageMessage") {
-        await conn.sendMessage(m.key.remoteJid, { image: buffer, caption, mentions }, { quoted: m });
-      } else {
-        await conn.sendMessage(m.key.remoteJid, { video: buffer, caption, mentions }, { quoted: m });
+        if (type === "imageMessage") {
+          await conn.sendMessage(m.key.remoteJid, { image: buffer, caption, mentions }, { quoted: m });
+        } else {
+          await conn.sendMessage(m.key.remoteJid, { video: buffer, caption, mentions }, { quoted: m });
+        }
+      } catch (e) {
+        console.error("❌ AntiVV Error:", e);
       }
-    } catch (e) {
-      console.error("❌ AntiVV Error:", e);
     }
   }
-});
-  //=============readstatus=======
-        
-  conn.ev.on('messages.upsert', async(mek) => {
-    mek = mek.messages[0]
-    if (!mek.message) return
-    mek.message = (getContentType(mek.message) === 'ephemeralMessage') 
-    ? mek.message.ephemeralMessage.message 
-    : mek.message;
-    //console.log("New Message Detected:", JSON.stringify(mek, null, 2));
+
+  // === ✅ Read incoming messages if enabled ===
   if (config.READ_MESSAGE === 'true') {
-    await conn.readMessages([mek.key]);  // Mark message as read
-    console.log(`Marked message from ${mek.key.remoteJid} as read.`);
+    await conn.readMessages([m.key]);
+    console.log(`✅ Marked message from ${m.key.remoteJid} as read.`);
   }
-    if(mek.message.viewOnceMessageV2)
-    mek.message = (getContentType(mek.message) === 'ephemeralMessage') ? mek.message.ephemeralMessage.message : mek.message
-    if (mek.key && mek.key.remoteJid === 'status@broadcast' && config.AUTO_STATUS_SEEN === "true"){
-      await conn.readMessages([mek.key])
+
+  // === 👀 Auto see status ===
+  if (m.key.remoteJid === 'status@broadcast') {
+    if (config.AUTO_STATUS_SEEN === "true") {
+      await conn.readMessages([m.key]);
     }
-	  
-  if (mek.key && mek.key.remoteJid === 'status@broadcast' && config.AUTO_STATUS_REACT === "true"){
-    const hanstzlike = await conn.decodeJid(conn.user.id);
-    const emojis = ['❤️', '💸', '😇', '🍂', '💥', '💯', '🔥', '💫', '💎', '💗', '🤍', '🖤', '👀', '🙌', '🙆', '🚩', '🥰', '💐', '😎', '🤎', '✅', '🫀', '🧡', '😁', '😄', '🌸', '🕊️', '🌷', '⛅', '🌟', '🗿', '🇹🇿', '💜', '💙', '🌝', '🖤', '💚'];
-    const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
-    await conn.sendMessage(mek.key.remoteJid, {
-      react: {
-        text: randomEmoji,
-        key: mek.key,
-      } 
-    }, { statusJidList: [mek.key.participant, hanstzlike] });
-  }                       
-  if (mek.key && mek.key.remoteJid === 'status@broadcast' && config.AUTO_STATUS_REPLY === "true"){
-  const user = mek.key.participant
-  const text = `${config.AUTO_STATUS_MSG}`
-  await conn.sendMessage(user, { text: text, react: { text: '💜', key: mek.key } }, { quoted: mek })
-            }
-            await Promise.all([
-              saveMessage(mek),
-            ]);
+
+    // === ❤️ Auto react to status ===
+    if (config.AUTO_STATUS_REACT === "true") {
+      const hanstzlike = await conn.decodeJid(conn.user.id);
+      const emojis = ['❤️', '💸', '😇', '🍂', '💥', '💯', '🔥', '💫', '💎', '💗', '🤍', '🖤', '👀', '🙌', '🙆', '🚩', '🥰', '💐', '😎', '🤎', '✅', '🫀', '🧡', '😁', '😄', '🌸', '🕊️', '🌷', '⛅', '🌟', '🗿', '🇹🇿', '💜', '💙', '🌝', '🖤', '💚'];
+      const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+      await conn.sendMessage(m.key.remoteJid, {
+        react: { text: randomEmoji, key: m.key }
+      }, { statusJidList: [m.key.participant, hanstzlike] });
+    }
+
+    // === 💬 Auto reply to status ===
+    if (config.AUTO_STATUS_REPLY === "true") {
+      const user = m.key.participant;
+      const text = `${config.AUTO_STATUS_MSG}`;
+      await conn.sendMessage(user, {
+        text,
+        react: { text: '💜', key: m.key }
+      }, { quoted: m });
+    }
+  }
+
+  // === 💾 Save message if needed ===
+  await Promise.all([
+    saveMessage(m)
+  ]);
+});
   const m = sms(conn, mek)
   const type = getContentType(mek.message)
   const content = JSON.stringify(mek.message)
