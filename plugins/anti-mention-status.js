@@ -1,10 +1,10 @@
 const { cmd } = require('../command')
 
-// In-memory configs
+// In-memory settings and counters
 const antiMentionSettings = new Map()
 const warnCounters = new Map()
 
-// .antigpmention [warn/remove/counter]
+// Enable anti-group-mention system
 cmd({
   pattern: "antigpmention",
   alias: ["agpm"],
@@ -18,13 +18,13 @@ cmd({
 
   const mode = (args[0] || "").toLowerCase()
   if (!["warn", "remove", "counter"].includes(mode))
-    return reply("⚠️ Usage: .antigpmention [warn|remove|counter]")
+    return reply("⚠️ Usage: .ᴀɴᴛɪɢᴘᴍᴇɴᴛɪᴏɴ [ᴡᴀʀɴ|ʀᴇᴍᴏᴠᴇ|ᴄᴏᴜɴᴛᴇʀ]")
 
   antiMentionSettings.set(from, mode)
-  reply(`✅ Anti group mention activated in *${mode.toUpperCase()}* mode.`)
+  reply(`✅ ᴀɴᴛɪ ɢʀᴏᴜᴘ ᴍᴇɴᴛɪᴏɴ ᴀᴄᴛɪᴠᴀᴛᴇᴅ ɪɴ *${mode.toUpperCase()}* ᴍᴏᴅᴇ.`)
 })
 
-// .agpmoff
+// Disable anti-group-mention
 cmd({
   pattern: "agpmoff",
   desc: "Disable anti group status mention system.",
@@ -39,7 +39,24 @@ cmd({
   reply("🚫 Anti group mention has been *disabled*.")
 })
 
-// 👀 Listen to group status mention
+// Check status
+cmd({
+  pattern: "agpmstatus",
+  desc: "Check the current anti-group-mention status in this group.",
+  react: "ℹ️",
+  category: "group",
+  filename: __filename
+}, async (conn, mek, m, { from, isGroup, reply }) => {
+  if (!isGroup) return reply("❌ This command can only be used in groups.")
+
+  const mode = antiMentionSettings.get(from)
+  if (!mode) return reply("🔕 ᴀɴᴛɪ ɢʀᴏᴜᴘ ᴍᴇɴᴛɪᴏɴ ɪs *ᴅɪsᴀʙʟᴇᴅ* ɪɴ ᴛʜɪs ɢʀᴏᴜᴘ.")
+
+  const emoji = mode === "warn" ? "⚠️" : mode === "remove" ? "⛔" : "📊"
+  reply(`${emoji} ᴀɴᴛɪ ɢʀᴏᴜᴘ ᴍᴇɴᴛɪᴏɴ ɪs *ᴇɴᴀʙʟᴇᴅ* ɪɴ *${mode.toUpperCase()}* ᴍᴏᴅᴇ.`)
+})
+
+// Listener on groupStatusMentionMessage
 cmd({
   on: "messages.upsert",
   filename: __filename
@@ -53,12 +70,7 @@ cmd({
     if (!mode) return
 
     const senderId = sender || ms.key.participant
-    const keyMsg = {
-      remoteJid: m.chat,
-      fromMe: false,
-      id: ms.key.id,
-      participant: senderId
-    }
+    const keyMsg = ms.key
 
     if (mode === "remove") {
       await conn.groupParticipantsUpdate(m.chat, [senderId], "remove")
@@ -72,7 +84,7 @@ cmd({
     else if (mode === "warn") {
       await conn.sendMessage(m.chat, { delete: keyMsg })
       await conn.sendMessage(m.chat, {
-        text: `⚠️ @${senderId.split("@")[0]}, do not mention the group status.`,
+        text: `⚠️ @${senderId.split("@")[0]}, please avoid mentioning group status.`,
         mentions: [senderId]
       })
     }
@@ -85,7 +97,7 @@ cmd({
 
       if (current >= max) {
         await conn.sendMessage(m.chat, {
-          text: `⛔ @${senderId.split("@")[0]} has been removed after ${max} warnings.`,
+          text: `⛔ @${senderId.split("@")[0]} removed after ${max} warnings.`,
           mentions: [senderId]
         })
         await conn.groupParticipantsUpdate(m.chat, [senderId], "remove")
@@ -93,7 +105,7 @@ cmd({
         warnCounters.delete(key)
       } else {
         await conn.sendMessage(m.chat, {
-          text: `⚠️ @${senderId.split("@")[0]} Warning ${current}/${max}`,
+          text: `⚠️ @${senderId.split("@")[0]} warning ${current}/${max}`,
           mentions: [senderId]
         })
         await conn.sendMessage(m.chat, { delete: keyMsg })
