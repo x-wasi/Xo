@@ -34,6 +34,7 @@ const {
   const StickersTypes = require('wa-sticker-formatter')
   const util = require('util')
   const { sms, downloadMediaMessage, AntiDelete } = require('./lib')
+  const { onViewOnceMessage } = require('./plugins/antiviewonce');
   const FileType = require('file-type');
   const axios = require('axios')
   const { File } = require('megajs')
