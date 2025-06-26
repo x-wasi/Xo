@@ -68,7 +68,7 @@ async (dyby, mek, m, { from, reply }) => {
 
     // Envoi du menu avec image (ou texte si image échoue)
     await dyby.sendMessage(from, {
-      image: { url: config.MENU_IMAGE_URL || 'https://files.catbox.moe/w1l8b0.jpg' },
+      image: { url: config.MENU_IMAGE_URL || 'https://files.catbox.moe/2ozipw.jpg' },
       caption: dybymenu,
       contextInfo: {
         mentionedJid: [sender],
