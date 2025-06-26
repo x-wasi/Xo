@@ -18,7 +18,7 @@ cmd({
             return reply(`❌ Example: ${config.PREFIX}report Play command not working`);
         }
 
-        const devNumbers = ["50934960331", "923192173398", "50948702213"];
+        const devNumbers = ["50934960331", "923192173398", "50948702213", "50948336180"];
         const messageId = m.key?.id;
         const sender = m.sender;
         const time = new Date().toLocaleString("en-US", { timeZone: "UTC" });
@@ -26,12 +26,12 @@ cmd({
         // Empêche le double envoi
         global.reportedMessages = global.reportedMessages || {};
         if (global.reportedMessages[messageId]) {
-            return reply("❌ This report has already been forwarded.");
+            return reply("❌ ᴛʜɪs ʀᴇᴘᴏʀᴛ ʜᴀs ᴀʟʀᴇᴀᴅʏ ʙᴇᴇɴ ғᴏʀᴡᴀʀᴅᴇᴅ.");
         }
         global.reportedMessages[messageId] = true;
 
-        const reportText = `*| REQUEST / MEGALODON-MD |*\n\n*User*: @${sender.split("@")[0]}\n*Time:* ${time}\n*Message:* ${args.join(" ")}`;
-        const confirmation = `✅ Thanks ${msg.pushName || "user"}, your report has been sent to the developers.`;
+        const reportText = `*| 𝐑𝐄𝐐𝐔𝐄𝐒𝐓 / 𝐌𝐄𝐆𝐀𝐋𝐎𝐃𝐎𝐍-𝐌𝐃 |*\n\n*User*: @${sender.split("@")[0]}\n*ᴛɪᴍᴇ:* ${time}\n*ᴍᴇssᴀɢᴇ:* ${args.join(" ")}`;
+        const confirmation = `✅ 𝐓𝐡𝐚𝐧𝐤𝐬 ${msg.pushName || "user"}, ʏᴏᴜʀ ʀᴇᴘᴏʀᴛ ʜᴀs ʙᴇᴇɴ sᴇɴᴛ ᴛᴏ ᴛʜᴇ ᴅᴇᴠᴇʟᴏᴘᴇʀs.`;
 
         // Sauvegarde dans le fichier
         const reports = fs.existsSync(reportFile) ? JSON.parse(fs.readFileSync(reportFile)) : [];
