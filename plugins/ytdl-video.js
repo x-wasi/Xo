@@ -3,7 +3,7 @@ const { cmd } = require('../command');
 const yts = require('yt-search');
 
 cmd({
-    pattern: "video2",
+    pattern: "video",
     alias: ["mp4", "song"],
     react: "🎥",
     desc: "Download video from YouTube",
@@ -12,7 +12,7 @@ cmd({
     filename: __filename
 }, async (conn, m, mek, { from, q, reply }) => {
     try {
-        if (!q) return await reply("❌ Please provide a video name or YouTube URL!");
+        if (!q) return await reply("❌ ᴘʟᴇᴀsᴇ ᴘʀᴏᴠɪᴅᴇ ᴀ ᴠɪᴅᴇᴏ ɴᴀᴍᴇ ᴏʀ ʏᴏᴜᴛᴜʙᴇ ᴜʀʟ!");
 
         let videoUrl, title;
         
@@ -44,7 +44,7 @@ cmd({
             caption: `*${title}*`
         }, { quoted: mek });
 
-        await reply(`✅ *${title}* downloaded successfully!`);
+        await reply(`✅ *${title}* ᴅᴏᴡɴʟᴏᴀᴅᴇᴅ sᴜᴄᴄᴇssғᴜʟʟʏ!`);
 
     } catch (error) {
         console.error(error);
