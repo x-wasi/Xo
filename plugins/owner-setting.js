@@ -10,8 +10,8 @@ cmd({
     react: "🛑",
     filename: __filename
 },
-async (conn, mek, m, { from, isOwner, reply }) => {
-    if (!isOwner) return reply("❌ You are not the owner!");
+async (conn, mek, m, { from, isOwner, reply, isCreator }) => {
+    if (!isOwner && !isCreator) return reply("❌ You are not the owner!");
     reply("🛑 Shutting down...").then(() => process.exit());
 });
 
@@ -23,8 +23,8 @@ cmd({
     react: "🖼️",
     filename: __filename
 },
-async (conn, mek, m, { from, isOwner, quoted, reply }) => {
-    if (!isOwner) return reply("❌ You are not the owner!");
+async (conn, mek, m, { from, isOwner, quoted, reply, isCreator }) => {
+    if (!isOwner && !isCreator) return reply("❌ You are not the owner!");
     if (!quoted || !quoted.message.imageMessage) return reply("❌ Please reply to an image.");
     try {
         const media = await conn.downloadMediaMessage(quoted);
@@ -44,8 +44,8 @@ cmd({
     react: "🧹",
     filename: __filename
 },
-async (conn, mek, m, { from, isOwner, reply }) => {
-    if (!isOwner) return reply("❌ You are not the owner!");
+async (conn, mek, m, { from, isOwner, reply, isCreator }) => {
+    if (!isOwner && !isCreator) return reply("❌ You are not the owner!");
     try {
         const chats = conn.chats.all();
         for (const chat of chats) {
@@ -65,7 +65,7 @@ cmd({
     react: "📝",
     filename: __filename
 },
-async (conn, mek, m, { from, isOwner, reply }) => {
+async (conn, mek, m, { from, isOwner, reply, isCreator }) => {
     if (!isOwner) return reply("❌ You are not the owner!");
     const groups = await conn.groupFetchAllParticipating();
     const groupJids = Object.keys(groups).join('\n');
@@ -84,7 +84,7 @@ category: "group",
 use: '.del',
 filename: __filename
 },
-async(conn, mek, m,{from, l, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants,  isItzcp, groupAdmins, isBotAdmins, isAdmins, reply}) => {
+async(conn, mek, m,{from, l, quoted, body, isCmd, command, isCreator, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants,  isItzcp, groupAdmins, isBotAdmins, isAdmins, reply}) => {
 if (!isOwner ||  !isAdmins) return;
 try{
 if (!m.quoted) return reply(mg.notextfordel);
