@@ -17,7 +17,7 @@ cmd({
             || (m.quoted?.sender ?? null)
             || (args[0]?.replace(/[^0-9]/g, '') + "@s.whatsapp.net");
 
-        if (!target) return reply("❌ Please provide a number or tag/reply a user.");
+        if (!target) return reply("❌ ᴘʟᴇᴀsᴇ ᴘʀᴏᴠɪᴅᴇ ᴀ ɴᴜᴍʙᴇʀ ᴏʀ ᴛᴀɢ/ʀᴇᴘʟʏ ᴀ ᴜsᴇʀ.");
 
         let banned = JSON.parse(fs.readFileSync("./lib/ban.json", "utf-8"));
 
@@ -29,8 +29,8 @@ cmd({
         fs.writeFileSync("./lib/ban.json", JSON.stringify([...new Set(banned)], null, 2));
 
         await conn.sendMessage(from, {
-            image: { url: "https://files.catbox.moe/xc6eca.jpg" },
-            caption: `⛔ User has been banned from using the bot.`
+            image: { url: "https://files.catbox.moe/phamfv.jpg" },
+            caption: `⛔ ᴜsᴇʀ ʜᴀs ʙᴇᴇɴ ʙᴀɴɴᴇᴅ ғʀᴏᴍ ᴜsɪɴɢ ᴛʜᴇ ʙᴏᴛ.`
         }, { quoted: mek });
 
     } catch (err) {
@@ -48,26 +48,26 @@ cmd({
     filename: __filename
 }, async (conn, mek, m, { from, args, isCreator, reply }) => {
     try {
-        if (!isCreator) return reply("_❗Only the bot owner can use this command!_");
+        if (!isCreator) return reply("_❗ᴏɴʟʏ ᴛʜᴇ ʙᴏᴛ ᴏᴡɴᴇʀ ᴄᴀɴ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ!_");
 
         let target = m.mentionedJid?.[0] 
             || (m.quoted?.sender ?? null)
             || (args[0]?.replace(/[^0-9]/g, '') + "@s.whatsapp.net");
 
-        if (!target) return reply("❌ Please provide a number or tag/reply a user.");
+        if (!target) return reply("❌ ᴘʟᴇᴀsᴇ ᴘʀᴏᴠɪᴅᴇ a ɴᴜᴍʙᴇʀ ᴏʀ ᴛᴀɢ/ʀᴇᴘʟʏ ᴀ ᴜsᴇʀ.");
 
         let banned = JSON.parse(fs.readFileSync("./lib/ban.json", "utf-8"));
 
         if (!banned.includes(target)) {
-            return reply("❌ This user is not banned.");
+            return reply("❌ ᴛʜɪs ᴜsᴇʀ ɪs ɴᴏᴛ ʙᴀɴɴᴇᴅ.");
         }
 
         const updated = banned.filter(u => u !== target);
         fs.writeFileSync("./lib/ban.json", JSON.stringify(updated, null, 2));
 
         await conn.sendMessage(from, {
-            image: { url: "https://files.catbox.moe/xc6eca.jpg" },
-            caption: `✅ User has been unbanned.`
+            image: { url: "https://files.catbox.moe/phamfv.jpg" },
+            caption: `✅ ᴜsᴇʀ ʜᴀs ʙᴇᴇɴ ᴜɴʙᴀɴɴᴇᴅ.`
         }, { quoted: mek });
 
     } catch (err) {
@@ -85,12 +85,12 @@ cmd({
     filename: __filename
 }, async (conn, mek, m, { from, isCreator, reply }) => {
     try {
-        if (!isCreator) return reply("_❗Only the bot owner can use this command!_");
+        if (!isCreator) return reply("_❗ᴏɴʟʏ ᴛʜᴇ ʙᴏᴛ ᴏᴡɴᴇʀ ᴄᴀɴ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ!_");
 
         let banned = JSON.parse(fs.readFileSync("./lib/ban.json", "utf-8"));
         banned = [...new Set(banned)];
 
-        if (banned.length === 0) return reply("✅ No banned users found.");
+        if (banned.length === 0) return reply("✅ ɴᴏ ʙᴀɴɴᴇᴅ ᴜsᴇʀs ғᴏᴜɴᴅ.");
 
         let msg = "`⛔ Banned Users:`\n\n";
         banned.forEach((id, i) => {
@@ -98,7 +98,7 @@ cmd({
         });
 
         await conn.sendMessage(from, {
-            image: { url: "https://files.catbox.moe/xc6eca.jpg" },
+            image: { url: "https://files.catbox.moe/phamfv.jpg" },
             caption: msg
         }, { quoted: mek });
     } catch (err) {
