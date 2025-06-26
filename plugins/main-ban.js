@@ -11,7 +11,7 @@ cmd({
     filename: __filename
 }, async (conn, mek, m, { from, args, isCreator, reply }) => {
     try {
-        if (!isCreator) return reply("_❗Only the bot owner can use this command!_");
+        if (!isCreator) return reply("_❗ᴏɴʟʏ ᴛʜᴇ ʙᴏᴛ ᴏᴡɴᴇʀ ᴄᴀɴ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ!_");
 
         let target = m.mentionedJid?.[0] 
             || (m.quoted?.sender ?? null)
@@ -22,7 +22,7 @@ cmd({
         let banned = JSON.parse(fs.readFileSync("./lib/ban.json", "utf-8"));
 
         if (banned.includes(target)) {
-            return reply("❌ This user is already banned.");
+            return reply("❌ ᴛʜɪs ᴜsᴇʀ ɪs ᴀʟʀᴇᴀᴅʏ ʙᴀɴɴᴇᴅ.");
         }
 
         banned.push(target);
@@ -92,7 +92,7 @@ cmd({
 
         if (banned.length === 0) return reply("✅ ɴᴏ ʙᴀɴɴᴇᴅ ᴜsᴇʀs ғᴏᴜɴᴅ.");
 
-        let msg = "`⛔ Banned Users:`\n\n";
+        let msg = "`⛔ ʙᴀɴɴᴇᴅ ᴜsᴇʀs:`\n\n";
         banned.forEach((id, i) => {
             msg += `${i + 1}. ${id.replace("@s.whatsapp.net", "")}\n`;
         });
