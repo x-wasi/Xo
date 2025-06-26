@@ -164,9 +164,6 @@ const port = process.env.PORT || 9090;
     if (mek.key && mek.key.remoteJid === 'status@broadcast' && config.AUTO_STATUS_SEEN === "true"){
       await conn.readMessages([mek.key])
     }
-	  if (m.message.viewOnceMessage) {
-    await onViewOnceMessage(conn, m);
-	  }
 	  
   if (mek.key && mek.key.remoteJid === 'status@broadcast' && config.AUTO_STATUS_REACT === "true"){
     const hanstzlike = await conn.decodeJid(conn.user.id);
