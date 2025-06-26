@@ -36,7 +36,7 @@ async (conn, mek, m, { from, sender, reply }) => {
 
         } else {
 
-            return reply(`🖼️ Please reply to a message or mention a user to get their profile picture.`);
+            return reply(`🖼️ ᴘʟᴇᴀsᴇ ʀᴇᴘʟʏ ᴛᴏ ᴀ ᴍᴇssᴀɢᴇ ᴏʀ ᴍᴇɴᴛɪᴏɴ ᴀ ᴜsᴇʀ ᴛᴏ ɢᴇᴛ ᴛʜᴇɪʀ ᴘʀᴏғɪʟᴇ ᴘɪᴄᴛᴜʀᴇ.`);
 
         }
 
@@ -50,7 +50,7 @@ async (conn, mek, m, { from, sender, reply }) => {
 
         }
 
-        const caption = `🔹 *Profile Picture of @${targetUser.split('@')[0]}*\n\n> *ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅʏʙʏ ᴛᴇᴄʜ*`;
+        const caption = `💫 ᴘʀᴏғɪʟᴇ ᴘɪᴄᴛᴜʀᴇ ᴏғ @${targetUser.split('@')[0]}\n\n> *ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅʏʙʏ ᴛᴇᴄʜ*`;
 
         await conn.sendMessage(from, {
 
