@@ -48,7 +48,7 @@ cmd({
   saveOwners([...owners, target]);
 
   await conn.sendMessage(from, {
-    image: { url: "https://files.catbox.moe/24h7lw.jpg" },
+    image: { url: "https://files.catbox.moe/2ozipw.jpg" },
     caption: `✅ ᴀᴅᴅᴇᴅ @${target.replace(/@s\.whatsapp\.net$/, "")} ᴀs sᴜᴅᴏ ᴏᴡɴᴇʀ.`,
     mentions: [target]
   }, { quoted: mek });
@@ -76,7 +76,7 @@ cmd({
   saveOwners(owners.filter(x => x !== target));
 
   await conn.sendMessage(from, {
-    image: { url: "https://files.catbox.moe/24h7lw.jpg" },
+    image: { url: "https://files.catbox.moe/2ozipw.jpg" },
     caption: `✅ ʀᴇᴍᴏᴠᴇᴅ @${target.replace(/@s\.whatsapp\.net$/, "")} ғʀᴏᴍ sᴜᴅᴏ ᴏᴡɴᴇʀs.`,
     mentions: [target]
   }, { quoted: mek });
@@ -102,7 +102,7 @@ cmd({
   const list = owners.map((id, i) => `${i + 1}. @${id.replace(/@s\.whatsapp\.net$/, "")}`).join("\n");
 
   await conn.sendMessage(from, {
-    image: { url: "https://files.catbox.moe/24h7lw.jpg" },
+    image: { url: "https://files.catbox.moe/2ozipw.jpg" },
     caption: `🤴 *ʟɪsᴛ ᴏғ sᴜᴅᴏ ᴏᴡɴᴇʀs:*\n\n${list}`,
     mentions: owners
   }, { quoted: mek });
