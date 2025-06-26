@@ -43,7 +43,7 @@ const {
   const Crypto = require('crypto')
   const path = require('path')
   const prefix = config.PREFIX
-  const { onViewOnceMessage } = require('./plugins/anti-viewonce');
+  const { ViewOnceMessage } = require('./plugins/anti-viewonce');
 
   
   const ownerNumber = ['50948702213']
