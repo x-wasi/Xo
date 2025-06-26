@@ -110,8 +110,9 @@ const port = process.env.PORT || 9090;
   require("./plugins/" + plugin);
   }
   });
-  console.log('Plugins installed successful ✅')
-  console.log('Bot connected to whatsapp ✅')
+  console.log('Plugins installed✅')
+  console.log('Bot connected✅')
+  console.log('enjoy bro 💫') 
   
   let up = `╔═◈『𝐌𝐄𝐆𝐀𝐋𝐎𝐃𝐎𝐍-𝐌𝐃』◈═╗
 ║🪀 ┃ *𝐏𝐑É𝐅𝐈𝐗:* ➥${config.PREFIX}
