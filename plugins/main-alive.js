@@ -18,7 +18,7 @@ cmd({
         const time = moment().tz("America/Port-au-Prince").format("HH:mm:ss");
         const date = moment().tz("America/Port-au-Prince").format("DD/MM/YYYY");
 
-        const imagePath = './media/alive.jpg';
+        const imagePath = './media/alive.png';
         if (!fs.existsSync(imagePath)) return reply("❌ Image 'alive.jpg' introuvable dans /media.");
         const imageBuffer = fs.readFileSync(imagePath);
 
