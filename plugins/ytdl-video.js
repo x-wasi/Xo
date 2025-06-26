@@ -1,6 +1,7 @@
 const config = require('../config');
 const { cmd } = require('../command');
 const yts = require('yt-search');
+const fetch = require('node-fetch');
 
 cmd({
     pattern: "video",
@@ -15,14 +16,13 @@ cmd({
         if (!q) return await reply("❌ ᴘʟᴇᴀsᴇ ᴘʀᴏᴠɪᴅᴇ ᴀ ᴠɪᴅᴇᴏ ɴᴀᴍᴇ ᴏʀ ʏᴏᴜᴛᴜʙᴇ ᴜʀʟ!");
 
         let videoUrl, title;
-        
-        // Check if it's a URL
+
         if (q.match(/(youtube\.com|youtu\.be)/)) {
             videoUrl = q;
-            const videoInfo = await yts({ videoId: q.split(/[=/]/).pop() });
-            title = videoInfo.title;
+            const videoId = q.split(/[=/]/).pop();
+            const videoInfo = await yts({ videoId });
+            title = videoInfo.title || 'YouTube Video';
         } else {
-            // Search YouTube
             const search = await yts(q);
             if (!search.videos.length) return await reply("❌ No results found!");
             videoUrl = search.videos[0].url;
@@ -31,12 +31,21 @@ cmd({
 
         await reply("⏳ ᴅᴏᴡɴʟᴏᴀᴅɪɴɢ ᴠɪᴅᴇᴏ...");
 
-        // Use API to get video
         const apiUrl = `https://apis.davidcyriltech.my.id/download/ytmp4?url=${encodeURIComponent(videoUrl)}`;
         const response = await fetch(apiUrl);
-        const data = await response.json();
+        const text = await response.text();
 
-        if (!data.success) return await reply("❌ Failed to download video!");
+        let data;
+        try {
+            data = JSON.parse(text);
+        } catch (e) {
+            console.error("Non-JSON response:", text);
+            return await reply("❌ Unexpected response from server:\n\n" + text.slice(0, 200));
+        }
+
+        if (!data.success || !data.result?.download_url) {
+            return await reply("❌ Failed to download video from API!");
+        }
 
         await conn.sendMessage(from, {
             video: { url: data.result.download_url },
