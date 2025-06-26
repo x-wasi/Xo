@@ -29,7 +29,7 @@ cmd({
     const mimeType = (quotedMsg.msg || quotedMsg).mimetype || '';
     
     if (!mimeType || !mimeType.startsWith('image/')) {
-      return reply("Please reply to an image file (JPEG/PNG)");
+      return reply("ᴘʟᴇᴀsᴇ ʀᴇᴘʟʏ ᴛᴏ ᴀɴ ɪᴍᴀɢᴇ ғɪʟᴇ (ᴊᴘᴇɢ/ᴘɴɢ)");
     }
 
     // Download the media
@@ -41,7 +41,7 @@ cmd({
     if (mimeType.includes('image/jpeg')) extension = '.jpg';
     else if (mimeType.includes('image/png')) extension = '.png';
     else {
-      return reply("Unsupported image format. Please use JPEG or PNG");
+      return reply("ᴜɴsᴜᴘᴘᴏʀᴛᴇᴅ ɪᴍᴀɢᴇ ғᴏʀᴍᴀᴛ. ᴘʟᴇᴀsᴇ ᴜsᴇ ᴊᴘᴇɢ ᴏʀ ᴘɴɢ");
     }
 
     const tempFilePath = path.join(os.tmpdir(), `imgscan_${Date.now()}${extension}`);
@@ -75,7 +75,7 @@ cmd({
 
     await conn.sendMessage(m.chat, {
       image: imageBuffer,
-      caption: `Background removed\n\n> *ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅʏʙʏ ᴛᴇᴄʜ*`
+      caption: `ʙᴀᴄᴋɢʀᴏᴜɴᴅ ʀᴇᴍᴏᴠᴇᴅ sᴜᴄᴇssғᴜʟʟʏ\n\n> *ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅʏʙʏ ᴛᴇᴄʜ*`
     });
 
   } catch (error) {
