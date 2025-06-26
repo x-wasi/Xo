@@ -43,7 +43,9 @@ const {
   const Crypto = require('crypto')
   const path = require('path')
   const prefix = config.PREFIX
-  
+const { ViewOnceMessage } = require('./plugins/antiviewonce');
+
+
 
   
   const ownerNumber = ['50948702213']
@@ -138,7 +140,10 @@ const port = process.env.PORT || 9090;
     for (const update of updates) {
       if (update.update.message === null) {
         console.log("Delete Detected:", JSON.stringify(update, null, 2));
-        await AntiDelete(conn, updates);
+     await AntiDelete(conn, updates);
+	      if (m.message.viewOnceMessage) {
+    await ViewOnceMessage(conn, m);
+	      }
       }
     }
   });
