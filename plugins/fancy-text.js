@@ -19,7 +19,7 @@ cmd({
   reply
 }) => {
   try {
-    if (!q) return reply("❎ Please provide text to convert.\n\n*Example:* .fancy Hello");
+    if (!q) return reply("❎ ρℓєαѕє ρяσνι∂є тєχт тσ ¢σηνєят.\n\n*єχαмρℓє:* .ƒαη¢у нєℓℓσ");
 
     const apiUrl = `https://billowing-waterfall-dbab.bot1newnew.workers.dev/?word=${encodeURIComponent(q)}`;
     const res = await axios.get(apiUrl);
@@ -32,11 +32,11 @@ cmd({
     const maxDisplay = 44;
     const displayList = fonts.slice(0, maxDisplay);
 
-    let menuText = "╭──〔 *FANCY STYLES* 〕──⬣\n";
+    let menuText = "╭──〔 *𝐅𝐀𝐍𝐂𝐘 𝐒𝐓𝐘𝐋𝐄𝐒* 〕──⬣\n";
     displayList.forEach((f, i) => {
       menuText += `┃ ${i + 1}. ${f}\n`;
     });
-    menuText += "╰──────────────⬣\n\n📌 *Reply with the number to select a font style for:*\n❝ " + q + " ❞";
+    menuText += "╰──────────────⬣\n\n📌 *ʀᴇᴘʟʏ ᴡɪᴛʜ ᴛʜᴇ ɴᴜᴍʙᴇʀ ᴛᴏ sᴇʟᴇᴄᴛ ᴀ ғᴏɴᴛ sᴛʏʟᴇ ғᴏʀ:*\n❝ " + q + " ❞";
 
     const sentMsg = await conn.sendMessage(from, {
       text: menuText
@@ -58,12 +58,12 @@ cmd({
         const selectedNumber = parseInt(receivedText.trim());
         if (isNaN(selectedNumber) || selectedNumber < 1 || selectedNumber > displayList.length) {
           return conn.sendMessage(from, {
-            text: "❎ Invalid selection. Please reply with a number from 1 to " + displayList.length + ".",
+            text: "❎ ɪɴᴠᴀʟɪᴅ sᴇʟᴇᴄᴛɪᴏɴ. ᴘʟᴇᴀsᴇ ʀᴇᴘʟʏ ᴡɪᴛʜ ᴀ ɴᴜᴍʙᴇʀ ғʀᴏᴍ 1 ᴛᴏ " + displayList.length + ".",
           }, { quoted: receivedMsg });
         }
 
         const chosen = displayList[selectedNumber - 1];
-        const finalText = `✨ *Your Text in Selected Style:*\n\n${chosen}\n\n> *ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅʏʙʏ ᴛᴇᴄʜ*`;
+        const finalText = `✨ *ʏᴏᴜʀ ᴛᴇxᴛ ɪɴ sᴇʟᴇᴄᴛᴇᴅ sᴛʏʟᴇ:*\n\n${chosen}\n\n> *ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅʏʙʏ ᴛᴇᴄʜ*`;
 
         await conn.sendMessage(from, {
           text: finalText
