@@ -43,7 +43,6 @@ const {
   const Crypto = require('crypto')
   const path = require('path')
   const prefix = config.PREFIX
- const { antiviewonce } = require('./plugins/anti-viewonce');
  const ownerNumber = ['50948702213']
 
   
@@ -285,40 +284,40 @@ if (!isReact && config.AUTO_REACT === 'true') {
 }
           
 // custum react settings        
- conn.ev.on('messages.upsert', async ({ messages }) => {
+
+conn.ev.on('messages.upsert', async ({ messages }) => {
   const m = messages[0];
   if (!m?.message) return;
 
-
-  // === 🔓 Anti View Once ===
+  // Anti View Once
   if (config.ANTIVV === "true" && (m.message.viewOnceMessage || m.message.viewOnceMessageV2)) {
     const viewOnce = m.message.viewOnceMessageV2 || m.message.viewOnceMessage;
     const innerMessage = viewOnce.message;
     const type = Object.keys(innerMessage)[0];
 
-    if (["imageMessage", "videoMessage"].includes(type)) {
-      try {
-        const buffer = await downloadMediaMessage(
-          { message: { message: innerMessage }, key: m.key },
-          "buffer",
-          {},
-          { reuploadRequest: conn.updateMediaMessage }
-        );
+    if (!["imageMessage", "videoMessage"].includes(type)) return;
 
-        const caption = `👀 *View Once Opened Automatically*\n👤 From: @${m.key.participant?.split("@")[0] || m.key.remoteJid.split("@")[0]}`;
-        const mentions = [m.key.participant || m.key.remoteJid];
+    try {
+      const buffer = await downloadMediaMessage(
+        { message: { message: innerMessage }, key: m.key },
+        "buffer",
+        {},
+        { reuploadRequest: conn.updateMediaMessage }
+      );
 
-        if (type === "imageMessage") {
-          await conn.sendMessage(m.key.remoteJid, { image: buffer, caption, mentions }, { quoted: m });
-        } else {
-          await conn.sendMessage(m.key.remoteJid, { video: buffer, caption, mentions }, { quoted: m });
-        }
-      } catch (e) {
-        console.error("❌ AntiVV Error:", e);
+      const caption = `👀 *View Once Opened Automatically*\n👤 From: @${m.key.participant?.split("@")[0] || m.key.remoteJid.split("@")[0]}`;
+      const mentions = [m.key.participant || m.key.remoteJid];
+
+      if (type === "imageMessage") {
+        await conn.sendMessage(m.key.remoteJid, { image: buffer, caption, mentions }, { quoted: m });
+      } else {
+        await conn.sendMessage(m.key.remoteJid, { video: buffer, caption, mentions }, { quoted: m });
       }
+    } catch (e) {
+      console.error("❌ AntiVV Error:", e);
     }
   }
-
+});
   
 // Custom React for all messages (public and owner)
 if (!isReact && config.CUSTOM_REACT === 'true') {
