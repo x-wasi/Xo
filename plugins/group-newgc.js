@@ -11,22 +11,22 @@ cmd({
   owner: true,
 }, async (conn, mek, m, { body, sender, isOwner, reply }) => {
   try {
-    if (!isOwner) return reply("❌ Only the bot owner can use this command.");
-    if (!body.includes(" ")) return reply(`Usage: ${prefix}newgc GroupName number1,number2`);
+    if (!isOwner) return reply("❌ ᴏɴʟʏ ᴛʜᴇ ʙᴏᴛ ᴏᴡɴᴇʀ ᴄᴀɴ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ.");
+    if (!body.includes(" ")) return reply(`Usage: ${prefix}ɴᴇᴡɢᴄ ɢʀᴏᴜᴘɴᴀᴍᴇ ɴᴜᴍʙᴇʀ1,ɴᴜᴍʙᴇʀ2`);
 
     const firstSpaceIndex = body.indexOf(" ");
     const groupName = body.slice(0, firstSpaceIndex).trim();
     const numbersRaw = body.slice(firstSpaceIndex + 1).trim();
 
-    if (!groupName) return reply("❌ Please provide a group name.");
-    if (groupName.length > 30) return reply("❌ Group name too long (max 30 chars).");
+    if (!groupName) return reply("❌ ᴘʟᴇᴀsᴇ ᴘʀᴏᴠɪᴅᴇ ᴀ ɢʀᴏᴜᴘ ɴᴀᴍᴇ.");
+    if (groupName.length > 30) return reply("❌ ɢʀᴏᴜᴘ ɴᴀᴍᴇ ᴛᴏᴏ ʟᴏɴɢ (ᴍᴀx 30 ᴄʜᴀʀs).");
 
     // Nettoyer les numéros, garder uniquement chiffres, min 10 chiffres
     let numberList = numbersRaw.split(",")
       .map(n => n.trim().replace(/\D/g, ''))
       .filter(n => n.length >= 10);
 
-    if (numberList.length === 0) return reply("❌ Provide at least one valid phone number (digits only).");
+    if (numberList.length === 0) return reply("❌ ᴘʀᴏᴠɪᴅᴇ ᴀᴛ ʟᴇᴀsᴛ ᴏɴᴇ ᴠᴀʟɪᴅ ᴘʜᴏɴᴇ ɴᴜᴍʙᴇʀ (ᴅɪɢɪᴛs ᴏɴʟʏ).");
 
     // Inclure le bot lui-même dans le groupe
     const me = sender.split("@")[0] + "@s.whatsapp.net";
@@ -56,17 +56,17 @@ cmd({
       mentions: [sender]
     });
 
-    let response = `╭━━━〔 *✅ GROUP CREATED SUCCESSFULLY* 〕━━⬣
-┃📛 *Group name:* ${groupName}
-┃👥 *Members added:* ${numberList.length - failedAdds.length}
+    let response = `╭━━━〔 *✅ 𝐆𝐑𝐎𝐔𝐏 𝐂𝐑𝐄𝐀𝐓𝐄𝐃 𝐒𝐔𝐂𝐂𝐄𝐒𝐒𝐅𝐔𝐋𝐋𝐘* 〕━━⬣
+┃📛 *ɢʀᴏᴜᴘ ηαмє:* ${groupName}
+┃👥 *мємвєяѕ α∂∂є∂:* ${numberList.length - failedAdds.length}
 ┃
-┃📎 *Invitation link:*
+┃📎 *ιηνιтαтιση ℓιηк:*
 ┃https://chat.whatsapp.com/${await conn.groupInviteCode(group.id)}
 ╰━━━━━━━━━━━━━━━━━━━━⬣
 
-✨ The group is now ready!
-👤 You are the founder.
-🚀 Invite more people with the link above.
+✨ тнє gяσυρ is ησω яєα∂у!
+👤 уσυ αяє тнє ƒσυη∂єя.
+🚀 ιηνιтє мσяє ρєσρℓє ωιтн тнє ℓιηк αвσνє.
 `;
 
     if (failedAdds.length) {
