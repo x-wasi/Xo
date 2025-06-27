@@ -1,117 +1,71 @@
-const { cmd } = require('../command')
+const { cmd } = require('../command');
+const config = require("../config");
 
-// In-memory settings and counters
-const antiMentionSettings = new Map()
-const warnCounters = new Map()
-
-// Enable anti-group-mention system
 cmd({
-  pattern: "antigpmention",
-  alias: ["agpm"],
-  desc: "Enable anti group status mention system.",
-  react: "🔒",
-  category: "group",
-  filename: __filename
-}, async (conn, mek, m, { from, isGroup, isAdmins, args, reply }) => {
-  if (!isGroup) return reply("❌ This command can only be used in groups.")
-  if (!isAdmins) return reply("❌ Only group admins can use this command.")
-
-  const mode = (args[0] || "").toLowerCase()
-  if (!["warn", "remove", "counter"].includes(mode))
-    return reply("⚠️ Usage: .ᴀɴᴛɪɢᴘᴍᴇɴᴛɪᴏɴ [ᴡᴀʀɴ|ʀᴇᴍᴏᴠᴇ|ᴄᴏᴜɴᴛᴇʀ]")
-
-  antiMentionSettings.set(from, mode)
-  reply(`✅ ᴀɴᴛɪ ɢʀᴏᴜᴘ ᴍᴇɴᴛɪᴏɴ ᴀᴄᴛɪᴠᴀᴛᴇᴅ ɪɴ *${mode.toUpperCase()}* ᴍᴏᴅᴇ.`)
-})
-
-// Disable anti-group-mention
-cmd({
-  pattern: "agpmoff",
-  desc: "Disable anti group status mention system.",
-  react: "🔕",
-  category: "group",
-  filename: __filename
-}, async (conn, mek, m, { from, isGroup, isAdmins, reply }) => {
-  if (!isGroup) return reply("❌ This command can only be used in groups.")
-  if (!isAdmins) return reply("❌ Only group admins can use this command.")
-
-  antiMentionSettings.delete(from)
-  reply("🚫 Anti group mention has been *disabled*.")
-})
-
-// Check status
-cmd({
-  pattern: "agpmstatus",
-  desc: "Check the current anti-group-mention status in this group.",
-  react: "ℹ️",
-  category: "group",
-  filename: __filename
-}, async (conn, mek, m, { from, isGroup, reply }) => {
-  if (!isGroup) return reply("❌ This command can only be used in groups.")
-
-  const mode = antiMentionSettings.get(from)
-  if (!mode) return reply("🔕 ᴀɴᴛɪ ɢʀᴏᴜᴘ ᴍᴇɴᴛɪᴏɴ ɪs *ᴅɪsᴀʙʟᴇᴅ* ɪɴ ᴛʜɪs ɢʀᴏᴜᴘ.")
-
-  const emoji = mode === "warn" ? "⚠️" : mode === "remove" ? "⛔" : "📊"
-  reply(`${emoji} ᴀɴᴛɪ ɢʀᴏᴜᴘ ᴍᴇɴᴛɪᴏɴ ɪs *ᴇɴᴀʙʟᴇᴅ* ɪɴ *${mode.toUpperCase()}* ᴍᴏᴅᴇ.`)
-})
-
-// Listener on groupStatusMentionMessage
-cmd({
-  on: "messages.upsert",
-  filename: __filename
-}, async (conn, m, store, { ms, isGroup, sender, isAdmins }) => {
+  on: "body"
+}, async (conn, m, store, {
+  from,
+  body,
+  sender,
+  isGroup,
+  isAdmins,
+  isBotAdmins,
+  reply
+}) => {
   try {
-    if (!isGroup) return
-    if (!ms?.message?.groupStatusMentionMessage) return
-    if (isAdmins || ms.key.fromMe) return
+    // Initialize warnings if not already
+    if (!global.warnings) global.warnings = {};
 
-    const mode = antiMentionSettings.get(m.chat)
-    if (!mode) return
+    // Only work in groups, if sender is not admin, and bot is admin
+    if (!isGroup || isAdmins || !isBotAdmins) return;
 
-    const senderId = sender || ms.key.participant
-    const keyMsg = ms.key
+    // Check if the message contains mass mentions (status tagging)
+    const contextInfo = m.message?.extendedTextMessage?.contextInfo || m.message?.conversationContextInfo || {};
+    const mentioned = contextInfo?.mentionedJid || [];
 
-    if (mode === "remove") {
-      await conn.groupParticipantsUpdate(m.chat, [senderId], "remove")
-      await conn.sendMessage(m.chat, { delete: keyMsg })
-      await conn.sendMessage(m.chat, {
-        text: `⛔ @${senderId.split("@")[0]} has been removed for status mention.`,
-        mentions: [senderId]
-      })
-    }
+    // Detect status tag spam (e.g., tagging many members)
+    const isStatusMention = mentioned.length > 5 || (body.includes("@") && mentioned.length > 0);
 
-    else if (mode === "warn") {
-      await conn.sendMessage(m.chat, { delete: keyMsg })
-      await conn.sendMessage(m.chat, {
-        text: `⚠️ @${senderId.split("@")[0]}, please avoid mentioning group status.`,
-        mentions: [senderId]
-      })
-    }
+    if (isStatusMention && config.ANTI_MENTION_STATUS === "true") {
+      console.log(`[⚠️] sᴛᴀᴛᴜs ᴍᴇɴᴛɪᴏɴ ᴅᴇᴛᴇᴄᴛᴇᴅ ғʀᴏᴍ ${sender}`);
 
-    else if (mode === "counter") {
-      const key = `${m.chat}:${senderId}`
-      const current = (warnCounters.get(key) || 0) + 1
-      warnCounters.set(key, current)
-      const max = 3
+      // Attempt to delete the message
+      try {
+        await conn.sendMessage(from, { delete: m.key });
+        console.log(`Message deleted: ${m.key.id}`);
+      } catch (err) {
+        console.error("Failed to delete message:", err);
+      }
 
-      if (current >= max) {
-        await conn.sendMessage(m.chat, {
-          text: `⛔ @${senderId.split("@")[0]} removed after ${max} warnings.`,
-          mentions: [senderId]
-        })
-        await conn.groupParticipantsUpdate(m.chat, [senderId], "remove")
-        await conn.sendMessage(m.chat, { delete: keyMsg })
-        warnCounters.delete(key)
+      // Add warning to sender
+      global.warnings[sender] = (global.warnings[sender] || 0) + 1;
+      const warns = global.warnings[sender];
+
+      if (warns < 4) {
+        // Send warning message
+        await conn.sendMessage(from, {
+          text: `*🚫 sᴛᴀᴛᴜs ᴛᴀɢɢɪɴɢ ɪs ɴᴏᴛ ᴀʟʟᴏᴡᴇᴅ!*\n` +
+                `*╭── ⚠️ ᴡᴀʀɴɪɴɢ ⚠️ ──╮*\n` +
+                `*├▢ ᴜsᴇʀ:* @${sender.split('@')[0]}\n` +
+                `*├▢ ᴡᴀʀɴ COUNT:* ${warns}\n` +
+                `*├▢ ʀᴇᴀsᴏɴ:* ᴍᴀss ᴍᴇɴᴛɪᴏɴ (sᴛᴀᴛᴜs ᴛᴀɢ)\n` +
+                `*├▢ ʟɪᴍɪᴛ:* 4\n` +
+                `*╰────────────────────*`,
+          mentions: [sender]
+        });
       } else {
-        await conn.sendMessage(m.chat, {
-          text: `⚠️ @${senderId.split("@")[0]} warning ${current}/${max}`,
-          mentions: [senderId]
-        })
-        await conn.sendMessage(m.chat, { delete: keyMsg })
+        // Kick the user after 3 warnings
+        await conn.sendMessage(from, {
+          text: `@${sender.split('@')[0]} *ʜᴀs ʙᴇᴇɴ ʀᴇᴍᴏᴠᴇᴅ ғᴏʀ ᴇxᴄᴇssɪᴠᴇ sᴛᴀᴛᴜs ᴛᴀɢɢɪɴɢ!*`,
+          mentions: [sender]
+        });
+        await conn.groupParticipantsUpdate(from, [sender], "remove");
+        delete global.warnings[sender]; // Reset warnings
       }
     }
+
   } catch (err) {
-    console.error("AntiGPMention error:", err)
+    console.error("Anti-status-mention error:", err);
+    reply("❌ An error occurred in the anti-mention-status system.");
   }
-})
+});
