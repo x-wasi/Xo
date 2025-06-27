@@ -23,8 +23,8 @@ cmd(
         if (!mek.quoted) return reply(`❌ ᴘʟᴇᴀsᴇ ʀᴇᴘʟʏ ᴛᴏ ᴀɴ ɪᴍᴀɢᴇ ᴏʀ sᴛɪᴄᴋᴇʀ.`);
 
         let mime = mek.quoted.mtype;
-        let userName = m.pushName || "User";
-        let packName = `ᴘᴀᴄᴋ ʙʏ ${userName}`;
+        let userName = `𝐌𝐄𝐆𝐀𝐋𝐎𝐃𝐎𝐍-𝐌𝐃`;
+        let packName = `${userName}`;
 
         if (
             mime === "imageMessage" || 
