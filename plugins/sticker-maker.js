@@ -9,36 +9,45 @@ const Config = require('../config');
 
 // Take Sticker 
 
+
 cmd(
     {
         pattern: 'take',
         alias: ['rename', 'stake'],
-        desc: 'Create a sticker with a custom pack name.',
+        desc: 'Create a sticker using your name as the pack name (supports animated).',
         category: 'sticker',
-        use: '<reply media or URL>',
+        use: '<reply to image or sticker>',
         filename: __filename,
     },
-    async (conn, mek, m, { quoted, args, q, reply, from }) => {
-        if (!mek.quoted) return reply(`*Reply to any sticker.*`);
-        if (!q) return reply(`*Please provide a pack name using .take <packname>*`);
+    async (conn, mek, m, { quoted, reply }) => {
+        if (!mek.quoted) return reply(`❌ ᴘʟᴇᴀsᴇ ʀᴇᴘʟʏ ᴛᴏ ᴀɴ ɪᴍᴀɢᴇ ᴏʀ sᴛɪᴄᴋᴇʀ.`);
 
         let mime = mek.quoted.mtype;
-        let pack = q;
+        let userName = m.pushName || "User";
+        let packName = `ᴘᴀᴄᴋ ʙʏ ${userName}`;
 
-        if (mime === "imageMessage" || mime === "stickerMessage") {
+        if (
+            mime === "imageMessage" || 
+            mime === "stickerMessage" || 
+            mime === "videoMessage" // for animated stickers/gifs
+        ) {
             let media = await mek.quoted.download();
+            let isAnimated = mek.quoted.isAnimated || mime === "videoMessage";
+
             let sticker = new Sticker(media, {
-                pack: pack, 
-                type: StickerTypes.FULL,
-                categories: ["🤩", "🎉"],
-                id: "12345",
+                pack: packName,
+                author: userName,
+                type: isAnimated ? StickerTypes.CROPPED : StickerTypes.FULL,
+                categories: ["🔥", "✨"],
                 quality: 75,
-                background: 'transparent',
+                id: "animated-sticker",
+                background: "transparent",
             });
+
             const buffer = await sticker.toBuffer();
             return conn.sendMessage(mek.chat, { sticker: buffer }, { quoted: mek });
         } else {
-            return reply("*Uhh, Please reply to an image.*");
+            return reply(`❌ ᴏɴʟʏ ɪᴍᴀɢᴇs, ᴠɪᴅᴇᴏs, ᴏʀ sᴛɪᴄᴋᴇʀs ᴀʀᴇ sᴜᴘᴘᴏʀᴛᴇᴅ.`);
         }
     }
 );
