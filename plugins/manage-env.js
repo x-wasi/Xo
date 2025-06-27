@@ -20,53 +20,8 @@ const { exec } = require('child_process');
 
 
 
-// SET PREFIX
-cmd({
-  pattern: "setprefix",
-  desc: "Set the bot's command prefix",
-  category: "owner",
-  react: "✅",
-  filename: __filename
-}, async (conn, mek, m, { args, isCreator, reply }) => {
-  if (!isCreator) return reply("❗ ᴏɴʟʏ ᴛʜᴇ ʙᴏᴛ ᴏᴡɴᴇʀ ᴄᴀɴ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ.");
-  const newPrefix = args[0]?.trim();
-  if (!newPrefix || newPrefix.length > 2) return reply("❌ ᴘʀᴏᴠɪᴅᴇ ᴀ ᴠᴀʟɪᴅ ᴘʀᴇғɪx (1–2 ᴄʜᴀʀᴀᴄᴛᴇʀs).");
-
-  await setConfig("PREFIX", newPrefix);
-
-  await reply(`✅ ᴘʀᴇғɪx ᴜᴘᴅᴀᴛᴇᴅ ᴛᴏ: *${newPrefix}*\n\n♻️ ʀᴇsᴛᴀʀᴛɪɴɢ...`);
-  setTimeout(() => exec("pm2 restart all"), 2000);
-});
 
 
-
-
-cmd({
-  pattern: "antistatus",
-  alias: ["antistatusmention", "ams"],
-  desc: "Enable or disable anti mention in group status",
-  category: "group",
-  react: "⚠️",
-  filename: __filename
-}, async (conn, mek, m, { isGroup, isAdmins, isBotAdmins, args, reply }) => {
-  try {
-    if (!isGroup) return reply('ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ ᴄᴀɴ ᴏɴʟʏ ʙᴇ ᴜsᴇᴅ in ᴀ ɢʀᴏᴜᴘ.');
-    if (!isBotAdmins) return reply('ʙᴏᴛ ᴍᴜsᴛ ʙᴇ ᴀᴅᴍɪɴ ᴛᴏ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ.');
-    if (!isAdmins) return reply('ʏᴏᴜ ᴍᴜsᴛ ʙᴇ ᴀɴ ᴀᴅᴍɪɴ ᴛᴏ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ.');
-
-    if (args[0] === "on") {
-      config.ANTI_MENTION_STATUS = "true";
-      reply("✅ Anti ᴍᴇɴᴛɪᴏɴ sᴛᴀᴛᴜs ʜᴀs ʙᴇᴇɴ *ᴇɴᴀʙʟᴇᴅ*.");
-    } else if (args[0] === "off") {
-      config.ANTI_MENTION_STATUS = "false";
-      reply("❌ ᴀɴᴛɪ ᴍᴇɴᴛɪᴏɴ sᴛᴀᴛᴜs ʜᴀs ʙᴇᴇɴ *ᴅɪsᴀʙʟᴇᴅ*.");
-    } else {
-      reply("Usage: *.ᴀɴᴛɪsᴛᴀᴛᴜs ᴏɴ/ᴏғғ*");
-    }
-  } catch (e) {
-    reply(`❌ Error: ${e.message}`);
-  }
-});
 
 
 cmd({
