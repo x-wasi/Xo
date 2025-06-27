@@ -11,19 +11,16 @@ const { getBuffer, getGroupAdmins, getRandom, h2k, isUrl, Json, sleep, fetchJson
 const { writeFileSync } = require('fs');
 const path = require('path');
 const { setConfig, getConfig } = require("../lib/dybydb");
-const axios = require('axios');
+const os = require('os');
 const FormData = require('form-data');
+const axios = require('axios');
 const { exec } = require('child_process');
-
-let antilinkAction = "off"; // Default state
-let warnCount = {}; // Track warnings per user
-
 
 
 
 cmd({
   pattern: "setbotimage",
-  desc: "Set the bot's image URL",
+  desc: "Set the bot's image (from URL or image reply)",
   category: "owner",
   react: "✅",
   filename: __filename
@@ -33,6 +30,7 @@ cmd({
 
     let imageUrl = args[0];
 
+    // Si aucun URL, essaie de prendre une image reply
     if (!imageUrl && m.quoted) {
       const quotedMsg = m.quoted;
       const mimeType = (quotedMsg.msg || quotedMsg).mimetype || '';
@@ -43,27 +41,27 @@ cmd({
       const tempFilePath = path.join(os.tmpdir(), `botimg_${Date.now()}${extension}`);
       fs.writeFileSync(tempFilePath, mediaBuffer);
 
+      // Upload via uguu.se
       const form = new FormData();
-      form.append("reqtype", "fileupload");
-      form.append("fileToUpload", fs.createReadStream(tempFilePath), `botimage${extension}`);
+      form.append("files[]", fs.createReadStream(tempFilePath));
 
       let response;
       try {
-        response = await axios.post("https://catbox.moe/user/api.php", form, {
+        response = await axios.post("https://uguu.se/upload.php", form, {
           headers: form.getHeaders()
         });
-      } catch (uploadError) {
-        console.error(uploadError);
-        return reply("❌ Failed to upload image to Catbox. Try again later.");
+      } catch (uploadErr) {
+        console.error('Upload error:', uploadErr);
+        return reply("❌ Failed to upload image to Uguu. Try again later.");
       } finally {
-        fs.unlinkSync(tempFilePath); // Clean temp file
+        fs.unlinkSync(tempFilePath); // Clean temp
       }
 
-      if (typeof response.data !== 'string' || !response.data.startsWith('https://')) {
-        return reply(`❌ Catbox upload failed:\n\n${response.data}`);
+      if (!response.data || !response.data.files || !response.data.files[0]?.url) {
+        return reply(`❌ Upload failed: ${JSON.stringify(response.data)}`);
       }
 
-      imageUrl = response.data;
+      imageUrl = response.data.files[0].url;
     }
 
     if (!imageUrl || !imageUrl.startsWith("http")) {
@@ -71,12 +69,11 @@ cmd({
     }
 
     await setConfig("MENU_IMAGE_URL", imageUrl);
-    await reply(`✅ Bot image updated.\n\n*New URL:* ${imageUrl}\n\n♻️ Restarting...`);
+    await reply(`✅ Bot image updated successfully.\n\n*New Image URL:*\n${imageUrl}\n\n♻️ Restarting...`);
     setTimeout(() => exec("pm2 restart all"), 2000);
-
   } catch (err) {
     console.error(err);
-    reply(`❌ Unexpected Error: ${err.message || err}`);
+    reply(`❌ Unexpected error: ${err.message || err}`);
   }
 });
 
