@@ -96,7 +96,7 @@ async (dyby, mek, m, { from, args, reply }) => {
 
     if (requestedCategory && categories[requestedCategory]) {
       const emoji = emojiByCategory[requestedCategory] || '📁';
-      dybymenu += `\n\n┌── 『 ${emoji} *${toUpperStylized(requestedCategory)} ᴍᴇɴᴜ* 』`;
+      dybymenu += `\n\n┌── 『 *`${toUpperStylized(requestedCategory)} ᴍᴇɴᴜ`* ${emoji} 』`;
 
       const cmds = categories[requestedCategory].filter(c => c.pattern).sort((a, b) => a.pattern.localeCompare(b.pattern));
       for (let c of cmds) {
