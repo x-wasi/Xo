@@ -20,6 +20,23 @@ const { exec } = require('child_process');
 
 
 
+// SET PREFIX
+cmd({
+  pattern: "setprefix",
+  desc: "Set the bot's command prefix",
+  category: "owner",
+  react: "✅",
+  filename: __filename
+}, async (conn, mek, m, { args, isCreator, reply }) => {
+  if (!isCreator) return reply("❗ ᴏɴʟʏ ᴛʜᴇ ʙᴏᴛ ᴏᴡɴᴇʀ ᴄᴀɴ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ.");
+  const newPrefix = args[0]?.trim();
+  if (!newPrefix || newPrefix.length > 2) return reply("❌ ᴘʀᴏᴠɪᴅᴇ ᴀ ᴠᴀʟɪᴅ ᴘʀᴇғɪx (1–2 ᴄʜᴀʀᴀᴄᴛᴇʀs).");
+
+  await setConfig("PREFIX", newPrefix);
+
+  await reply(`✅ ᴘʀᴇғɪx ᴜᴘᴅᴀᴛᴇᴅ ᴛᴏ: *${newPrefix}*\n\n♻️ ʀᴇsᴛᴀʀᴛɪɴɢ...`);
+  setTimeout(() => exec("pm2 restart all"), 2000);
+});
 
 
 
