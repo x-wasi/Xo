@@ -23,8 +23,7 @@ cmd(
         if (!mek.quoted) return reply(`❌ ᴘʟᴇᴀsᴇ ʀᴇᴘʟʏ ᴛᴏ ᴀɴ ɪᴍᴀɢᴇ ᴏʀ sᴛɪᴄᴋᴇʀ.`);
 
         let mime = mek.quoted.mtype;
-        let userName = `𝐌𝐄𝐆𝐀𝐋𝐎𝐃𝐎𝐍-𝐌𝐃`;
-        let packName = `${userName}`;
+        let packName = `${packName}`;
 
         if (
             mime === "imageMessage" || 
@@ -36,7 +35,6 @@ cmd(
 
             let sticker = new Sticker(media, {
                 pack: packName,
-                author: userName,
                 type: isAnimated ? StickerTypes.CROPPED : StickerTypes.FULL,
                 categories: ["🔥", "✨"],
                 quality: 75,
