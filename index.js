@@ -110,8 +110,8 @@ const port = process.env.PORT || 9090;
   require("./plugins/" + plugin);
   }
   });
-  console.log('PLUGINS INSTALLED SUCCESSFUL ✅')
-  console.log('BOT CONNECTED TO WHATSAPP ✅')
+  console.log('Plugins installed✅')
+  console.log('Bot connected✅')
   console.log('GO ON INBOX 💫') 
   
   let up = `> 𝐁𝐎𝐓 𝐂𝐎𝐍𝐍𝐄𝐂𝐓𝐄𝐃 
@@ -129,7 +129,7 @@ const port = process.env.PORT || 9090;
   }
   })
   conn.ev.on('creds.update', saveCreds)
-
+  console.log('Bot connected')
   //==============================
 
   conn.ev.on('messages.update', async updates => {
