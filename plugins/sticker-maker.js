@@ -11,45 +11,46 @@ const Config = require('../config');
 
 
 cmd(
-    {
-        pattern: 'take',
-        alias: ['rename', 'stake'],
-        desc: 'Create a sticker using your name as the pack name (supports animated).',
-        category: 'sticker',
-        use: '<reply to image or sticker>',
-        filename: __filename,
-    },
-    async (conn, mek, m, { quoted, reply }) => {
-        if (!mek.quoted) return reply(`❌ ᴘʟᴇᴀsᴇ ʀᴇᴘʟʏ ᴛᴏ ᴀɴ ɪᴍᴀɢᴇ ᴏʀ sᴛɪᴄᴋᴇʀ.`);
+  {
+    pattern: 'take',
+    alias: ['rename', 'stake'],
+    desc: 'Create a sticker using user\'s name as pack name (supports animated).',
+    category: 'sticker',
+    use: '<reply to image or sticker>',
+    filename: __filename,
+  },
+  async (conn, mek, m, { quoted, reply }) => {
+    if (!quoted) return reply('❌ Please reply to an image, video or sticker.');
 
-        let mime = mek.quoted.mtype;
-        let packName = `${packName}`;
+    let mime = quoted.mtype;
+    let media = await quoted.download();
+    if (!media) return reply('❌ Failed to download media.');
 
-        if (
-            mime === "imageMessage" || 
-            mime === "stickerMessage" || 
-            mime === "videoMessage" // for animated stickers/gifs
-        ) {
-            let media = await mek.quoted.download();
-            let isAnimated = mek.quoted.isAnimated || mime === "videoMessage";
+    const senderName = m.pushName || 'Sticker Pack';
+    const isAnimated =
+      quoted.isAnimated ||
+      mime === 'videoMessage' ||
+      (mime === 'stickerMessage' && quoted.msg?.isAnimated);
 
-            let sticker = new Sticker(media, {
-                pack: packName,
-                type: isAnimated ? StickerTypes.CROPPED : StickerTypes.FULL,
-                categories: ["🔥", "✨"],
-                quality: 75,
-                id: "animated-sticker",
-                background: "transparent",
-            });
+    try {
+      const sticker = new Sticker(media, {
+        pack: senderName,
+        author: 'ᴍᴇɢᴀʟᴏᴅᴏɴ-ᴍᴅ',
+        type: isAnimated ? StickerTypes.CROPPED : StickerTypes.FULL,
+        categories: ['🔥', '✨'],
+        id: 'custom-sticker',
+        quality: 75,
+        background: 'transparent',
+      });
 
-            const buffer = await sticker.toBuffer();
-            return conn.sendMessage(mek.chat, { sticker: buffer }, { quoted: mek });
-        } else {
-            return reply(`❌ ᴏɴʟʏ ɪᴍᴀɢᴇs, ᴠɪᴅᴇᴏs, ᴏʀ sᴛɪᴄᴋᴇʀs ᴀʀᴇ sᴜᴘᴘᴏʀᴛᴇᴅ.`);
-        }
+      const buffer = await sticker.toBuffer();
+      await conn.sendMessage(m.chat, { sticker: buffer }, { quoted: mek });
+    } catch (e) {
+      console.error(e);
+      reply('❌ Error while creating sticker.');
     }
+  }
 );
-
 //Sticker create 
 
 cmd(
