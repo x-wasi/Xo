@@ -96,30 +96,23 @@ const port = process.env.PORT || 9090;
           version
           })
       
-  conn.ev.on('connection.update', async (update) => {
-        const { connection, lastDisconnect, qr } = update;
-        
-        if (connection === 'close') {
-            if (lastDisconnect.error?.output?.statusCode !== DisconnectReason.loggedOut) {
-                console.log('Connection lost, reconnecting...');
-                setTimeout(connectToWA, 5000);
-            } else {
-                console.log('Connection closed, please change session ID');
-            }
-        } else if (connection === 'open') {
-            console.log('MEGALODON MD connected to WhatsApp ✅');
-            
-            
-            // Load plugins
-            const pluginPath = path.join(__dirname, 'plugins');
-            fs.readdirSync(pluginPath).forEach((plugin) => {
-                if (path.extname(plugin).toLowerCase() === ".js") {
-                    require(path.join(pluginPath, plugin));
-                }
-            });
-            console.log('Plugins installed successfully ✅');
-            console.log('Bot connected✅')
-            console.log('GO ON INBOX 💫') 
+  conn.ev.on('connection.update', (update) => {
+  const { connection, lastDisconnect } = update
+  if (connection === 'close') {
+  if (lastDisconnect.error.output.statusCode !== DisconnectReason.loggedOut) {
+  connectToWA()
+  }
+  } else if (connection === 'open') {
+  console.log('🧬 Installing Plugins')
+  const path = require('path');
+  fs.readdirSync("./plugins/").forEach((plugin) => {
+  if (path.extname(plugin).toLowerCase() == ".js") {
+  require("./plugins/" + plugin);
+  }
+  });
+  console.log('PLUGINS INSTALLED SUCCESSFUL ✅')
+  console.log('BOT CONNECTED TO WHATSAPP ✅')
+  console.log('GO ON INBOX 💫') 
   
   let up = `> 𝐁𝐎𝐓 𝐂𝐎𝐍𝐍𝐄𝐂𝐓𝐄𝐃 
 > *╭┈───────────────•*
