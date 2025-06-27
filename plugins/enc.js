@@ -11,15 +11,14 @@ cmd({
 }, async (dyby, m, text, { Owner }) => {
   if (!Owner) return m.reply('❌ ᴏɴʟʏ ᴏᴡɴᴇʀ ᴄᴀɴ ᴜꜱᴇ ᴛʜɪꜱ ᴄᴏᴍᴍᴀɴᴅ.');
 
-  const quoted = m.quoted || m.message?.extendedTextMessage?.contextInfo?.quotedMessage;
-  const fileInfo = quoted?.documentMessage;
+  const isQuotedDoc = m.quoted?.mimetype === 'application/javascript';
+  const fileName = m.quoted?.msg?.fileName || "encrypted.js";
 
-  if (!fileInfo || !fileInfo.fileName.endsWith('.js')) {
+  if (!isQuotedDoc || !fileName.endsWith('.js')) {
     return m.reply('❌ ᴘʟᴇᴀꜱᴇ ʀᴇᴘʟʏ ᴛᴏ ᴀ .ᴊꜱ ꜰɪʟᴇ ᴛᴏ ᴇɴᴄʀʏᴘᴛ.');
   }
 
   try {
-    const fileName = fileInfo.fileName;
     const docBuffer = await m.quoted.download();
     if (!docBuffer) return m.reply('❌ ᴄᴀɴ’ᴛ ᴅᴏᴡɴʟᴏᴀᴅ ꜰɪʟᴇ.');
 
