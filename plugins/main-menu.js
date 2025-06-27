@@ -26,6 +26,7 @@ async (dyby, mek, m, { from, reply }) => {
     const sender = (m && m.sender) ? m.sender : (mek?.key?.participant || mek?.key?.remoteJid || 'unknown@s.whatsapp.net');
     const totalCommands = commands.length;
     const date = moment().tz("America/Port-au-Prince").format("dddd, DD MMMM YYYY");
+    const time = moment().tz("America/Port-au-Prince").format("HH:mm:ss");
 
     const uptime = () => {
       let sec = process.uptime();
@@ -37,13 +38,15 @@ async (dyby, mek, m, { from, reply }) => {
 
     let dybymenu = `
 *╭══〘 𝐌𝐄𝐆𝐀𝐋𝐎𝐃𝐎𝐍-𝐌𝐃 〙*
-*┃◆* *ᴜsᴇʀ* : @${sender.split("@")[0]}
-*┃◆* *ʀᴜɴᴛɪᴍᴇ* : ${uptime()}
-*┃◆* *ᴍᴏᴅᴇ* : *${config.MODE}*
-*┃◆* *ᴘʀᴇғɪx* : [${config.PREFIX}]
-*┃◆* *ᴩʟᴜɢɪɴ* :  ${totalCommands}
-*┃◆* *ᴅᴇᴠ* : *ᴅʏʙʏ ᴛᴇᴄʜ*
-*┃◆* *ᴠᴇʀsɪᴏɴ* : *1.0.0*
+*┃◆* ᴜꜱᴇʀ : @${sender.split("@")[0]}
+*┃◆* ᴅᴀᴛᴇ : ${date}
+*┃◆* ᴛɪᴍᴇ : ${time}
+*┃◆* ʀᴜɴᴛɪᴍᴇ : ${uptime()}
+*┃◆* ᴍᴏᴅᴇ : *${config.MODE}*
+*┃◆* ᴘʀᴇғɪx : [${config.PREFIX}]
+*┃◆* ᴘʟᴜɢɪɴꜱ : ${totalCommands}
+*┃◆* ᴅᴇᴠ : ᴅʏʙʏ ᴛᴇᴄʜ
+*┃◆* ᴠᴇʀꜱɪᴏɴ : 1.0.0
 *╰════════════════⊷*`;
 
     // Organise commands by category
@@ -57,7 +60,7 @@ async (dyby, mek, m, { from, reply }) => {
     // Build command list
     const keys = Object.keys(category).sort();
     for (let k of keys) {
-      dybymenu += `\n\n┌── 『 *${k.toUpperCase()} MENU* 』`;
+      dybymenu += `\n\n┌── 『 *${k.toUpperCase()} ᴍᴇɴᴜ* 』`;
       const cmds = category[k].filter(c => c.pattern).sort((a, b) => a.pattern.localeCompare(b.pattern));
       cmds.forEach((cmd) => {
         const usage = cmd.pattern.split('|')[0];
@@ -66,9 +69,9 @@ async (dyby, mek, m, { from, reply }) => {
       dybymenu += `\n┗━━━━━━━━━━━━━━❃`;
     }
 
-    // Envoi du menu avec image (ou texte si image échoue)
+    // Envoi du menu avec image
     await dyby.sendMessage(from, {
-      image: { url: config.MENU_IMAGE_URL || 'https://files.catbox.moe/2ozipw.jpg' },
+      image: { url: 'https://files.catbox.moe/2ozipw.jpg' },
       caption: dybymenu,
       contextInfo: {
         mentionedJid: [sender],
