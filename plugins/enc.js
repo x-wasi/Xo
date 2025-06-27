@@ -11,22 +11,22 @@ cmd({
 }, async (dyby, m, text, { Owner }) => {
   if (!Owner) return m.reply('❌ ᴏɴʟʏ ᴏᴡɴᴇʀ ᴄᴀɴ ᴜꜱᴇ ᴛʜɪꜱ ᴄᴏᴍᴍᴀɴᴅ.');
 
-  const isQuotedDoc = m.quoted?.mimetype === 'application/javascript';
-  const fileName = m.quoted?.msg?.fileName || "encrypted.js";
+  const isQuotedJs = m.quoted?.mimetype === 'application/javascript';
+  const originalName = m.quoted?.msg?.fileName || "unknown.js";
 
-  if (!isQuotedDoc || !fileName.endsWith('.js')) {
+  if (!isQuotedJs || !originalName.endsWith('.js')) {
     return m.reply('❌ ᴘʟᴇᴀꜱᴇ ʀᴇᴘʟʏ ᴛᴏ ᴀ .ᴊꜱ ꜰɪʟᴇ ᴛᴏ ᴇɴᴄʀʏᴘᴛ.');
   }
 
   try {
-    const docBuffer = await m.quoted.download();
-    if (!docBuffer) return m.reply('❌ ᴄᴀɴ’ᴛ ᴅᴏᴡɴʟᴏᴀᴅ ꜰɪʟᴇ.');
+    const buffer = await m.quoted.download();
+    if (!buffer) return m.reply('❌ ꜰᴀɪʟᴇᴅ ᴛᴏ ᴅᴏᴡɴʟᴏᴀᴅ ꜰɪʟᴇ.');
 
     await dyby.sendMessage(m.chat, {
       react: { text: '🔐', key: m.key }
     });
 
-    const obfuscatedCode = await JsConfuser.obfuscate(docBuffer.toString(), {
+    const encryptedCode = await JsConfuser.obfuscate(buffer.toString(), {
       target: "node",
       preset: "high",
       compact: true,
@@ -34,10 +34,10 @@ cmd({
       flatten: true,
       identifierGenerator: () => {
         const base = "素DYBY晴TECH晴";
-        const randomString = (len) => Array(len).fill('').map(() =>
+        const rand = (l) => Array(l).fill('').map(() =>
           "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".charAt(Math.floor(Math.random() * 52))
         ).join('');
-        return base.replace(/[^a-zA-Z]/g, "") + randomString(2);
+        return base.replace(/[^a-zA-Z]/g, "") + rand(2);
       },
       renameVariables: true,
       renameGlobals: true,
@@ -60,15 +60,17 @@ cmd({
       globalConcealing: true
     });
 
+    const encryptedName = originalName.replace(/\.js$/i, '.enc.js');
+
     await dyby.sendMessage(m.chat, {
-      document: Buffer.from(obfuscatedCode, 'utf-8'),
+      document: Buffer.from(encryptedCode, 'utf-8'),
       mimetype: 'application/javascript',
-      fileName,
-      caption: `✅ *sᴜᴄᴄᴇꜱꜱғᴜʟʟʏ ᴇɴᴄʀʏᴘᴛᴇᴅ*\n• ᴛʏᴘᴇ: ʜᴀʀᴅ ᴄᴏᴅᴇ\n• ᴄʀᴇᴀᴛᴇᴅ ʙʏ: @ᴅʏʙʏ ᴛᴇᴄʜ`,
+      fileName: encryptedName,
+      caption: `✅ *ғɪʟᴇ ᴇɴᴄʀʏᴘᴛᴇᴅ*\n• ɴᴇᴡ ɴᴀᴍᴇ: *${encryptedName}*\n• ᴛʏᴘᴇ: ʜᴀʀᴅ ᴏʙꜰᴜꜱᴄᴀᴛɪᴏɴ\n• ʙʏ: @ᴅʏʙʏ ᴛᴇᴄʜ`,
     }, { quoted: m });
 
-  } catch (error) {
-    console.error('Encryption Error:', error);
-    await m.reply(`❌ *ᴇʀʀᴏʀ:* ${error.message}`);
+  } catch (err) {
+    console.error('Encryption Error:', err);
+    return m.reply(`❌ *ᴇʀʀᴏʀ:* ${err.message}`);
   }
 });
