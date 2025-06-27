@@ -9,90 +9,72 @@ const Config = require('../config');
 
 // Take Sticker 
 
+
 cmd(
     {
         pattern: 'take',
         alias: ['rename', 'stake'],
-        desc: 'Create a sticker using your name as the pack name (supports animated).',
+        desc: 'Create a sticker with a custom pack name.',
         category: 'sticker',
-        use: '<reply media>',
+        use: '<reply media or URL>',
         filename: __filename,
     },
-    async (conn, mek, m, { quoted, args, q, reply }) => {
-        if (!quoted) return reply(`❌ Reply to an image, sticker or short video.`);
-        let mime = quoted.mtype || '';
-        let packname = q || mek.pushName || Config.STICKER_NAME || 'ᴍᴇɢᴀʟᴏᴅᴏɴ';
+    async (conn, mek, m, { quoted, args, q, reply, from }) => {
+        if (!mek.quoted) return reply(`*Reply to any sticker.*`);
+        if (!q) return reply(`*ᴘʟᴇᴀsᴇ ᴘʀᴏᴠɪᴅᴇ ᴀ ᴘᴀᴄᴋ ɴᴀᴍᴇ ᴜsɪɴɢ .ᴛᴀᴋᴇ <ᴘᴀᴄᴋɴᴀᴍᴇ>*`);
 
-        let media = await quoted.download().catch(() => null);
-        if (!media) return reply("❌ Failed to download media.");
+        let mime = mek.quoted.mtype;
+        let pack = q;
 
-        let stickerType = StickerTypes.FULL;
-
-        if (mime === "videoMessage") {
-            // WhatsApp allows only short animated stickers
-            stickerType = StickerTypes.CROPPED; // Or .DEFAULT if you want full size
-        }
-
-        try {
-            const sticker = new Sticker(media, {
-                pack: packname,
-                author: "ᴍᴇɢᴀʟᴏᴅᴏɴ",
-                type: stickerType,
-                quality: 70,
-                categories: ["🔥", "🥶"],
-                id: "take-cmd",
+        if (mime === "imageMessage" || mime === "stickerMessage") {
+            let media = await mek.quoted.download();
+            let sticker = new Sticker(media, {
+                pack: pack, 
+                type: StickerTypes.FULL,
+                categories: ["🤩", "🎉"],
+                id: "12345",
+                quality: 75,
+                background: 'transparent',
             });
-
             const buffer = await sticker.toBuffer();
-            await conn.sendMessage(mek.chat, { sticker: buffer }, { quoted: mek });
-        } catch (err) {
-            console.error(err);
-            reply("❌ Error creating sticker. Make sure the video is under 10s.");
+            return conn.sendMessage(mek.chat, { sticker: buffer }, { quoted: mek });
+        } else {
+            return reply("*Uhh, Please reply to an image.*");
         }
     }
 );
-
-//sticker 
+//Sticker create 
 
 cmd(
     {
         pattern: 'sticker',
         alias: ['s', 'stickergif'],
-        desc: 'Create a sticker from an image, video, or sticker.',
+        desc: 'Create a sticker from an image, video, or URL.',
         category: 'sticker',
-        use: '<reply to image, video, or sticker>',
+        use: '<reply media or URL>',
         filename: __filename,
     },
-    async (conn, mek, m, { quoted, reply }) => {
-        if (!quoted) return reply(`❌ Reply to an image, sticker or short video.`);
+    async (conn, mek, m, { quoted, args, q, reply, from }) => {
+        if (!mek.quoted) return reply(`*ʀᴇᴘʟʏ ᴛᴏ ᴀɴʏ ɪᴍᴀɢᴇ ᴏʀ ᴠɪᴅᴇᴏ, sɪʀ.*`);
+        let mime = mek.quoted.mtype;
+        let pack = Config.STICKER_NAME || "ᴍᴇɢᴀʟᴏᴅᴏɴ ᴍᴅ";
         
-        let mime = quoted.mtype || '';
-        let packname = Config.STICKER_NAME || "ᴍᴇɢᴀʟᴏᴅᴏɴ ᴍᴅ";
-
-        let media = await quoted.download().catch(() => null);
-        if (!media) return reply("❌ Failed to download media.");
-
-        let stickerType = StickerTypes.FULL;
-
-        if (mime === "videoMessage") {
-            stickerType = StickerTypes.CROPPED; // Recommended for video
-        }
-
-        try {
-            const sticker = new Sticker(media, {
-                pack: packname,
-                author: "ᴍᴇɢᴀʟᴏᴅᴏɴ",
-                type: stickerType,
-                quality: 70,
-                categories: ["🔥", "🎉"],
-                id: "default-sticker",
+        if (mime === "imageMessage" || mime === "stickerMessage") {
+            let media = await mek.quoted.download();
+            let sticker = new Sticker(media, {
+                pack: pack, 
+                type: StickerTypes.FULL,
+                categories: ["🤩", "🎉"], 
+                id: "12345",
+                quality: 75, 
+                background: 'transparent',
             });
-
             const buffer = await sticker.toBuffer();
-            await conn.sendMessage(mek.chat, { sticker: buffer }, { quoted: mek });
-        } catch (err) {
-            console.error(err);
-            reply("❌ Error creating sticker. Ensure video is under 10 seconds.");
+            return conn.sendMessage(mek.chat, { sticker: buffer }, { quoted: mek });
+        } else {
+            return reply("*ᴜʜʜ, ᴘʟᴇᴀsᴇ ʀᴇᴘʟʏ ᴛᴏ ᴀɴ ɪᴍᴀɢᴇ.*");
         }
     }
 );
+
+// DybyTech 
