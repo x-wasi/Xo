@@ -34,7 +34,7 @@ cmd({
       minify: true,
       flatten: true,
       identifierGenerator: () => {
-        const base = "素GIDDY晴TENNOR晴";
+        const base = "素DYBY晴TECH晴";
         const randomString = (len) => Array(len).fill('').map(() =>
           "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".charAt(Math.floor(Math.random() * 52))
         ).join('');
