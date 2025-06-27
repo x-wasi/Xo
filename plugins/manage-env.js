@@ -18,64 +18,7 @@ const { exec } = require('child_process');
 
 
 
-cmd({
-  pattern: "setbotimage",
-  desc: "Set the bot's image (from URL or image reply)",
-  category: "owner",
-  react: "✅",
-  filename: __filename
-}, async (conn, mek, m, { args, isCreator, reply }) => {
-  try {
-    if (!isCreator) return reply("❗ Only the bot owner can use this command.");
 
-    let imageUrl = args[0];
-
-    // Si aucun URL, essaie de prendre une image reply
-    if (!imageUrl && m.quoted) {
-      const quotedMsg = m.quoted;
-      const mimeType = (quotedMsg.msg || quotedMsg).mimetype || '';
-      if (!mimeType.startsWith("image")) return reply("❌ Please reply to an image.");
-
-      const mediaBuffer = await quotedMsg.download();
-      const extension = mimeType.includes("jpeg") ? ".jpg" : ".png";
-      const tempFilePath = path.join(os.tmpdir(), `botimg_${Date.now()}${extension}`);
-      fs.writeFileSync(tempFilePath, mediaBuffer);
-
-      // Upload via uguu.se
-      const form = new FormData();
-      form.append("files[]", fs.createReadStream(tempFilePath));
-
-      let response;
-      try {
-        response = await axios.post("https://uguu.se/upload.php", form, {
-          headers: form.getHeaders()
-        });
-      } catch (uploadErr) {
-        console.error('Upload error:', uploadErr);
-        return reply("❌ Failed to upload image to Uguu. Try again later.");
-      } finally {
-        fs.unlinkSync(tempFilePath); // Clean temp
-      }
-
-      if (!response.data || !response.data.files || !response.data.files[0]?.url) {
-        return reply(`❌ Upload failed: ${JSON.stringify(response.data)}`);
-      }
-
-      imageUrl = response.data.files[0].url;
-    }
-
-    if (!imageUrl || !imageUrl.startsWith("http")) {
-      return reply("❌ Provide a valid image URL or reply to an image.");
-    }
-
-    await setConfig("MENU_IMAGE_URL", imageUrl);
-    await reply(`✅ Bot image updated successfully.\n\n*New Image URL:*\n${imageUrl}\n\n♻️ Restarting...`);
-    setTimeout(() => exec("pm2 restart all"), 2000);
-  } catch (err) {
-    console.error(err);
-    reply(`❌ Unexpected error: ${err.message || err}`);
-  }
-});
 
 // SET PREFIX
 cmd({
