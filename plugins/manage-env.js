@@ -11,6 +11,9 @@ const { getBuffer, getGroupAdmins, getRandom, h2k, isUrl, Json, sleep, fetchJson
 const { writeFileSync } = require('fs');
 const path = require('path');
 const { setConfig, getConfig } = require("../lib/dybydb");
+const axios = require('axios');
+const FormData = require('form-data');
+const { exec } = require('child_process');
 
 let antilinkAction = "off"; // Default state
 let warnCount = {}; // Track warnings per user
@@ -18,8 +21,6 @@ let warnCount = {}; // Track warnings per user
 
 
 
-
-// SET BOT IMAGE
 cmd({
   pattern: "setbotimage",
   desc: "Set the bot's image URL",
@@ -32,7 +33,6 @@ cmd({
 
     let imageUrl = args[0];
 
-    // Upload image if replying to one
     if (!imageUrl && m.quoted) {
       const quotedMsg = m.quoted;
       const mimeType = (quotedMsg.msg || quotedMsg).mimetype || '';
@@ -44,17 +44,23 @@ cmd({
       fs.writeFileSync(tempFilePath, mediaBuffer);
 
       const form = new FormData();
-      form.append("fileToUpload", fs.createReadStream(tempFilePath), `botimage${extension}`);
       form.append("reqtype", "fileupload");
+      form.append("fileToUpload", fs.createReadStream(tempFilePath), `botimage${extension}`);
 
-      const response = await axios.post("https://catbox.moe/user/api.php", form, {
-        headers: form.getHeaders()
-      });
-
-      fs.unlinkSync(tempFilePath);
+      let response;
+      try {
+        response = await axios.post("https://catbox.moe/user/api.php", form, {
+          headers: form.getHeaders()
+        });
+      } catch (uploadError) {
+        console.error(uploadError);
+        return reply("❌ Failed to upload image to Catbox. Try again later.");
+      } finally {
+        fs.unlinkSync(tempFilePath); // Clean temp file
+      }
 
       if (typeof response.data !== 'string' || !response.data.startsWith('https://')) {
-        throw new Error(`Catbox upload failed: ${response.data}`);
+        return reply(`❌ Catbox upload failed:\n\n${response.data}`);
       }
 
       imageUrl = response.data;
@@ -65,13 +71,12 @@ cmd({
     }
 
     await setConfig("MENU_IMAGE_URL", imageUrl);
-
     await reply(`✅ Bot image updated.\n\n*New URL:* ${imageUrl}\n\n♻️ Restarting...`);
     setTimeout(() => exec("pm2 restart all"), 2000);
 
   } catch (err) {
     console.error(err);
-    reply(`❌ Error: ${err.message || err}`);
+    reply(`❌ Unexpected Error: ${err.message || err}`);
   }
 });
 
