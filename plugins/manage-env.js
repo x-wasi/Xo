@@ -10,7 +10,7 @@ const fs = require('fs');
 const { getBuffer, getGroupAdmins, getRandom, h2k, isUrl, Json, sleep, fetchJson } = require('../lib/functions2');
 const { writeFileSync } = require('fs');
 const path = require('path');
-const { setConfig, getConfig } = require("../lib/configdb");
+const { setConfig, getConfig } = require("../lib/dybydb");
 
 let antilinkAction = "off"; // Default state
 let warnCount = {}; // Track warnings per user
