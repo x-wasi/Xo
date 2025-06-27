@@ -97,24 +97,26 @@ const port = process.env.PORT || 9090;
           })
       
   conn.ev.on('connection.update', (update) => {
-  const { connection, lastDisconnect } = update
+  const { connection, lastDisconnect } = update;
   if (connection === 'close') {
-  if (lastDisconnect.error.output.statusCode !== DisconnectReason.loggedOut) {
-  connectToWA()
-  }
+    if (lastDisconnect?.error?.output?.statusCode !== DisconnectReason.loggedOut) {
+      connectToWA(); // reconnect only if not logged out
+    } else {
+      console.log('🔒 Session logged out.');
+    }
   } else if (connection === 'open') {
-  console.log('🧬 Installing Plugins')
-  const path = require('path');
-  fs.readdirSync("./plugins/").forEach((plugin) => {
-  if (path.extname(plugin).toLowerCase() == ".js") {
-  require("./plugins/" + plugin);
-  }
-  });
-  console.log('Plugins installed✅')
-  console.log('Bot connected✅')
-  console.log('GO ON INBOX 💫') 
-  
-  let up = `> 𝐁𝐎𝐓 𝐂𝐎𝐍𝐍𝐄𝐂𝐓𝐄𝐃 
+    console.log('🧬 Installing Plugins');
+    const path = require('path');
+    fs.readdirSync("./plugins/").forEach((plugin) => {
+      if (path.extname(plugin).toLowerCase() == ".js") {
+        require("./plugins/" + plugin);
+      }
+    });
+    console.log('Plugins installed✅');
+    console.log('Bot connected✅');
+    console.log('GO ON INBOX 💫');
+
+    let up = `> 𝐁𝐎𝐓 𝐂𝐎𝐍𝐍𝐄𝐂𝐓𝐄𝐃 
 > *╭┈───────────────•*
 > *│ 👑 ◦* *ᴘʀᴇғɪx: ${config.PREFIX}*
 > *│ 👑 ◦* *ᴏᴡɴᴇʀ-ɴᴀᴍᴇ: ➩ ${config.OWNER_NAME}*
@@ -125,9 +127,13 @@ const port = process.env.PORT || 9090;
 > *│ 👑 ◦*💫𝐌𝐄𝐆𝐀𝐋𝐎𝐃𝐎𝐍 𝐈𝐒 𝐇𝐄𝐑𝐄💫
 > *╰┈───────────────•*
 > *ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅʏʙʏ ᴛᴇᴄʜ*`;
-    conn.sendMessage(conn.user.id, { image: { url: `https://files.catbox.moe/2ozipw.jpg` }, caption: up })
+    
+    conn.sendMessage(conn.user.id, {
+      image: { url: `https://files.catbox.moe/2ozipw.jpg` },
+      caption: up
+    });
   }
-  })
+});
   conn.ev.on('creds.update', saveCreds)
   console.log('Bot connected')
   //==============================
