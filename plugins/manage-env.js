@@ -64,7 +64,7 @@ cmd({
       return reply("❌ Provide a valid image URL or reply to an image.");
     }
 
-    await setConfig("BOT_IMAGE", imageUrl);
+    await setConfig("MENU_IMAGE_URL", imageUrl);
 
     await reply(`✅ Bot image updated.\n\n*New URL:* ${imageUrl}\n\n♻️ Restarting...`);
     setTimeout(() => exec("pm2 restart all"), 2000);
