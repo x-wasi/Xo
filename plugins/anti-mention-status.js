@@ -2,10 +2,9 @@ const { cmd } = require('../command');
 const config = require("../config");
 
 cmd({
-  on: "body"
+  on: "message"
 }, async (conn, m, store, {
   from,
-  body,
   sender,
   isGroup,
   isAdmins,
@@ -13,59 +12,43 @@ cmd({
   reply
 }) => {
   try {
-    // Initialize warnings if not already
-    if (!global.warnings) global.warnings = {};
-
-    // Only work in groups, if sender is not admin, and bot is admin
     if (!isGroup || isAdmins || !isBotAdmins) return;
 
-    // Check if the message contains mass mentions (status tagging)
-    const contextInfo = m.message?.extendedTextMessage?.contextInfo || m.message?.conversationContextInfo || {};
-    const mentioned = contextInfo?.mentionedJid || [];
+    if (config.ANTI_MENTION_STATUS !== "true") return;
 
-    // Detect status tag spam (e.g., tagging many members)
-    const isStatusMention = mentioned.length > 5 || (body.includes("@") && mentioned.length > 0);
+    const msg = m.message;
 
-    if (isStatusMention && config.ANTI_MENTION_STATUS === "true") {
-      console.log(`[⚠️] sᴛᴀᴛᴜs ᴍᴇɴᴛɪᴏɴ ᴅᴇᴛᴇᴄᴛᴇᴅ ғʀᴏᴍ ${sender}`);
+    // Detect status mention (e.g. "Statut de +xxx", group mentioned)
+    const isStatusMention =
+      msg?.extendedTextMessage?.text?.includes("Statut de") ||
+      msg?.extendedTextMessage?.canonicalUrl?.includes("status") ||
+      msg?.messageStubType === 22 || // Group mention via status
+      m.pushName?.toLowerCase().includes("statut");
 
-      // Attempt to delete the message
-      try {
-        await conn.sendMessage(from, { delete: m.key });
-        console.log(`Message deleted: ${m.key.id}`);
-      } catch (err) {
-        console.error("Failed to delete message:", err);
-      }
+    if (isStatusMention) {
+      await conn.sendMessage(from, { delete: m.key });
 
-      // Add warning to sender
+      // Warn system
+      global.warnings = global.warnings || {};
       global.warnings[sender] = (global.warnings[sender] || 0) + 1;
-      const warns = global.warnings[sender];
+      const warn = global.warnings[sender];
 
-      if (warns < 4) {
-        // Send warning message
+      if (warn < 4) {
         await conn.sendMessage(from, {
-          text: `*🚫 sᴛᴀᴛᴜs ᴛᴀɢɢɪɴɢ ɪs ɴᴏᴛ ᴀʟʟᴏᴡᴇᴅ!*\n` +
-                `*╭── ⚠️ ᴡᴀʀɴɪɴɢ ⚠️ ──╮*\n` +
-                `*├▢ ᴜsᴇʀ:* @${sender.split('@')[0]}\n` +
-                `*├▢ ᴡᴀʀɴ COUNT:* ${warns}\n` +
-                `*├▢ ʀᴇᴀsᴏɴ:* ᴍᴀss ᴍᴇɴᴛɪᴏɴ (sᴛᴀᴛᴜs ᴛᴀɢ)\n` +
-                `*├▢ ʟɪᴍɪᴛ:* 4\n` +
-                `*╰────────────────────*`,
+          text: `⚠️ *Status Mention Detected!*\nUser: @${sender.split("@")[0]}\nWarnings: ${warn}/3`,
           mentions: [sender]
         });
       } else {
-        // Kick the user after 3 warnings
         await conn.sendMessage(from, {
-          text: `@${sender.split('@')[0]} *ʜᴀs ʙᴇᴇɴ ʀᴇᴍᴏᴠᴇᴅ ғᴏʀ ᴇxᴄᴇssɪᴠᴇ sᴛᴀᴛᴜs ᴛᴀɢɢɪɴɢ!*`,
+          text: `@${sender.split('@')[0]} has been *removed* for status mention spam!`,
           mentions: [sender]
         });
         await conn.groupParticipantsUpdate(from, [sender], "remove");
-        delete global.warnings[sender]; // Reset warnings
+        delete global.warnings[sender];
       }
     }
-
   } catch (err) {
-    console.error("Anti-status-mention error:", err);
-    reply("❌ An error occurred in the anti-mention-status system.");
+    console.error("❌ Anti-status error:", err);
+    reply("An error occurred in anti-status plugin.");
   }
 });
