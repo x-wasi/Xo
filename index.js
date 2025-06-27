@@ -83,59 +83,157 @@ const port = process.env.PORT || 9090;
   //=============================================
   
   async function connectToWA() {
-  console.log("Connecting to WhatsApp ⏳️...");
-  const { state, saveCreds } = await useMultiFileAuthState(__dirname + '/sessions/')
-  var { version } = await fetchLatestBaileysVersion()
-  
-  const conn = makeWASocket({
-          logger: P({ level: 'silent' }),
-          printQRInTerminal: false,
-          browser: Browsers.macOS("Firefox"),
-          syncFullHistory: true,
-          auth: state,
-          version
-          })
-      
-  conn.ev.on('connection.update', (update) => {
-  const { connection, lastDisconnect } = update;
-  if (connection === 'close') {
-    if (lastDisconnect?.error?.output?.statusCode !== DisconnectReason.loggedOut) {
-      connectToWA(); // reconnect only if not logged out
-    } else {
-      console.log('🔒 Session logged out.');
-    }
-  } else if (connection === 'open') {
-    console.log('🧬 Installing Plugins');
-    const path = require('path');
-    fs.readdirSync("./plugins/").forEach((plugin) => {
-      if (path.extname(plugin).toLowerCase() == ".js") {
-        require("./plugins/" + plugin);
-      }
-    });
-    console.log('Plugins installed✅');
-    console.log('Bot connected✅');
-    console.log('GO ON INBOX 💫');
+Voici un bout de mon index.js
 
-    let up = `> 𝐁𝐎𝐓 𝐂𝐎𝐍𝐍𝐄𝐂𝐓𝐄𝐃 
-> *╭┈───────────────•*
-> *│ 👑 ◦* *ᴘʀᴇғɪx: ${config.PREFIX}*
-> *│ 👑 ◦* *ᴏᴡɴᴇʀ-ɴᴀᴍᴇ: ➩ ${config.OWNER_NAME}*
-> *│ 👑 ◦* *ᴍᴏᴅᴇ: ➩ ${config.MODE}*
-> *│ 👑 ◦* *ᴏᴡɴᴇʀ-ɴᴜᴍᴇʀ: ➩ ${config.OWNER_NUMBER}*
-> *│ 👑 ◦* *ᴛʏᴘᴇ : ➩ ${config.PREFIX}menu* 
-> *│ 👑 ◦*
-> *│ 👑 ◦*💫𝐌𝐄𝐆𝐀𝐋𝐎𝐃𝐎𝐍 𝐈𝐒 𝐇𝐄𝐑𝐄💫
-> *╰┈───────────────•*
-> *ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅʏʙʏ ᴛᴇᴄʜ*`;
-    
-    conn.sendMessage(conn.user.id, {
-      image: { url: `https://files.catbox.moe/2ozipw.jpg` },
-      caption: up
-    });
-  }
+const {
+default: makeWASocket,
+useMultiFileAuthState,
+DisconnectReason,
+jidNormalizedUser,
+isJidBroadcast,
+getContentType,
+proto,
+generateWAMessageContent,
+generateWAMessage,
+AnyMessageContent,
+prepareWAMessageMedia,
+areJidsSameUser,
+downloadContentFromMessage,
+MessageRetryMap,
+generateForwardMessageContent,
+generateWAMessageFromContent,
+generateMessageID, makeInMemoryStore,
+jidDecode,
+fetchLatestBaileysVersion,
+Browsers
+} = require('baileys')
+
+const l = console.log
+const { getBuffer, getGroupAdmins, getRandom, h2k, isUrl, Json, runtime, sleep, fetchJson } = require('./lib/functions')
+const { AntiDelDB, initializeAntiDeleteSettings, setAnti, getAnti, getAllAntiDeleteSettings, saveContact, loadMessage, getName, getChatSummary, saveGroupMetadata, getGroupMetadata, saveMessageCount, getInactiveGroupMembers, getGroupMembersMessageCount, saveMessage } = require('./data')
+const fs = require('fs')
+const ff = require('fluent-ffmpeg')
+const P = require('pino')
+const config = require('./config')
+const GroupEvents = require('./lib/groupevents');
+const qrcode = require('qrcode-terminal')
+const StickersTypes = require('wa-sticker-formatter')
+const util = require('util')
+const { sms, downloadMediaMessage, AntiDelete } = require('./lib')
+const FileType = require('file-type');
+const axios = require('axios')
+const { File } = require('megajs')
+const { fromBuffer } = require('file-type')
+const bodyparser = require('body-parser')
+const os = require('os')
+const Crypto = require('crypto')
+const path = require('path')
+const prefix = config.PREFIX
+const ownerNumber = ['50948702213']
+
+const tempDir = path.join(os.tmpdir(), 'cache-temp')
+if (!fs.existsSync(tempDir)) {
+fs.mkdirSync(tempDir)
+}
+
+const clearTempDir = () => {
+fs.readdir(tempDir, (err, files) => {
+if (err) throw err;
+for (const file of files) {
+fs.unlink(path.join(tempDir, file), err => {
+if (err) throw err;
 });
-  conn.ev.on('creds.update', saveCreds)
-  console.log('Bot connected')
+}
+});
+}
+
+// Clear the temp directory every 5 minutes
+setInterval(clearTempDir, 5 * 60 * 1000);
+
+//===================SESSION-AUTH============================
+if (!fs.existsSync(__dirname + '/sessions/creds.json')) {
+if(!config.SESSION_ID) return console.log('Please add your session to SESSION_ID env !!')
+const sessdata = config.SESSION_ID.replace("MEGALODON", '');
+const filer = File.fromURL(https://mega.nz/file/${sessdata})
+filer.download((err, data) => {
+if(err) throw err
+fs.writeFile(__dirname + '/sessions/creds.json', data, () => {
+console.log("Session downloaded ✅")
+})})}
+
+const express = require("express");
+const app = express();
+const port = process.env.PORT || 9090;
+
+//=============================================
+
+async function connectToWA() {
+console.log("Connecting to WhatsApp ⏳️...");
+const { state, saveCreds } = await useMultiFileAuthState(__dirname + '/sessions/')
+var { version } = await fetchLatestBaileysVersion()
+
+const conn = makeWASocket({
+logger: P({ level: 'silent' }),
+printQRInTerminal: false,
+browser: Browsers.macOS("Firefox"),
+syncFullHistory: true,
+auth: state,
+version
+})
+
+conn.ev.on('connection.update', (update) => {
+const { connection, lastDisconnect } = update
+if (connection === 'close') {
+if (lastDisconnect.error.output.statusCode !== DisconnectReason.loggedOut) {
+connectToWA()
+}
+} else if (connection === 'open') {
+console.log('🧬 Installing Plugins')
+const path = require('path');
+fs.readdirSync("./plugins/").forEach((plugin) => {
+if (path.extname(plugin).toLowerCase() == ".js") {
+require("./plugins/" + plugin);
+}
+});
+console.log('Plugins installed✅')
+console.log('Bot connected✅')
+console.log('GO ON INBOX 💫')
+
+let up = `> 𝐁𝐎𝐓 𝐂𝐎𝐍𝐍𝐄𝐂𝐓𝐄𝐃
+
+> ╭┈───────────────•
+│ 👑 ◦ ᴘʀᴇғɪx: ${config.PREFIX}
+│ 👑 ◦ ᴏᴡɴᴇʀ-ɴᴀᴍᴇ: ➩ ${config.OWNER_NAME}
+│ 👑 ◦ ᴍᴏᴅᴇ: ➩ ${config.MODE}
+│ 👑 ◦ ᴏᴡɴᴇʀ-ɴᴜᴍᴇʀ: ➩ ${config.OWNER_NUMBER}
+│ 👑 ◦ ᴛʏᴘᴇ : ➩ ${config.PREFIX}menu
+│ 👑 ◦
+│ 👑 ◦💫𝐌𝐄𝐆𝐀𝐋𝐎𝐃𝐎𝐍 𝐈𝐒 𝐇𝐄𝐑𝐄💫
+╰┈───────────────•
+ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅʏʙʏ ᴛᴇᴄʜ;   conn.sendMessage(conn.user.id, { image: { url: https://files.catbox.moe/2ozipw.jpg` }, caption: up })
+}
+})
+conn.ev.on('creds.update', saveCreds)
+console.log('Bot connected')
+//==============================
+
+
+
+conn.ev.on('messages.update', async updates => {
+for (const update of updates) {
+if (update.update.message === null) {
+console.log("Delete Detected:", JSON.stringify(update, null, 2));
+await AntiDelete(conn, updates);
+
+}  
+}
+
+});
+//==============================
+
+conn.ev.on("group-participants.update", (update) => GroupEvents(conn, update));
+
+
   //==============================
 
   conn.ev.on('messages.update', async updates => {
