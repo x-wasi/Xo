@@ -1,7 +1,7 @@
 const config = require('../config');
 const { cmd, commands } = require('../command');
 
-// Fonction pour styliser les majuscules comme ʜɪ
+// Fonction pour styliser les majuscules
 function toUpperStylized(str) {
   const stylized = {
     A: 'ᴀ', B: 'ʙ', C: 'ᴄ', D: 'ᴅ', E: 'ᴇ', F: 'ғ', G: 'ɢ', H: 'ʜ',
@@ -12,41 +12,17 @@ function toUpperStylized(str) {
   return str.split('').map(c => stylized[c.toUpperCase()] || c).join('');
 }
 
-// Normalisation des catégories
+// Fonction pour normaliser les noms de catégorie
 const normalize = (str) => str.toLowerCase().replace(/\s+menu$/, '').trim();
 
-// Emojis par catégorie normalisée
+// Emojis assignés par catégorie
 const emojiByCategory = {
-  ai: '🤖',
-  anime: '🍥',
-  audio: '🎧',
-  bible: '📖',
-  download: '⬇️',
-  downloader: '📥',
-  fun: '🎮',
-  game: '🕹️',
-  group: '👥',
-  img_edit: '🖌️',
-  info: 'ℹ️',
-  information: '🧠',
-  logo: '🖼️',
-  main: '🏠',
-  media: '🎞️',
-  menu: '📜',
-  misc: '📦',
-  music: '🎵',
-  other: '📁',
-  owner: '👑',
-  privacy: '🔒',
-  search: '🔎',
-  settings: '⚙️',
-  sticker: '🌟',
-  tools: '🛠️',
-  user: '👤',
-  utilities: '🧰',
-  utility: '🧮',
-  wallpapers: '🖼️',
-  whatsapp: '📱',
+  ai: '🤖', anime: '🍥', audio: '🎧', bible: '📖', download: '⬇️', downloader: '📥',
+  fun: '🎮', game: '🕹️', group: '👥', img_edit: '🖌️', info: 'ℹ️', information: '🧠',
+  logo: '🖼️', main: '🏠', media: '🎞️', menu: '📜', misc: '📦', music: '🎵',
+  other: '📁', owner: '👑', privacy: '🔒', search: '🔎', settings: '⚙️',
+  sticker: '🌟', tools: '🛠️', user: '👤', utilities: '🧰', utility: '🧮',
+  wallpapers: '🖼️', whatsapp: '📱'
 };
 
 cmd({
@@ -72,7 +48,7 @@ async (dyby, mek, m, { from, args, reply }) => {
     };
 
     let dybymenu = `
-*╭══〘 𝐌𝐄𝐆𝐀𝐋𝐎𝐃𝐎𝐍-𝐌𝐃 〙*
+*╭══〘 ᴍᴇɢᴀʟᴏᴅᴏɴ-ᴍᴅ 〙*
 *┃◆* ᴜꜱᴇʀ : @${sender.split("@")[0]}
 *┃◆* ʀᴜɴᴛɪᴍᴇ : ${uptime()}
 *┃◆* ᴍᴏᴅᴇ : *${config.MODE}*
@@ -82,7 +58,7 @@ async (dyby, mek, m, { from, args, reply }) => {
 *┃◆* ᴠᴇʀꜱɪᴏɴ : 1.0.0
 *╰════════════════⊷*`;
 
-    // Organiser les commandes par catégorie
+    // Organisation par catégorie
     let categories = {};
     for (let cmd of commands) {
       if (!cmd.category) continue;
@@ -96,7 +72,7 @@ async (dyby, mek, m, { from, args, reply }) => {
 
     if (requestedCategory && categories[requestedCategory]) {
       const emoji = emojiByCategory[requestedCategory] || '📁';
-      dybymenu += `\n\n┌── 『 *`${toUpperStylized(requestedCategory)} ᴍᴇɴᴜ`* ${emoji} 』`;
+      dybymenu += `\n\n┌── 『 *${toUpperStylized(requestedCategory)} ᴍᴇɴᴜ* ${emoji} 』`;
 
       const cmds = categories[requestedCategory].filter(c => c.pattern).sort((a, b) => a.pattern.localeCompare(b.pattern));
       for (let c of cmds) {
@@ -119,17 +95,16 @@ async (dyby, mek, m, { from, args, reply }) => {
       }
     }
 
-    // Envoi final
     await dyby.sendMessage(from, {
-      image: { url: config.MENU_IMAGE_URL || 'https://files.catbox.moe/2ozipw.jpg' },
+      image: { url: 'https://files.catbox.moe/2ozipw.jpg' },
       caption: dybymenu,
       contextInfo: {
         mentionedJid: [sender],
         forwardingScore: 999,
         isForwarded: true,
         forwardedNewsletterMessageInfo: {
-          newsletterJid: '120363401051937059@newsletter',
-          newsletterName: '𝐌𝐄𝐆𝐀𝐋𝐎𝐃𝐎𝐍-𝐌𝐃',
+          newsletterJid: config.newsletterJid || '120363401051937059@newsletter',
+          newsletterName: 'ᴍᴇɢᴀʟᴏᴅᴏɴ-ᴍᴅ',
           serverMessageId: 143
         }
       }
