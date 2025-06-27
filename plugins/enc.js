@@ -9,24 +9,33 @@ cmd({
   react: "🔐",
   filename: __filename
 }, async (dyby, m, text, { Owner }) => {
-  if (!Owner) return m.reply('❌ ᴏɴʟʏ ᴏᴡɴᴇʀ ᴄᴀɴ ᴜꜱᴇ ᴛʜɪꜱ ᴄᴏᴍᴍᴀɴᴅ.');
-
-  const isQuotedJs = m.quoted?.mimetype === 'application/javascript';
-  const originalName = m.quoted?.msg?.fileName || "unknown.js";
-
-  if (!isQuotedJs || !originalName.endsWith('.js')) {
-    return m.reply('❌ ᴘʟᴇᴀꜱᴇ ʀᴇᴘʟʏ ᴛᴏ ᴀ .ᴊꜱ ꜰɪʟᴇ ᴛᴏ ᴇɴᴄʀʏᴘᴛ.');
-  }
-
   try {
-    const buffer = await m.quoted.download();
-    if (!buffer) return m.reply('❌ ꜰᴀɪʟᴇᴅ ᴛᴏ ᴅᴏᴡɴʟᴏᴀᴅ ꜰɪʟᴇ.');
+    if (!Owner) return m.reply('❌ ᴏɴʟʏ ᴏᴡɴᴇʀ ᴄᴀɴ ᴜꜱᴇ ᴛʜɪꜱ ᴄᴏᴍᴍᴀɴᴅ.');
+
+    const quoted = m.quoted;
+    const mime = quoted?.mimetype;
+    const fileName = quoted?.msg?.fileName;
+
+    if (!quoted || mime !== 'application/javascript' || !fileName || !fileName.endsWith('.js')) {
+      return m.reply('❌ ᴘʟᴇᴀꜱᴇ ʀᴇᴘʟʏ ᴛᴏ ᴀ ᴠᴀʟɪᴅ .ᴊꜱ ꜰɪʟᴇ (ᴀꜱ ᴅᴏᴄᴜᴍᴇɴᴛ).');
+    }
+
+    // ✅ Sécurisation : on vérifie que `download` existe
+    if (typeof quoted.download !== 'function') {
+      return m.reply('❌ ᴄᴀɴɴᴏᴛ ᴅᴏᴡɴʟᴏᴀᴅ ꜰɪʟᴇ. ᴍᴀᴋᴇ ꜱᴜʀ ɪᴛ ᴡᴀꜱ ꜱᴇɴᴛ ᴀꜱ ᴀ ᴅᴏᴄᴜᴍᴇɴᴛ.');
+    }
+
+    const buffer = await quoted.download();
+
+    if (!buffer || buffer.length === 0) {
+      return m.reply('❌ ꜰᴀɪʟᴇᴅ ᴛᴏ ᴅᴏᴡɴʟᴏᴀᴅ ꜰɪʟᴇ. ɪꜱ ɪᴛ ᴀ ʀᴇᴀʟ ꜰɪʟᴇ?');
+    }
 
     await dyby.sendMessage(m.chat, {
       react: { text: '🔐', key: m.key }
     });
 
-    const encryptedCode = await JsConfuser.obfuscate(buffer.toString(), {
+    const encrypted = await JsConfuser.obfuscate(buffer.toString(), {
       target: "node",
       preset: "high",
       compact: true,
@@ -60,17 +69,17 @@ cmd({
       globalConcealing: true
     });
 
-    const encryptedName = originalName.replace(/\.js$/i, '.enc.js');
+    const encryptedName = fileName.replace(/\.js$/i, '.enc.js');
 
     await dyby.sendMessage(m.chat, {
-      document: Buffer.from(encryptedCode, 'utf-8'),
+      document: Buffer.from(encrypted, 'utf-8'),
       mimetype: 'application/javascript',
       fileName: encryptedName,
       caption: `✅ *ғɪʟᴇ ᴇɴᴄʀʏᴘᴛᴇᴅ*\n• ɴᴇᴡ ɴᴀᴍᴇ: *${encryptedName}*\n• ᴛʏᴘᴇ: ʜᴀʀᴅ ᴏʙꜰᴜꜱᴄᴀᴛɪᴏɴ\n• ʙʏ: @ᴅʏʙʏ ᴛᴇᴄʜ`,
     }, { quoted: m });
 
-  } catch (err) {
-    console.error('Encryption Error:', err);
-    return m.reply(`❌ *ᴇʀʀᴏʀ:* ${err.message}`);
+  } catch (error) {
+    console.error("Encryption Plugin Error:", error);
+    return m.reply(`❌ *ᴇʀʀᴏʀ:* ${error.message || error}`);
   }
 });
