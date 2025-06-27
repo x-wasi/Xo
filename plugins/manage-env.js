@@ -10,12 +10,6 @@ const fs = require('fs');
 const { getBuffer, getGroupAdmins, getRandom, h2k, isUrl, Json, sleep, fetchJson } = require('../lib/functions2');
 const { writeFileSync } = require('fs');
 const path = require('path');
-const { setConfig, getConfig } = require("../lib/dybydb");
-const os = require('os');
-const FormData = require('form-data');
-const axios = require('axios');
-const { exec } = require('child_process');
-
 
 
 
