@@ -11,6 +11,36 @@ const { getBuffer, getGroupAdmins, getRandom, h2k, isUrl, Json, sleep, fetchJson
 const { writeFileSync } = require('fs');
 const path = require('path');
 
+
+
+cmd({
+  pattern: "antistatus",
+  alias: ["antistatusmention", "ams"],
+  desc: "Enable or disable anti mention in group status",
+  category: "group",
+  react: "⚠️",
+  filename: __filename
+}, async (conn, mek, m, { isGroup, isAdmins, isBotAdmins, args, reply }) => {
+  try {
+    if (!isGroup) return reply('ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ ᴄᴀɴ ᴏɴʟʏ ʙᴇ ᴜsᴇᴅ in ᴀ ɢʀᴏᴜᴘ.');
+    if (!isBotAdmins) return reply('ʙᴏᴛ ᴍᴜsᴛ ʙᴇ ᴀᴅᴍɪɴ ᴛᴏ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ.');
+    if (!isAdmins) return reply('ʏᴏᴜ ᴍᴜsᴛ ʙᴇ ᴀɴ ᴀᴅᴍɪɴ ᴛᴏ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ.');
+
+    if (args[0] === "on") {
+      config.ANTI_MENTION_STATUS = "true";
+      reply("✅ Anti ᴍᴇɴᴛɪᴏɴ sᴛᴀᴛᴜs ʜᴀs ʙᴇᴇɴ *ᴇɴᴀʙʟᴇᴅ*.");
+    } else if (args[0] === "off") {
+      config.ANTI_MENTION_STATUS = "false";
+      reply("❌ ᴀɴᴛɪ ᴍᴇɴᴛɪᴏɴ sᴛᴀᴛᴜs ʜᴀs ʙᴇᴇɴ *ᴅɪsᴀʙʟᴇᴅ*.");
+    } else {
+      reply("Usage: *.ᴀɴᴛɪsᴛᴀᴛᴜs ᴏɴ/ᴏғғ*");
+    }
+  } catch (e) {
+    reply(`❌ Error: ${e.message}`);
+  }
+});
+
+
 cmd({
     pattern: "admin-events",
     alias: ["adminevents"],
