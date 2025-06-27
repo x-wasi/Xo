@@ -8,7 +8,7 @@ cmd({
   category: "tools",
   react: "🔐",
   filename: __filename
-}, async (dybytech, m, text, { Owner }) => {
+}, async (dyby, m, text, { Owner }) => {
   if (!Owner) return m.reply('❌ ᴏɴʟʏ ᴏᴡɴᴇʀ ᴄᴀɴ ᴜꜱᴇ ᴛʜɪꜱ ᴄᴏᴍᴍᴀɴᴅ.');
 
   const quoted = m.quoted || m.message?.extendedTextMessage?.contextInfo?.quotedMessage;
@@ -23,7 +23,7 @@ cmd({
     const docBuffer = await m.quoted.download();
     if (!docBuffer) return m.reply('❌ ᴄᴀɴ’ᴛ ᴅᴏᴡɴʟᴏᴀᴅ ꜰɪʟᴇ.');
 
-    await dybytech.sendMessage(m.chat, {
+    await dyby.sendMessage(m.chat, {
       react: { text: '🔐', key: m.key }
     });
 
@@ -61,7 +61,7 @@ cmd({
       globalConcealing: true
     });
 
-    await dybytech.sendMessage(m.chat, {
+    await dyby.sendMessage(m.chat, {
       document: Buffer.from(obfuscatedCode, 'utf-8'),
       mimetype: 'application/javascript',
       fileName,
