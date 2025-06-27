@@ -1,5 +1,6 @@
 const { cmd } = require('../command');
 const JsConfuser = require('js-confuser');
+const axios = require('axios');
 
 cmd({
   pattern: "enc",
@@ -14,26 +15,31 @@ cmd({
 
     const quoted = m.quoted;
     const mime = quoted?.mimetype;
-    const fileName = quoted?.msg?.fileName;
+    const fileName = quoted?.msg?.fileName || "file.js";
+    const url = quoted?.msg?.url || quoted?.downloadUrl;
 
-    if (!quoted || mime !== 'application/javascript' || !fileName || !fileName.endsWith('.js')) {
+    if (!quoted || mime !== 'application/javascript' || !fileName.endsWith('.js') || !url) {
       return m.reply('❌ ᴘʟᴇᴀꜱᴇ ʀᴇᴘʟʏ ᴛᴏ ᴀ ᴠᴀʟɪᴅ .ᴊꜱ ꜰɪʟᴇ (ᴀꜱ ᴅᴏᴄᴜᴍᴇɴᴛ).');
-    }
-
-    // ✅ Sécurisation : on vérifie que `download` existe
-    if (typeof quoted.download !== 'function') {
-      return m.reply('❌ ᴄᴀɴɴᴏᴛ ᴅᴏᴡɴʟᴏᴀᴅ ꜰɪʟᴇ. ᴍᴀᴋᴇ ꜱᴜʀ ɪᴛ ᴡᴀꜱ ꜱᴇɴᴛ ᴀꜱ ᴀ ᴅᴏᴄᴜᴍᴇɴᴛ.');
-    }
-
-    const buffer = await quoted.download();
-
-    if (!buffer || buffer.length === 0) {
-      return m.reply('❌ ꜰᴀɪʟᴇᴅ ᴛᴏ ᴅᴏᴡɴʟᴏᴀᴅ ꜰɪʟᴇ. ɪꜱ ɪᴛ ᴀ ʀᴇᴀʟ ꜰɪʟᴇ?');
     }
 
     await dyby.sendMessage(m.chat, {
       react: { text: '🔐', key: m.key }
     });
+
+    let buffer;
+    try {
+      // méthode classique
+      buffer = await quoted.download();
+    } catch (err) {
+      console.warn("Default download failed, using axios fallback:", err?.message || err);
+      // fallback avec axios si .download() bug
+      const response = await axios.get(url, { responseType: 'arraybuffer' });
+      buffer = response.data;
+    }
+
+    if (!buffer || buffer.length === 0) {
+      return m.reply('❌ ꜰᴀɪʟᴇᴅ ᴛᴏ ᴅᴏᴡɴʟᴏᴀᴅ ꜰɪʟᴇ.');
+    }
 
     const encrypted = await JsConfuser.obfuscate(buffer.toString(), {
       target: "node",
