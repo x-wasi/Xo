@@ -8,11 +8,12 @@ cmd({
   desc: "Convert a plugin using cmd() to switch/case format",
   category: "owner",
   filename: __filename
-}, async (conn, m, msg, { q, reply }) => {
+}, async (conn, m, msg, { q, reply, quoted }) => {
   try {
-    if (!q) return reply("❎ ʀᴇᴘʟʏ ᴛᴏ ᴀ ᴘʟᴜɢɪɴ ᴏʀ sᴘᴇᴄɪғʏ ɪᴛs ғɪʟᴇ ɴᴀᴍᴇ.\n\n*ᴇxᴀᴍᴘʟᴇ:* .tocase fancy.js");
+    const fileName = q || (quoted?.mimetype === 'application/javascript' ? quoted.fileName : null);
+    if (!fileName) return reply("❎ ᴘʟᴇᴀsᴇ sᴘᴇᴄɪғʏ ᴀ ᴘʟᴜɢɪɴ ғɪʟᴇ.\n\n*ᴇxᴀᴍᴘʟᴇ:* .tocase fancy.js");
 
-    const filePath = path.join(__dirname, q.trim());
+    const filePath = path.join(__dirname, fileName.trim());
 
     if (!fs.existsSync(filePath)) return reply("❌ ғɪʟᴇ ɴᴏᴛ ғᴏᴜɴᴅ ɪɴ ᴘʟᴜɢɪɴs ꜰᴏʟᴅᴇʀ.");
 
@@ -21,19 +22,19 @@ cmd({
     const headerMatch = content.match(/cmd\s*{([\s\S]*?)}\s*,/);
     const bodyMatch = content.match(/cmd\s*{[\s\S]*?},\s*async\s*[\s\S]*?\s*=>\s*{([\s\S]*?)\n}/);
 
-    if (!headerMatch || !bodyMatch) return reply("❌ ɴᴏ ᴄᴏᴍᴍᴀɴᴅ ꜰᴏᴜɴᴅ ɪɴ ᴛʜɪs ꜰɪʟᴇ.");
+    if (!headerMatch || !bodyMatch) return reply("❌ ɴᴏ ᴄᴍᴅ ғᴏᴜɴᴅ ɪɴ ᴛʜɪs ꜰɪʟᴇ.");
 
-    const jsonHeader = `{${headerMatch[1]}}`.replace(/(\w+):/g, '"$1":');
+    const jsonHeader = `{${headerMatch[1]}}`.replace(/(\w+):/g, '"$1":').replace(/,\s*}/g, '}');
     const command = JSON.parse(jsonHeader);
     const names = [command.pattern, ...(command.alias || [])].filter(Boolean);
     const body = bodyMatch[1].trim();
 
     const caseBlock = names.map(n => `case '${n}':`).join("\n") + ` {\n${body}\n  break;\n}`;
 
-    return reply("✅ *Converted Case Code:*\n\n```js\n" + caseBlock + "\n```");
+    await reply("✅ *Converted Case Code:*\n\n```js\n" + caseBlock + "\n```");
 
   } catch (e) {
     console.error(e);
-    return reply("❌ ᴇʀʀᴏʀ ᴡʜɪʟᴇ ᴘᴀʀsɪɴɢ ᴛʜᴇ ᴄᴍᴅ ғɪʟᴇ.");
+    return reply("❌ ᴇʀʀᴏʀ ᴘᴀʀsɪɴɢ ᴏʀ ʀᴇᴀᴅɪɴɢ ғɪʟᴇ.");
   }
 });
