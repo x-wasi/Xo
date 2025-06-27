@@ -2,7 +2,7 @@ const config = require('../config');
 const moment = require('moment-timezone');
 const { cmd, commands } = require('../command');
 
-// Stylised uppercase (ʜɪ style)
+// Fonction pour styliser les majuscules comme ʜɪ
 function toUpperStylized(str) {
   const stylized = {
     A: 'ᴀ', B: 'ʙ', C: 'ᴄ', D: 'ᴅ', E: 'ᴇ', F: 'ғ', G: 'ɢ', H: 'ʜ',
@@ -12,6 +12,43 @@ function toUpperStylized(str) {
   };
   return str.split('').map(c => stylized[c.toUpperCase()] || c).join('');
 }
+
+// Normalisation des catégories
+const normalize = (str) => str.toLowerCase().replace(/\s+menu$/, '').trim();
+
+// Emojis par catégorie normalisée
+const emojiByCategory = {
+  ai: '🤖',
+  anime: '🍥',
+  audio: '🎧',
+  bible: '📖',
+  download: '⬇️',
+  downloader: '📥',
+  fun: '🎮',
+  game: '🕹️',
+  group: '👥',
+  img_edit: '🖌️',
+  info: 'ℹ️',
+  information: '🧠',
+  logo: '🖼️',
+  main: '🏠',
+  media: '🎞️',
+  menu: '📜',
+  misc: '📦',
+  music: '🎵',
+  other: '📁',
+  owner: '👑',
+  privacy: '🔒',
+  search: '🔎',
+  settings: '⚙️',
+  sticker: '🌟',
+  tools: '🛠️',
+  user: '👤',
+  utilities: '🧰',
+  utility: '🧮',
+  wallpapers: '🖼️',
+  whatsapp: '📱',
+};
 
 cmd({
   pattern: "menu",
@@ -26,8 +63,6 @@ async (dyby, mek, m, { from, reply }) => {
   try {
     const sender = m?.sender || mek?.key?.participant || mek?.key?.remoteJid || 'unknown@s.whatsapp.net';
     const totalCommands = commands.length;
-    const date = moment().tz("America/Port-au-Prince").format("dddd, DD MMMM YYYY");
-    const time = moment().tz("America/Port-au-Prince").format("HH:mm:ss");
 
     const uptime = () => {
       let sec = process.uptime();
@@ -48,24 +83,30 @@ async (dyby, mek, m, { from, reply }) => {
 *┃◆* ᴠᴇʀꜱɪᴏɴ : 1.0.0
 *╰════════════════⊷*`;
 
-    let category = {};
+    // Regrouper les commandes par catégorie normalisée
+    let categories = {};
     for (let cmd of commands) {
       if (!cmd.category) continue;
-      if (!category[cmd.category]) category[cmd.category] = [];
-      category[cmd.category].push(cmd);
+      const cat = normalize(cmd.category);
+      if (!categories[cat]) categories[cat] = [];
+      categories[cat].push(cmd);
     }
 
-    const keys = Object.keys(category).sort();
-    for (let k of keys) {
-      dybymenu += `\n\n┌── 『 `*${toUpperStylized(k)} ᴍᴇɴᴜ*` 』`;
-      const cmds = category[k].filter(c => c.pattern).sort((a, b) => a.pattern.localeCompare(b.pattern));
-      cmds.forEach((cmd) => {
-        const usage = cmd.pattern.split('|')[0];
+    // Construction du menu par catégorie
+    const sortedKeys = Object.keys(categories).sort();
+    for (let key of sortedKeys) {
+      const emoji = emojiByCategory[key] || '❓';
+      dybymenu += `\n\n┌── 『 ${emoji} *${toUpperStylized(key)} ᴍᴇɴᴜ* 』`;
+
+      const cmds = categories[key].filter(c => c.pattern).sort((a, b) => a.pattern.localeCompare(b.pattern));
+      for (let c of cmds) {
+        const usage = c.pattern.split('|')[0];
         dybymenu += `\n├❃ ${config.PREFIX}${toUpperStylized(usage)}`;
-      });
+      }
       dybymenu += `\n┗━━━━━━━━━━━━━━❃`;
     }
 
+    // Envoi du menu avec image
     await dyby.sendMessage(from, {
       image: { url: 'https://files.catbox.moe/2ozipw.jpg' },
       caption: dybymenu,
