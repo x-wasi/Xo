@@ -1,54 +1,26 @@
 const { cmd } = require('../command');
 const config = require('../config');
-let called = false;
-let antiCallEnabled = config.ANTI_CALL === "true"; // Initial value from config
 
-// Activation / désactivation via commande
+
 cmd({
-  pattern: "anticall",
-  alias: ["callblock", "rejectcall"],
-  desc: "Enable or disable auto call reject feature.",
-  category: "settings",
-  filename: __filename
-}, async (conn, m, msg, { text }) => {
-  if (!text) return m.reply("*Use:* .ᴀɴᴛɪᴄᴀʟʟ ᴏɴ | ᴏғғ");
+    pattern: "anti-call",
+    react: "🫟",
+    alias: ["anticall"],
+    desc: "Enable or disable welcome messages for new members",
+    category: "owner",
+    filename: __filename
+},
+async (conn, mek, m, { from, args, isCreator, reply }) => {
+    if (!isCreator) return reply("*🫟σɴℓу тнє σωɴєʀ ¢αɴ ᴜѕє тнιѕ ¢σммαɴ∂!*");
 
-  if (text.toLowerCase() === "on") {
-    antiCallEnabled = true;
-    m.reply("*✅ ᴀɴᴛɪ-ᴄᴀʟʟ ᴇɴᴀʙʟᴇᴅ sᴜᴄᴄᴇssғᴜʟʟʏ.*");
-  } else if (text.toLowerCase() === "off") {
-    antiCallEnabled = false;
-    m.reply("*❌ 𝐀𝐧𝐭𝐢-𝐂𝐚𝐥𝐥 ᴅɪsᴀʙʟᴇᴅ sᴜᴄᴄᴇssғᴜʟʟʏ.*");
-  } else {
-    m.reply("*Use:* .ᴀɴᴛɪᴄᴀʟʟ ᴏɴ | ᴏғғ");
-  }
-});
-
-// Événement sur les appels
-cmd({ on: "body" }, async (conn, m, msg, { from }) => {
-  try {
-    if (!called) {
-      conn.ev.on('call', async (calls) => {
-        if (!antiCallEnabled) return;
-
-        for (const call of calls) {
-          if (call.status !== "offer") continue;
-
-          await conn.rejectCall(call.id, call.from);
-
-          if (!call.isGroup) {
-            await conn.sendMessage(call.from, {
-              text: "*📵 ᴄᴀʟʟ ᴀᴜᴛᴏᴍᴀᴛɪᴄᴀʟʟʏ ʀᴇᴊᴇᴄᴛᴇᴅ. ᴛʜᴇ ᴏᴡɴᴇʀ ɪs ᴄᴜʀʀᴇɴᴛʟʏ ʙᴜsʏ.*",
-              mentions: [call.from]
-            });
-          }
-        }
-      });
-
-      called = true;
+    const status = args[0]?.toLowerCase();
+    if (status === "on") {
+        config.ANTI_CALL = "true";
+        return reply("*✅ αɴтι-¢αℓℓ нαѕ вєєɴ єɴαвℓє∂*");
+    } else if (status === "off") {
+        config.ANTI_CALL = "false";
+        return reply("*❌ αɴтι-¢αℓℓ нαѕ вєєɴ ∂ιѕαвℓє∂*");
+    } else {
+        return reply(`*🏷️ єχαмρℓє: αɴтι-¢αℓℓ σɴ/σff*`);
     }
-  } catch (err) {
-    console.error(err);
-    m.reply("❌ Error:\n" + err.toString());
-  }
 });
