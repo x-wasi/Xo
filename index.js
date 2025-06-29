@@ -899,18 +899,11 @@ if (isBanned) return; // Ignore banned users completely
         };
     conn.serializeM = mek => sms(conn, mek, store);
   }
- /* 
+  
   app.get("/", (req, res) => {
-  res.send("KHAN STARTED ✅");
+  res.send("MEGALODON-MD STARTED ✅");
   });
-*/
-  app.use(express.static(path.join(__dirname, 'lib')));
-
-app.get('/', (req, res) => {
-  res.redirect('/DybyTech.html');
-});
   app.listen(port, () => console.log(`Server listening on port http://localhost:${port}`));
   setTimeout(() => {
   connectToWA()
   }, 4000);
-
