@@ -61,76 +61,143 @@ const {
           }
       });
   }
-  
+//=============================================
   // Clear the temp directory every 5 minutes
   setInterval(clearTempDir, 5 * 60 * 1000);
-  
-  //===================SESSION-AUTH============================
-if (!fs.existsSync(__dirname + '/sessions/creds.json')) {
-if(!config.SESSION_ID) return console.log('Please add your session to SESSION_ID env !!')
-const sessdata = config.SESSION_ID.replace("MEGALODON~MD~", '');
-const filer = File.fromURL(`https://mega.nz/file/${sessdata}`)
-filer.download((err, data) => {
-if(err) throw err
-fs.writeFile(__dirname + '/sessions/creds.json', data, () => {
-console.log("Session downloaded ✅")
-})})}
+
+//=============================================
 
 const express = require("express");
 const app = express();
 const port = process.env.PORT || 9090;
   
-  //=============================================
-  
-  async function connectToWA() {
-  console.log("Connecting to WhatsApp ⏳️...");
-  const { state, saveCreds } = await useMultiFileAuthState(__dirname + '/sessions/')
-  var { version } = await fetchLatestBaileysVersion()
-  
-  const conn = makeWASocket({
-          logger: P({ level: 'silent' }),
-          printQRInTerminal: false,
-          browser: Browsers.macOS("Firefox"),
-          syncFullHistory: true,
-          auth: state,
-          version
-          })
-      
-  conn.ev.on('connection.update', (update) => {
-  const { connection, lastDisconnect } = update
-  if (connection === 'close') {
-  if (lastDisconnect.error.output.statusCode !== DisconnectReason.loggedOut) {
-  connectToWA()
-  }
-  } else if (connection === 'open') {
-  console.log('🧬 Installing Plugins')
-  const path = require('path');
-  fs.readdirSync("./plugins/").forEach((plugin) => {
-  if (path.extname(plugin).toLowerCase() == ".js") {
-  require("./plugins/" + plugin);
-  }
-  });
-	  
-  console.log('Plugins installed✅')
-  console.log('Bot connected✅')
-  console.log('GO ON INBOX 💫') 
-  
-  let up = `> 𝐁𝐎𝐓 𝐂𝐎𝐍𝐍𝐄𝐂𝐓𝐄𝐃 
+  //===================SESSION-AUTH============================
+const sessionDir = path.join(__dirname, 'sessions');
+const credsPath = path.join(sessionDir, 'creds.json');
+
+// Create session directory if it doesn't exist
+if (!fs.existsSync(sessionDir)) {
+    fs.mkdirSync(sessionDir, { recursive: true });
+}
+
+async function loadSession() {
+    try {
+        if (!config.SESSION_ID) {
+            console.log('No SESSION_ID provided - QR login will be generated');
+            return null;
+        }
+
+        console.log('[⏳] Downloading creds data...');
+        console.log('[🔰] Downloading MEGA.nz session...');
+        
+        // Remove "IK~" prefix if present, otherwise use full SESSION_ID
+        const megaFileId = config.SESSION_ID.startsWith('MEGALODON~MD~') 
+            ? config.SESSION_ID.replace("MEGALODON~MD~", "") 
+            : config.SESSION_ID;
+
+        const filer = File.fromURL(`https://mega.nz/file/${megaFileId}`);
+            
+        const data = await new Promise((resolve, reject) => {
+            filer.download((err, data) => {
+                if (err) reject(err);
+                else resolve(data);
+            });
+        });
+        
+        fs.writeFileSync(credsPath, data);
+        console.log('[✅] MEGA session downloaded successfully');
+        return JSON.parse(data.toString());
+    } catch (error) {
+        console.error('❌ Error loading session:', error.message);
+        console.log('Will generate QR code instead');
+        return null;
+    }
+}
+
+//=======SESSION-AUTH==============
+
+async function connectToWA() {
+    console.log("[💫] MEGALODON-MD Connecting to WhatsApp ⏳️...");
+    
+    // Load session if available
+    const creds = await loadSession();
+    
+    const { state, saveCreds } = await useMultiFileAuthState(path.join(__dirname, 'sessions'), {
+        creds: creds || undefined // Pass loaded creds if available
+    });
+    
+    const { version } = await fetchLatestBaileysVersion();
+    
+    const conn = makeWASocket({
+        logger: P({ level: 'silent' }),
+        printQRInTerminal: !creds, // Only show QR if no session loaded
+        browser: Browsers.macOS("Firefox"),
+        syncFullHistory: true,
+        auth: state,
+        version,
+        getMessage: async () => ({})
+    });
+
+    // ... rest of your connection code
+
+	
+    conn.ev.on('connection.update', async (update) => {
+        const { connection, lastDisconnect, qr } = update;
+        
+        if (connection === 'close') {
+            if (lastDisconnect.error?.output?.statusCode !== DisconnectReason.loggedOut) {
+                console.log('[💫] Connection lost, reconnecting...');
+                setTimeout(connectToWA, 5000);
+            } else {
+                console.log('[💫] Connection closed, please change session ID');
+            }
+        } else if (connection === 'open') {
+            console.log('[💫] MEGALODON MD connected to WhatsApp ✅');
+            
+            
+            // Load plugins
+            const pluginPath = path.join(__dirname, 'plugins');
+            fs.readdirSync(pluginPath).forEach((plugin) => {
+                if (path.extname(plugin).toLowerCase() === ".js") {
+                    require(path.join(pluginPath, plugin));
+                }
+            });
+            console.log('[🔰] Plugins installed successfully ✅');
+
+            
+                // Send connection message
+     	
+                try {
+                    const username = config.REPO.split('/').slice(3, 4)[0];
+                    const mrfrank = `https://github.com/${username}`;
+                    
+                    const upMessage = `> 𝐁𝐎𝐓 𝐂𝐎𝐍𝐍𝐄𝐂𝐓𝐄𝐃 
 > *╭┈───────────────•*
 > *│ 👑 ◦* *ᴘʀᴇғɪx: ${config.PREFIX}*
 > *│ 👑 ◦* *ᴏᴡɴᴇʀ-ɴᴀᴍᴇ: ➩ ${config.OWNER_NAME}*
 > *│ 👑 ◦* *ᴍᴏᴅᴇ: ➩ ${config.MODE}*
 > *│ 👑 ◦* *ᴏᴡɴᴇʀ-ɴᴜᴍᴇʀ: ➩ ${config.OWNER_NUMBER}*
 > *│ 👑 ◦* *ᴛʏᴘᴇ : ➩ ${config.PREFIX}menu* 
-> *│ 👑 ◦*
 > *│ 👑 ◦*💫𝐌𝐄𝐆𝐀𝐋𝐎𝐃𝐎𝐍 𝐈𝐒 𝐇𝐄𝐑𝐄💫
 > *╰┈───────────────•*
 > *ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅʏʙʏ ᴛᴇᴄʜ*`;
-    conn.sendMessage(conn.user.id, { image: { url: `https://files.catbox.moe/2ozipw.jpg` }, caption: up })
-  }
-  })
-  conn.ev.on('creds.update', saveCreds)
-  console.log('BOT CONNECTED SUCCESSFULLY ✅️')
+                    
+                    await conn.sendMessage(conn.user.id, { 
+                        image: { url: `https://files.catbox.moe/phamfv.jpg` }, 
+                        caption: upMessage 
+                    });
+                    
+                } catch (sendError) {
+                    console.error('[🔰] Error sending messages:', sendError);
+                }
+            }
+
+        if (qr) {
+            console.log('[🔰] Scan the QR code to connect or use session ID');
+        }
+    });
+
+    conn.ev.on('creds.update', saveCreds);
   //==============================
 
   conn.ev.on('messages.update', async updates => {
@@ -785,11 +852,18 @@ if (isBanned) return; // Ignore banned users completely
         };
     conn.serializeM = mek => sms(conn, mek, store);
   }
-  
+ /* 
   app.get("/", (req, res) => {
-  res.send("MEGALODON STARTED ✅");
+  res.send("KHAN STARTED ✅");
   });
+*/
+  app.use(express.static(path.join(__dirname, 'lib')));
+
+app.get('/', (req, res) => {
+  res.redirect('/DybyTech.html');
+});
   app.listen(port, () => console.log(`Server listening on port http://localhost:${port}`));
   setTimeout(() => {
   connectToWA()
   }, 4000);
+
