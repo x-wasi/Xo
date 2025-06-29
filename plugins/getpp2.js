@@ -27,7 +27,7 @@ async (conn, mek, m, { from, prefix, l, quoted, body, isCmd, command, args, q, i
         try {
             ppUrl = await conn.profilePictureUrl(targetJid, "image");
         } catch (e) {
-            return reply("🖼️ This user has no profile picture or it cannot be accessed!");
+            return reply("🖼️ ᴛʜɪs ᴜsᴇʀ ʜᴀs ɴᴏ ᴘʀᴏғɪʟᴇ ᴘɪᴄᴛᴜʀᴇ ᴏʀ ɪᴛ ᴄᴀɴɴᴏᴛ ʙᴇ ᴀᴄᴄᴇssᴇᴅ!");
         }
 
         // Get the user's name or number for the caption
@@ -42,7 +42,7 @@ async (conn, mek, m, { from, prefix, l, quoted, body, isCmd, command, args, q, i
         // Send the profile picture
         await conn.sendMessage(from, { 
             image: { url: ppUrl }, 
-            caption: `> *© ᴘσωєʀє∂ ву αℓι м∂⎯꯭̽🐍*` 
+            caption: `> *© ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅʏʙʏ ᴛᴇᴄʜ*` 
         });
 
         // Send a reaction to the command message
