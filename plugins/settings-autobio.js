@@ -66,7 +66,7 @@ cmd({
                 `${config.PREFIX}ᴀᴜᴛᴏʙɪᴏ ᴏɴ @quote - ᴇɴᴀʙʟᴇ ᴡɪᴛʜ ʀᴀɴᴅᴏᴍ ǫᴜᴏᴛᴇs\n` +
                 `${config.PREFIX}ᴀᴜᴛᴏʙɪᴏ ᴏғғ - ᴅɪsᴀʙʟᴇ ᴀᴜᴛᴏ-ʙɪᴏ\n\n` +
                 `ᴀᴠᴀɪʟᴀʙʟᴇ ᴘʟᴀᴄᴇʜᴏʟᴅᴇʀs:\n` +
-                `{time} - ᴄᴜʀʀᴇɴᴛ ᴛɪᴍᴇ\n` +
+                `{timeZone} - ᴄᴜʀʀᴇɴᴛ ᴛɪᴍᴇ\n` +
                 `ᴄᴜʀʀᴇɴᴛ sᴛᴀᴛᴜs: ${config.AUTO_BIO === "true" ? 'ON' : 'OFF'}\n` +
                 `ᴄᴜʀʀᴇɴᴛ ᴛᴇxᴛ: "${config.AUTO_BIO_TEXT || defaultBio}"`);
         }
