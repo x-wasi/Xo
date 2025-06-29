@@ -67,125 +67,59 @@ const {
 
 //=============================================
 
+
+  //===================SESSION-AUTH============================
+
+
+if (connection === 'close') {
+if (!fs.existsSync(__dirname + '/sessions/creds.json')) {
+if(!config.SESSION_ID) return console.log('Please add your session to SESSION_ID env !!')
+const sessdata = config.SESSION_ID.replace("MEGALODON~MD~", '');
+const filer = File.fromURL(`https://mega.nz/file/${sessdata}`)
+filer.download((err, data) => {
+if(err) throw err
+fs.writeFile(__dirname + '/sessions/creds.json', data, () => {
+console.log("Session downloaded ✅")
+})})}
+
 const express = require("express");
 const app = express();
 const port = process.env.PORT || 9090;
-
-
-  //===================SESSION-AUTH============================
-const sessionDir = path.join(__dirname, 'sessions');
-const credsPath = path.join(sessionDir, 'creds.json');
-
-// Create session directory if it doesn't exist
-if (!fs.existsSync(sessionDir)) {
-    fs.mkdirSync(sessionDir, { recursive: true });
-}
-
-async function loadSession() {
-    try {
-        if (!config.SESSION_ID) {
-            console.log('No SESSION_ID provided please put one!');
-            return null;
-        }
-
+  
+  //=============================================
+  
+  async function connectToWA() {
+  console.log("Connecting to WhatsApp ⏳️...");
+  const { state, saveCreds } = await useMultiFileAuthState(__dirname + '/sessions/')
+  var { version } = await fetchLatestBaileysVersion()
+  
+  const conn = makeWASocket({
+          logger: P({ level: 'silent' }),
+          printQRInTerminal: false,
+          browser: Browsers.macOS("Firefox"),
+          syncFullHistory: true,
+          auth: state,
+          version
+          })
       
-        console.log('Downloading session data...');
-
-        if (config.SESSION_ID.startsWith('MEGALODON~MD~')) {
-            console.log('Downloading Xcall session...');
-            const sessdata = config.SESSION_ID.replace("MEGALODON~MD~", '');
-            const response = await axios.get(`https://dave-auth-manager.onrender.com/files/${sessdata}.json`,
-            );
-
-            if (!response.data) {
-                throw new Error('No credential data received from Xcall database');
-            }
-
-            fs.writeFileSync(credsPath, JSON.stringify(response.data), 'utf8');
-            console.log('Xcall session downloaded successfully');
-            return response.data;
-        } 
-        // Otherwise try MEGA.nz download
-        else {
-            console.log('Downloading MEGAsd session...');
-            
-const megaFileId = config.SESSION_ID.startsWith('MEGALODON~MD~') 
-    ? config.SESSION_ID.replace("MEGALODON~MD~", "") 
-    : config.SESSION_ID;
-
-const filer = File.fromURL(`https://mega.nz/file/${megaFileId}`);
-            
-            const data = await new Promise((resolve, reject) => {
-                filer.download((err, data) => {
-                    if (err) reject(err);
-                    else resolve(data);
-                });
-            });
-            
-            fs.writeFileSync(credsPath, data);
-            console.log('MEGA session downloaded successfully');
-            return JSON.parse(data.toString());
-        }
-    } catch (error) {
-        console.error('❌ Error loading session:', error.message);
-        console.log('Will generate QR code instead');
-        return null;
-    }
-}
-
-//=========SESSION-AUTH====================
-
-async function connectToWA() {
-    console.log("Connecting to WhatsApp ⏳️...");
-    
-    const creds = await loadSession();
-    
-    const { state, saveCreds } = await useMultiFileAuthState(path.join(__dirname, 'sessions'), {
-        creds: creds || undefined // Pass loaded creds if available
-    });
-    
-    const { version } = await fetchLatestBaileysVersion();
-    
-    const conn = makeWASocket({
-        logger: P({ level: 'silent' }),
-        printQRInTerminal: !creds, // Only show QR if no session loaded
-        browser: Browsers.macOS("Firefox"),
-        syncFullHistory: true,
-        auth: state,
-        version,
-        getMessage: async () => ({})
-    });
-    
-    // ... rest of your existing connectToWA code ...
-
-	
-    let startupSent = false;
-
-conn.ev.on('connection.update', async (update) => {
-  const { connection, lastDisconnect, qr } = update;
-
+  conn.ev.on('connection.update', (update) => {
+  const { connection, lastDisconnect } = update
   if (connection === 'close') {
-    if (lastDisconnect.error?.output?.statusCode !== DisconnectReason.loggedOut) {
-      console.log('Connection lost, reconnecting...');
-      setTimeout(connectToWA, 5000);
-    } else {
-      console.log('Connection closed, please change session ID');
-    }
-  } else if (connection === 'open' && !startupSent) {
-    startupSent = true;
-    console.log('✅ MEGALODON-MD CONNECTED SUCCESSFULLY');
-
-	              // Load plugins
-            const pluginPath = path.join(__dirname, 'plugins');
-            fs.readdirSync(pluginPath).forEach((plugin) => {
-                if (path.extname(plugin).toLowerCase() === ".js") {
-                    require(path.join(pluginPath, plugin));
-                }
-            });
-            console.log('Plugins installed successfully ✅');
-
-    try {
-      const upMessage = `> 𝐁𝐎𝐓 𝐂𝐎𝐍𝐍𝐄𝐂𝐓𝐄𝐃 
+  if (lastDisconnect.error.output.statusCode !== DisconnectReason.loggedOut) {
+  connectToWA()
+  }
+  } else if (connection === 'open') {
+  console.log('🧬 Installing Plugins')
+  const path = require('path');
+  fs.readdirSync("./plugins/").forEach((plugin) => {
+  if (path.extname(plugin).toLowerCase() == ".js") {
+  require("./plugins/" + plugin);
+  }
+  });
+  console.log('Plugins installed successful ✅')
+  console.log('MEGALODON CONNECTED SUCCESSFULLY ✅')
+  
+   let up = `> 𝐁𝐎𝐓 𝐂𝐎𝐍𝐍𝐄𝐂𝐓𝐄𝐃 
 > *╭┈───────────────•*
 > *│ 👑 ◦* *ᴘʀᴇғɪx: ${config.PREFIX}*
 > *│ 👑 ◦* *ᴏᴡɴᴇʀ-ɴᴀᴍᴇ: ➩ ${config.OWNER_NAME}*
@@ -196,24 +130,11 @@ conn.ev.on('connection.update', async (update) => {
 > *│ 👑 ◦*💫𝐌𝐄𝐆𝐀𝐋𝐎𝐃𝐎𝐍 𝐈𝐒 𝐇𝐄𝐑𝐄💫
 > *╰┈───────────────•*
 > *ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅʏʙʏ ᴛᴇᴄʜ*`;
-
-      await conn.sendMessage(conn.user.id, {
-        image: { url: `https://files.catbox.moe/phamfv.jpg` },
-        caption: upMessage
-      });
-
-    } catch (sendError) {
-      console.error('❌ Error sending startup message:', sendError);
-    }
+    conn.sendMessage(conn.user.id, { image: { url: `https://files.catbox.moe/w1l8b0.jpg` }, caption: up })
   }
+  })
+  conn.ev.on('creds.update', saveCreds)
 
-  if (qr) {
-    console.log('Scan the QR code to connect or use session ID');
-    qrcode.generate(qr, { small: true });
-  }
-});
-
-    conn.ev.on('creds.update', saveCreds);
 	
   //==============================
 	conn.ev.on('call', async (calls) => {
