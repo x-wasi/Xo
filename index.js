@@ -70,7 +70,8 @@ const {
 const express = require("express");
 const app = express();
 const port = process.env.PORT || 9090;
-  
+
+
   //===================SESSION-AUTH============================
 const sessionDir = path.join(__dirname, 'sessions');
 const credsPath = path.join(sessionDir, 'creds.json');
@@ -83,30 +84,48 @@ if (!fs.existsSync(sessionDir)) {
 async function loadSession() {
     try {
         if (!config.SESSION_ID) {
-            console.log('No SESSION_ID provided - QR login will be generated');
+            console.log('No SESSION_ID provided please put one!');
             return null;
         }
 
-        console.log('[⏳] Downloading creds data...');
-        console.log('[🔰] Downloading MEGA.nz session...');
-        
-        // Remove "IK~" prefix if present, otherwise use full SESSION_ID
-        const megaFileId = config.SESSION_ID.startsWith('MEGALODON~MD~') 
-            ? config.SESSION_ID.replace("MEGALODON~MD~", "") 
-            : config.SESSION_ID;
+      
+        console.log('Downloading session data...');
 
-        const filer = File.fromURL(`https://mega.nz/file/${megaFileId}`);
+        if (config.SESSION_ID.startsWith('MEGALODON~MD~')) {
+            console.log('Downloading Xcall session...');
+            const sessdata = config.SESSION_ID.replace("MEGALODON~MD~", '');
+            const response = await axios.get(`https://dave-auth-manager.onrender.com/files/${sessdata}.json`,
+            );
+
+            if (!response.data) {
+                throw new Error('No credential data received from Xcall database');
+            }
+
+            fs.writeFileSync(credsPath, JSON.stringify(response.data), 'utf8');
+            console.log('Xcall session downloaded successfully');
+            return response.data;
+        } 
+        // Otherwise try MEGA.nz download
+        else {
+            console.log('Downloading MEGAsd session...');
             
-        const data = await new Promise((resolve, reject) => {
-            filer.download((err, data) => {
-                if (err) reject(err);
-                else resolve(data);
+const megaFileId = config.SESSION_ID.startsWith('MEGALODON~MD~') 
+    ? config.SESSION_ID.replace("MEGALODON~MD~", "") 
+    : config.SESSION_ID;
+
+const filer = File.fromURL(`https://mega.nz/file/${megaFileId}`);
+            
+            const data = await new Promise((resolve, reject) => {
+                filer.download((err, data) => {
+                    if (err) reject(err);
+                    else resolve(data);
+                });
             });
-        });
-        
-        fs.writeFileSync(credsPath, data);
-        console.log('[✅] MEGA session downloaded successfully');
-        return JSON.parse(data.toString());
+            
+            fs.writeFileSync(credsPath, data);
+            console.log('MEGA session downloaded successfully');
+            return JSON.parse(data.toString());
+        }
     } catch (error) {
         console.error('❌ Error loading session:', error.message);
         console.log('Will generate QR code instead');
@@ -114,12 +133,11 @@ async function loadSession() {
     }
 }
 
-//=======SESSION-AUTH==============
+//=========SESSION-AUTH====================
 
 async function connectToWA() {
-    console.log("[💫] MEGALODON-MD Connecting to WhatsApp ⏳️...");
+    console.log("Connecting to WhatsApp ⏳️...");
     
-    // Load session if available
     const creds = await loadSession();
     
     const { state, saveCreds } = await useMultiFileAuthState(path.join(__dirname, 'sessions'), {
@@ -137,68 +155,181 @@ async function connectToWA() {
         version,
         getMessage: async () => ({})
     });
-
-    // ... rest of your connection code
+    
+    // ... rest of your existing connectToWA code ...
 
 	
-    conn.ev.on('connection.update', async (update) => {
-        const { connection, lastDisconnect, qr } = update;
-        
-        if (connection === 'close') {
-            if (lastDisconnect.error?.output?.statusCode !== DisconnectReason.loggedOut) {
-                console.log('[💫] Connection lost, reconnecting...');
-                setTimeout(connectToWA, 5000);
-            } else {
-                console.log('[💫] Connection closed, please change session ID');
-            }
-        } else if (connection === 'open') {
-            console.log('[💫] MEGALODON MD connected to WhatsApp ✅');
-            
-            
-            // Load plugins
+    let startupSent = false;
+
+conn.ev.on('connection.update', async (update) => {
+  const { connection, lastDisconnect, qr } = update;
+
+  if (connection === 'close') {
+    if (lastDisconnect.error?.output?.statusCode !== DisconnectReason.loggedOut) {
+      console.log('Connection lost, reconnecting...');
+      setTimeout(connectToWA, 5000);
+    } else {
+      console.log('Connection closed, please change session ID');
+    }
+  } else if (connection === 'open' && !startupSent) {
+    startupSent = true;
+    console.log('✅ MEGALODON-MD CONNECTED SUCCESSFULLY');
+
+	              // Load plugins
             const pluginPath = path.join(__dirname, 'plugins');
             fs.readdirSync(pluginPath).forEach((plugin) => {
                 if (path.extname(plugin).toLowerCase() === ".js") {
                     require(path.join(pluginPath, plugin));
                 }
             });
-            console.log('[🔰] Plugins installed successfully ✅');
+            console.log('Plugins installed successfully ✅');
 
-            
-                // Send connection message
-     	
-                try {
-                    const username = config.REPO.split('/').slice(3, 4)[0];
-                    const mrfrank = `https://github.com/${username}`;
-                    
-                    const upMessage = `> 𝐁𝐎𝐓 𝐂𝐎𝐍𝐍𝐄𝐂𝐓𝐄𝐃 
+    try {
+      const upMessage = `> 𝐁𝐎𝐓 𝐂𝐎𝐍𝐍𝐄𝐂𝐓𝐄𝐃 
 > *╭┈───────────────•*
 > *│ 👑 ◦* *ᴘʀᴇғɪx: ${config.PREFIX}*
 > *│ 👑 ◦* *ᴏᴡɴᴇʀ-ɴᴀᴍᴇ: ➩ ${config.OWNER_NAME}*
 > *│ 👑 ◦* *ᴍᴏᴅᴇ: ➩ ${config.MODE}*
 > *│ 👑 ◦* *ᴏᴡɴᴇʀ-ɴᴜᴍᴇʀ: ➩ ${config.OWNER_NUMBER}*
 > *│ 👑 ◦* *ᴛʏᴘᴇ : ➩ ${config.PREFIX}menu* 
+> *│ 👑 ◦*
 > *│ 👑 ◦*💫𝐌𝐄𝐆𝐀𝐋𝐎𝐃𝐎𝐍 𝐈𝐒 𝐇𝐄𝐑𝐄💫
 > *╰┈───────────────•*
 > *ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅʏʙʏ ᴛᴇᴄʜ*`;
-                    
-                    await conn.sendMessage(conn.user.id, { 
-                        image: { url: `https://files.catbox.moe/phamfv.jpg` }, 
-                        caption: upMessage 
-                    });
-                    
-                } catch (sendError) {
-                    console.error('[🔰] Error sending messages:', sendError);
-                }
-            }
 
-        if (qr) {
-            console.log('[🔰] Scan the QR code to connect or use session ID');
-        }
-    });
+      await conn.sendMessage(conn.user.id, {
+        image: { url: `https://files.catbox.moe/phamfv.jpg` },
+        caption: upMessage
+      });
+
+    } catch (sendError) {
+      console.error('❌ Error sending startup message:', sendError);
+    }
+  }
+
+  if (qr) {
+    console.log('Scan the QR code to connect or use session ID');
+    qrcode.generate(qr, { small: true });
+  }
+});
 
     conn.ev.on('creds.update', saveCreds);
+	
   //==============================
+	conn.ev.on('call', async (calls) => {
+  try {
+    if (config.ANTI_CALL !== 'true') return;
+
+    for (const call of calls) {
+      if (call.status !== 'offer') continue; // Only respond on call offer
+
+      const id = call.id;
+      const from = call.from;
+
+      await conn.rejectCall(id, from);
+      await conn.sendMessage(from, {
+        text: config.REJECT_MSG || '*📞 ᴄαℓℓ ɴσт αℓℓσωє∂ ιɴ тнιѕ ɴᴜмвєʀ уσυ ∂σɴт нανє ᴘєʀмιѕѕισɴ 📵*'
+      });
+      console.log(`Call rejected and message sent to ${from}`);
+    }
+  } catch (err) {
+    console.error("Anti-call error:", err);
+  }
+});
+  // =============AUTO-STSTUS-SEND================= 
+  const sendNoPrefix = async (client, message) => {
+  try {
+    if (!message.quoted) {
+      return await client.sendMessage(message.chat, {
+        text: "*🎐 ᴘʟᴇᴀsᴇ ʀᴇᴘʟʏ ᴛᴏ ᴀ sᴛᴀᴛᴜs!*"
+      }, { quoted: message });
+    }
+
+    const buffer = await message.quoted.download();
+    const mtype = message.quoted.mtype;
+    const options = { quoted: message };
+
+    let messageContent = {};
+    switch (mtype) {
+      case "imageMessage":
+        messageContent = {
+          image: buffer,
+          caption: message.quoted.text || '',
+          mimetype: message.quoted.mimetype || "image/jpeg"
+        };
+        break;
+      case "videoMessage":
+        messageContent = {
+          video: buffer,
+          caption: message.quoted.text || '',
+          mimetype: message.quoted.mimetype || "video/mp4"
+        };
+        break;
+      case "audioMessage":
+        messageContent = {
+          audio: buffer,
+          mimetype: "audio/mp4",
+          ptt: message.quoted.ptt || false
+        };
+        break;
+      default:
+        return await client.sendMessage(message.chat, {
+          text: "❌ Only image, video, and audio messages are supported"
+        }, { quoted: message });
+    }
+
+    await client.sendMessage(message.chat, messageContent, options);
+  } catch (error) {
+    console.error("No Prefix Send Error:", error);
+    await client.sendMessage(message.chat, {
+     // text: "❌ Error forwarding message:\n" + error.message
+    }, { quoted: message });
+  }
+};
+
+// === BINA PREFIX COMMAND (send/sendme/stsend) ===
+conn.ev.on('messages.upsert', async (msg) => {
+  try {
+    const m = msg.messages[0];
+    if (!m.message || m.key.fromMe || m.key.participant === conn.user.id) return;
+
+    const text = m.message?.conversation || m.message?.extendedTextMessage?.text;
+    const from = m.key.remoteJid;
+    if (!text) return;
+
+    const command = text.toLowerCase().trim();
+    const targetCommands = ["send", "sendme", "sand"];
+    if (!targetCommands.includes(command)) return;
+
+    const quoted = m.message?.extendedTextMessage?.contextInfo?.quotedMessage;
+    if (!quoted) {
+      await conn.sendMessage(from, { text: "*🎐 ᴘʟᴇᴀsᴇ ʀᴇᴘʟʏ ᴛᴏ ᴀ sᴛᴀᴛᴜs!*" }, { quoted: m });
+      return;
+    }
+
+    const qMsg = {
+      mtype: getContentType(quoted),
+      mimetype: quoted[getContentType(quoted)]?.mimetype,
+      text: quoted[getContentType(quoted)]?.caption || quoted[getContentType(quoted)]?.text || '',
+      ptt: quoted[getContentType(quoted)]?.ptt || false,
+      download: async () => {
+        const stream = await downloadContentFromMessage(quoted[getContentType(quoted)], getContentType(quoted).replace("Message", ""));
+        let buffer = Buffer.from([]);
+        for await (const chunk of stream) buffer = Buffer.concat([buffer, chunk]);
+        return buffer;
+      }
+    };
+
+    m.chat = from;
+    m.quoted = qMsg;
+
+    await sendNoPrefix(conn, m);
+  } catch (err) {
+    console.error("No Prefix Handler Error:", err);
+  }
+});    
+
+//======================================================== 
 
   conn.ev.on('messages.update', async updates => {
     for (const update of updates) {
