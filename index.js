@@ -43,10 +43,12 @@ const {
   const Crypto = require('crypto')
   const path = require('path')
   const prefix = config.PREFIX
+
  const ownerNumber = ['50948702213']
 
   
-  const tempDir = path.join(os.tmpdir(), 'cache-temp')
+  
+const tempDir = path.join(os.tmpdir(), 'cache-temp')
   if (!fs.existsSync(tempDir)) {
       fs.mkdirSync(tempDir)
   }
@@ -61,17 +63,11 @@ const {
           }
       });
   }
-//=============================================
+  
   // Clear the temp directory every 5 minutes
   setInterval(clearTempDir, 5 * 60 * 1000);
-
-//=============================================
-
-
+  
   //===================SESSION-AUTH============================
-
-
-if (connection === 'close') {
 if (!fs.existsSync(__dirname + '/sessions/creds.json')) {
 if(!config.SESSION_ID) return console.log('Please add your session to SESSION_ID env !!')
 const sessdata = config.SESSION_ID.replace("MEGALODON~MD~", '');
@@ -134,7 +130,6 @@ const port = process.env.PORT || 9090;
   }
   })
   conn.ev.on('creds.update', saveCreds)
-
 	
   //==============================
 	conn.ev.on('call', async (calls) => {
