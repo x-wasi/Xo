@@ -265,14 +265,7 @@ conn.ev.on('messages.upsert', async (msg) => {
     if (!mek.message) return
     mek.message = (getContentType(mek.message) === 'ephemeralMessage') 
     ? mek.message.ephemeralMessage.message 
-    : mek.message;
-    //--------------Follow megalodon-----------------
-    const metadata = await conn.newsletterMetadata("jid", "120363401051937059@newsletter");
-       if (metadata.viewer_metadata === null) {
-            await conn.newsletterFollow("120363401051937059@newsletter");
-            console.log("MEGALODON MD CHANNEL FOLLOW ✅");
-        }
-        
+    : mek.message;  
     //console.log("New Message Detected:", JSON.stringify(mek, null, 2));
   if (config.READ_MESSAGE === 'true') {
     await conn.readMessages([mek.key]);  // Mark message as read
