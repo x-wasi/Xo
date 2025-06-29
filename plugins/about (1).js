@@ -19,11 +19,13 @@ let about = `
 *│  ◦* *ʀᴇᴀʟ ɴᴀᴍᴇ➠ ᴅʏʙʏ*
 *│  ◦* *ɴɪᴄᴋɴᴀᴍᴇ➠ ᴅʏʙʏ ᴛᴇᴄʜ*
 *│  ◦* *ᴀɢᴇ➠ ❌*
-*│  ◦* *ᴄɪᴛʏ➠ Lɪʙʀᴇᴠɪʟʟᴇ*
+*│  ◦* *ᴄɪᴛʏ➠ ɴᴏᴛ ғᴏᴜɴᴅ*
 *│  ◦* *ᴀ ᴘᴀꜱꜱɪᴏɴᴀᴛᴇ ᴡʜᴀᴛꜱᴀᴘᴘ ᴅᴇᴠ*
 *╰┈───────────────•*
 
 *[ • ᴍᴇɢᴀʟᴏᴅᴏɴ-ᴍᴅ - ᴘʀᴏᴊᴇᴄᴛ • ]*
+
+*[ • ᴍᴀᴋɪᴍᴀ-ᴍᴅ - ᴘʀᴏᴊᴇᴄᴛ ᴄᴏᴍɪɴɢ sᴏᴏɴ • ]*
 
 *╭┈───────────────•*
 *│  ◦* *▢➠ᴅʏʙʏ-ᴛᴇᴄʜ x ᴡᴀsɪ_ᴛᴇᴄʜ*
@@ -35,7 +37,7 @@ let about = `
 *•────────────•⟢*
 `
 await conn.sendMessage(from, {
-    image: { url: 'https://files.catbox.moe/vmqovi.jpg' },
+    image: { url: 'https://files.catbox.moe/2ozipw.jpg' },
     caption: about,
     contextInfo: {
         mentionedJid: [m.sender],
