@@ -75,7 +75,7 @@ const {
     jidDecode,
     fetchLatestBaileysVersion,
     Browsers
-} = require(config.BAILEYS)
+} = require('baileys')
 
 
 const l = console.log
@@ -126,7 +126,7 @@ setInterval(clearTempDir, 5 * 60 * 1000);
 
 const express = require("express");
 const app = express();
-const port = process.env.PORT || 7860;
+const port = process.env.PORT || 9090;
 
 //===================SESSION-AUTH============================
 const sessionDir = path.join(__dirname, 'sessions');
