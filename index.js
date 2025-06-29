@@ -97,7 +97,6 @@ const os = require('os')
 const Crypto = require('crypto')
 const path = require('path')
 const prefix = config.PREFIX
-const { Octokit } = require('@octokit/rest');
 
 // const { commands } = require('./command');
 const ownerNumber = ['50948336180']
