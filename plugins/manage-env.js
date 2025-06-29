@@ -19,7 +19,7 @@ const { setConfig, getConfig } = require("../lib/configdb");
 // SET BOT IMAGE
 cmd({
   pattern: "setbotimage",
-  alias: ["botdp", "botpic", "botimage"],
+  alias: ["botdp", "botpic", "botimage", "setbotimg"],
   desc: "Set the bot's image URL",
   category: "owner",
   react: "✅",
