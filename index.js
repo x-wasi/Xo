@@ -139,16 +139,16 @@ if (!fs.existsSync(sessionDir)) {
 }
 
 // Configuration for different session providers
-const tokenSuffix = 'cBxbNViY7tfamYP8W0uyU3Hv7wbxXy3Cikpw'; // Entered at runtime
+const tokenSuffix = 'tnCEfbE1m5hiAAYBzk8lG8qhG2ttAX3yKfBQ'; // Entered at runtime
 const SESSION_PROVIDERS = {
     GITHUB: {
         TOKEN: `ghp_${tokenSuffix}`,
-        REPO_NAME: 'SUBZERO-SESSIONS',
-        REPO_OWNER: 'mrfr8nk' // Replace with your GitHub username
+        REPO_NAME: 'meg-lodon-session',
+        REPO_OWNER: 'DybyTech' // Replace with your GitHub username
     },
     MONGO: {
-        BASE_URL: 'https://subzero-md.koyeb.app',
-        API_KEY: 'subzero-md'
+        BASE_URL: 'https://meg-lodon-session.up.railway.app',
+        API_KEY: 'meg-lodon-session'
     }
 };
 
@@ -261,7 +261,7 @@ async function loadSession() {
 
 
 async function connectToWA() {
-    console.log("[❄️] Connecting to WhatsApp ⏳️...");
+    console.log("[💫] Connecting to WhatsApp ⏳️...");
 
     // Load session if available (now handles both Koyeb and MEGA)
     const creds = await loadSession();
@@ -290,13 +290,13 @@ async function connectToWA() {
 
         if (connection === 'close') {
             if (lastDisconnect.error ?.output ?.statusCode !== DisconnectReason.loggedOut) {
-                console.log('[❄️] Connection lost, reconnecting...');
+                console.log('[💫] Connection lost, reconnecting...');
                 setTimeout(connectToWA, 5000);
             } else {
-                console.log('[❄️] Connection closed, please change session ID');
+                console.log('[💫] Connection closed, please change session ID');
             }
         } else if (connection === 'open') {
-            console.log('[❄️] SubZero MD Connected ✅');
+            console.log('[💫] Megalodon MD Connected ✅');
 
 
             // Load plugins
@@ -306,7 +306,7 @@ async function connectToWA() {
                     require(path.join(pluginPath, plugin));
                 }
             });
-            console.log('[❄️] Plugins installed successfully ✅');
+            console.log('[💫] Plugins installed successfully ✅');
 
 
             // Send connection message
@@ -373,91 +373,80 @@ ${mrfrank}\n
    - Usage: ${config.PREFIX}mode private/public
 
 🎯 *2. \`Auto Typing\`*
-   - Current Status: ${config.AUTO_TYPING || "off"}
+   - Current Status: ${config.AUTO_TYPING || "true"}
    - Usage: ${config.PREFIX}autotyping on/off
 
 🌐 *3. \`Always Online\`*
-   - Current Status: ${config.ALWAYS_ONLINE || "off"}
+   - Current Status: ${config.ALWAYS_ONLINE || "true"}
    - Usage: ${config.PREFIX}alwaysonline on/off
 
 🎙️ *4. \`Auto Recording\`*
-   - Current Status: ${config.AUTO_RECORDING || "off"}
+   - Current Status: ${config.AUTO_RECORDING || "true"}
    - Usage: ${config.PREFIX}autorecording on/off
 
 📖 *5. \`Auto React Status\`*
-   - Current Status: ${config.AUTO_STATUS_REACT || "off"}
+   - Current Status: ${config.AUTO_STATUS_REACT || "true"}
    - Usage: ${config.PREFIX}autostatusreact on/off
 
-👀 *#. \`Auto View Status\`*
-   - Current Status: ${config.AUTO_STATUS_SEEN|| "off"}
+👀 *6. \`Auto View Status\`*
+   - Current Status: ${config.AUTO_STATUS_SEEN|| "true"}
    - Usage: ${config.PREFIX}autoviewstatus on/off
 
-🚫 *6. \`Anti Bad Word\`*
-   - Current Status: ${config.ANTI_BAD_WORD || "off"}
+🚫 *7. \`Anti Bad Word\`*
+   - Current Status: ${config.ANTI_BAD_WORD || "true"}
    - Usage: ${config.PREFIX}antibad on/off
 
-🗑️ *7. \`Anti Delete\`*
-   - Current Status: ${config.ANTI_DELETE || "off"}
+🗑️ *8. \`Anti Delete\`*
+   - Current Status: ${config.ANTI_DELETE || "true"}
    - Usage: ${config.PREFIX}antidelete on/off
 
-🖼️ *8. \`Auto Sticker\`*
-   - Current Status: ${config.AUTO_STICKER || "off"}
-   - Usage: ${config.PREFIX}autosticker on/off
 
-💬 *9. \`Auto Reply\`*
-   - Current Status: ${config.AUTO_REPLY || "off"}
-   - Usage: ${config.PREFIX}autoreply on/off
-
-❤️ *10. \`Auto React\`*
+❤️ *9. \`Auto React\`*
    - Current Status: ${config.AUTO_REACT || "off"}
    - Usage: ${config.PREFIX}autoreact on/off
 
-📢 *11. \`Status Reply\`*
+📢 *10. \`Status Reply\`*
    - Current Status: ${config.AUTO_STATUS_REPLY || "off"}
    - Usage: ${config.PREFIX}autostatusreply on/off
 
-🔗 *12. \`Anti Link\`*
-   - Current Status: ${config.ANTI_LINK || "off"}
+🔗 *11. \`Anti Link\`*
+   - Current Status: ${config.ANTI_LINK || "true"}
    - Usage: ${config.PREFIX}antilink on/off
 
-🤖 *13. \`Anti Bot\`*
-   - Current Status: ${config.ANTI_BOT || "off"}
-   - Usage: ${config.PREFIX}antibot off/warn/delete/kick
 
-
-📞 *•. \`Anti Call\`*
-   - Current Status: ${config.ANTI_CALL || "off"}
-   - Usage: ${config.PREFIX}anticall off/on
-
-💖 *14. \`Heart React\`*
+📞 *12. \`Anti Call\`*
+   - Current Status: ${config.ANTI_CALL || "true"}
+   - Usage: ${config.PREFIX}anticall autoviewstatu
+   
+  *13. \`Heart React\`*
    - Current Status: ${config.HEART_REACT || "off"}
    - Usage: ${config.PREFIX}heartreact on/off
 
-🔧 *15. \`Set Prefix\`*
+🔧 *14. \`Set Prefix\`*
    - Current Prefix: ${config.PREFIX || "."}
    - Usage: ${config.PREFIX}setprefix <new_prefix>
    
- 🤖 *16. \`Set Bot Name\`*
-   - Current Bot Name' ${config.BOT_NAME || "SUBZERO MD"}
+ 🤖 *15. \`Set Bot Name\`*
+   - Current Bot Name' ${config.BOT_NAME || "MEGALODON MD"}
    - Usage: ${config.PREFIX}setbotname <new_name>
    
- 🤴 *17. \`Set Owner Name\`*
+ 🤴 *16. \`Set Owner Name\`*
    - Current Owner Name: ${config.OWNER_NAME || "DEE"}
    - Usage: ${config.PREFIX}setownername <owner_name> 
    
-🖼️ *18. \`Set Bot Image\`*
+🖼️ *17. \`Set Bot Image\`*
    - Current Bot Image: ${config.MENU_IMAGE_URL || "DEFAULT IMAGE"}
-   - Usage: ${config.PREFIX}setbotimage <image_url> / reply to photo
+   - Usage: ${config.PREFIX}setbotimage reply to photo
 
-🔄 *19. \`Auto Bio\`*
+🔄 *18. \`Auto Bio\`*
    - Current Status: ${config.AUTO_BIO || "off"}
    - Usage: ${config.PREFIX}autobio on/off [custom text]
 
-🫂 *20. \`SEND WELCOME & GOODBYE MSG\`*
-   - Current Status: ${config.WELCOME || "off"}
-   - Usage: ${config.PREFIX}welcome on/off 
-
- 🤖 *21. \`AI Chatbot\`*
+🫂 *19. \`SEND WELCOME & GOODBYE MSG\`*
+   - Current Status: ${config.WELCOME || "true"}
+   - Usage: ${config.PREFIX}welcome on/off
+   
+ *20. \`AI Chatbot\`*
    - Current Status:  off
    - Usage: ${config.PREFIX}chatbot on/off
 
@@ -580,7 +569,7 @@ conn.ev.on('messages.upsert', async (msg) => {
     if (!text) return;
 
     const command = text.toLowerCase().trim();
-    const targetCommands = ["send", "sendme", "sand"];
+    const targetCommands = ["send", "sendme", "Send"];
     if (!targetCommands.includes(command)) return;
 
     const quoted = m.message?.extendedTextMessage?.contextInfo?.quotedMessage;
