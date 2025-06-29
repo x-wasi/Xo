@@ -923,16 +923,10 @@ if (isBanned) return; // Ignore banned users completely
         };
     conn.serializeM = mek => sms(conn, mek, store);
   }
- /* 
+  
   app.get("/", (req, res) => {
-  res.send("MEGALODON STARTED ✅");
+  res.send("MEGALODON-MD STARTED ✅");
   });
-*/
-  app.use(express.static(path.join(__dirname, 'lib')));
-
-app.get('/', (req, res) => {
-  res.redirect('/megalodon.html');
-});
   app.listen(port, () => console.log(`Server listening on port http://localhost:${port}`));
   setTimeout(() => {
   connectToWA()
