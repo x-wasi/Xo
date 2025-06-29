@@ -14,7 +14,7 @@ const os = require('os');
 const { exec } = require('child_process');
 const axios = require('axios');
 const FormData = require('form-data');
-const { setConfig, getConfig } = require("../lib/configub");
+const { setConfig, getConfig } = require("../lib/configdb");
 
 // SET BOT IMAGE
 cmd({
