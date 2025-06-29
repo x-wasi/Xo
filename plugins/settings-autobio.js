@@ -4,7 +4,7 @@ const axios = require("axios");
 
 
 let bioInterval;
-const defaultBio = "⚡ ᴍᴇɢᴀʟᴏᴅᴏɴ ᴍᴅ | ᴏɴʟɪɴᴇ 🕒 {time}";
+const defaultBio = "⚡ ᴍᴇɢᴀʟᴏᴅᴏɴ ᴍᴅ | ᴏɴʟɪɴᴇ 🕒 {timeZone}";
 const timeZone = 'America/Port-au-Prince';
 
 cmd({
@@ -13,7 +13,7 @@ cmd({
     desc: "Toggle automatic bio updates",
     category: "misc",
     filename: __filename,
-    usage: `${config.PREFIX}autobio [on/off]`
+    usage: `${config.PREFIX}ᴀᴜᴛᴏʙɪᴏ [on/off]`
 }, async (conn, mek, m, { args, reply, isOwner }) => {
     if (!isOwner) return reply("❌ ᴏɴʟʏ ᴛʜᴇ ʙᴏᴛ ᴏᴡɴᴇʀ ᴄᴀɴ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ");
     
@@ -63,8 +63,8 @@ cmd({
 
         } else {
             return reply(`Usage:\n` +
-                `${config.PREFIX}ᴀᴜᴛᴏʙɪᴏ ᴏɴ @quote - Enable with random quotes\n` +
-                `${config.PREFIX}ᴀᴜᴛᴏʙɪᴏ ᴏғғ - Disable auto-bio\n\n` +
+                `${config.PREFIX}ᴀᴜᴛᴏʙɪᴏ ᴏɴ @quote - ᴇɴᴀʙʟᴇ ᴡɪᴛʜ ʀᴀɴᴅᴏᴍ ǫᴜᴏᴛᴇs\n` +
+                `${config.PREFIX}ᴀᴜᴛᴏʙɪᴏ ᴏғғ - ᴅɪsᴀʙʟᴇ ᴀᴜᴛᴏ-ʙɪᴏ\n\n` +
                 `ᴀᴠᴀɪʟᴀʙʟᴇ ᴘʟᴀᴄᴇʜᴏʟᴅᴇʀs:\n` +
                 `{time} - ᴄᴜʀʀᴇɴᴛ ᴛɪᴍᴇ\n` +
                 `ᴄᴜʀʀᴇɴᴛ sᴛᴀᴛᴜs: ${config.AUTO_BIO === "true" ? 'ON' : 'OFF'}\n` +
