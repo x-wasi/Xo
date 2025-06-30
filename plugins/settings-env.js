@@ -64,7 +64,7 @@ cmd({
       return reply("❌ ᴘʀᴏᴠɪᴅᴇ ᴀ ᴠᴀʟɪᴅ ɪᴍᴀɢᴇ ᴜʀʟ ᴏʀ ʀᴇᴘʟʏ ᴛᴏ ᴀɴ ɪᴍᴀɢᴇ.");
     }
 
-    await setConfig("BOT_IMAGE", imageUrl);
+    await setConfig("MENU_IMAGE_URL", imageUrl);
 
     await reply(`✅ ʙᴏᴛ ɪᴍᴀɢᴇ ᴜᴘᴅᴀᴛᴇᴅ.\n\n*ɴᴇᴡ ᴜʀʟ:* ${imageUrl}\n\n♻️ ʀᴇsᴛᴀʀᴛɪɴɢ...`);
     setTimeout(() => exec("pm2 restart all"), 2000);
