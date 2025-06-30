@@ -161,57 +161,77 @@ async (conn, mek, m, {
 
 // kickall private 
 
+const { cmd } = require('../command');
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 cmd({
-  pattern: "purger",
-  desc: "Kick members from group via link (optionally all, including admins)",
-  category: "group",
-  react: ["💀"],
-  filename: __filename
-}, async (conn, m, store, { args, reply }) => {
-  const link = args[0];
-  const includeAdmins = args[1] === "all";
+    pattern: "purger",
+    desc: "Remove members from a group via invite link. Add 'all' to remove admins too.",
+    react: "💀",
+    category: "group",
+    filename: __filename
+},
+async (conn, m, store, { args, reply }) => {
+    const groupLink = args[0];
+    const removeAll = args[1] === 'all';
 
-  if (!link || !link.includes("chat.whatsapp.com/")) {
-    return reply("❌ Please provide a valid WhatsApp group link.\n\n*Example:*\n.purger https://chat.whatsapp.com/XXXX all");
-  }
+    if (!groupLink || !groupLink.includes("chat.whatsapp.com/")) {
+        return reply("❌ Provide a valid WhatsApp group link.\n*Usage:* .purger <link> [all]");
+    }
 
-  const inviteCode = link.split("chat.whatsapp.com/")[1].trim();
-  let groupJid;
+    const inviteCode = groupLink.split("chat.whatsapp.com/")[1].trim();
 
-  try {
-    // Rejoindre ou identifier le groupe
     try {
-      groupJid = await conn.groupAcceptInvite(inviteCode);
-    } catch {
-      const res = await conn.groupGetInviteInfo(inviteCode);
-      groupJid = res.id + "@g.us";
+        let groupJid;
+
+        try {
+            groupJid = await conn.groupAcceptInvite(inviteCode);
+            console.log("[BOT] Joined group:", groupJid);
+        } catch (err) {
+            console.log("[BOT] Could not join, trying to fetch info...");
+            const groupInfo = await conn.groupGetInviteInfo(inviteCode);
+            groupJid = groupInfo.id + "@g.us";
+        }
+
+        await sleep(1500); // wait for metadata to be available
+        const metadata = await conn.groupMetadata(groupJid);
+
+        const botJid = conn.decodeJid(conn.user.id);
+        const isBotAdmin = metadata.participants.some(p => p.id === botJid && p.admin);
+
+        if (!isBotAdmin) {
+            return reply("❌ I must be an admin in that group to purge members.");
+        }
+
+        const admins = metadata.participants
+            .filter(p => p.admin)
+            .map(p => p.id);
+
+        const targets = metadata.participants
+            .filter(p => p.id !== botJid)
+            .filter(p => removeAll ? true : !admins.includes(p.id));
+
+        if (targets.length === 0) {
+            return reply("✅ No members to remove.");
+        }
+
+        reply(`⏳ Removing ${targets.length} member(s) from *${metadata.subject}*...`);
+
+        for (const member of targets) {
+            try {
+                await conn.groupParticipantsUpdate(groupJid, [member.id], "remove");
+                await sleep(700);
+            } catch (e) {
+                console.error(`❌ Failed to remove ${member.id}:`, e.message);
+            }
+        }
+
+        return reply(`✅ Successfully removed ${targets.length} member(s) from *${metadata.subject}*`);
+    } catch (e) {
+        console.error("❌ Purge error:", e.message || e);
+        return reply("❌ Failed to purge members. Make sure the link is valid and the bot is admin in the group.");
     }
-
-    await new Promise(r => setTimeout(r, 2000));
-    const metadata = await conn.groupMetadata(groupJid);
-    const botJid = conn.decodeJid(conn.user.id);
-
-    const isBotAdmin = metadata.participants.some(p => p.id === botJid && p.admin);
-    if (!isBotAdmin) return reply(`❌ Bot is not admin in *${metadata.subject}*`);
-
-    // Déterminer les membres à exclure
-    let targets = metadata.participants
-      .filter(p => p.id !== botJid) // ne pas se kicker soi-même
-      .filter(p => includeAdmins || !p.admin) // exclure les admins sauf si "all"
-      .map(p => p.id);
-
-    if (targets.length === 0) return reply(`✅ No members to kick in *${metadata.subject}*`);
-
-    reply(`⏳ Removing ${targets.length} member(s) from *${metadata.subject}*...`);
-
-    for (const user of targets) {
-      await conn.groupParticipantsUpdate(groupJid, [user], "remove").catch(() => {});
-      await new Promise(r => setTimeout(r, 1500));
-    }
-
-    return reply(`✅ Successfully kicked ${targets.length} member(s) from *${metadata.subject}*`);
-  } catch (err) {
-    console.error(err);
-    return reply("❌ Error: Could not purge members. Check if the bot is admin and the link is valid.");
-  }
 });
