@@ -37,34 +37,31 @@ cmd({
     filename: __filename
 }, 
 async (conn, mek, m, { from, reply, isCreator }) => {
-    if (!isCreator) return reply("Command reserved for owner and my Creator alone");
+    if (!isCreator) return reply("ᴄᴏᴍᴍᴀɴᴅ ʀᴇsᴇʀᴠᴇᴅ ғᴏʀ ᴏᴡɴᴇʀ ᴀɴᴅ ᴍʏ ᴄʀᴇᴀᴛᴏʀ ᴀʟᴏɴᴇ");
 
     const menu = `
-*1. ᴀᴜᴛᴏ ғᴇᴀᴛᴜʀᴇs*
-╰ 1.1 - AUTO_REPLY (${isEnabled(config.AUTO_REPLY) ? "✅" : "❌"})
-╰ 1.2 - AUTO_REACT (${isEnabled(config.AUTO_REACT) ? "✅" : "❌"})
-╰ 1.3 - AUTO_STICKER (${isEnabled(config.AUTO_STICKER) ? "✅" : "❌"})
-╰ 1.4 - AUTO_VOICE (${isEnabled(config.AUTO_VOICE) ? "✅" : "❌"})
+*1. ᴀᴜᴛᴏ ғᴇᴀᴛᴜ
+╰ 1.2 - 𝐀𝐔𝐓𝐎_𝐑𝐄𝐀𝐂𝐓 (${isEnabled(config.AUTO_REACT) ? "✅" : "❌"})
 
 *2. sᴇᴄᴜʀɪᴛʏ*
-╰ 2.1 - ANTI_LINK (${isEnabled(config.ANTI_LINK) ? "✅" : "❌"})
-╰ 2.2 - ANTI_BAD (${isEnabled(config.ANTI_BAD) ? "✅" : "❌"})
-╰ 2.3 - DELETE_LINKS (${isEnabled(config.DELETE_LINKS) ? "✅" : "❌"})
+╰ 2.1 - 𝐀𝐍𝐓𝐈_𝐋𝐈𝐍𝐊 (${isEnabled(config.ANTI_LINK) ? "✅" : "❌"})
+╰ 2.2 - 𝐀𝐍𝐓𝐈_𝐁𝐀𝐃 (${isEnabled(config.ANTI_BAD) ? "✅" : "❌"})
+╰ 2.3 - 𝐃𝐄𝐋𝐄𝐓𝐄_𝐋𝐈𝐍𝐊𝐒 (${isEnabled(config.DELETE_LINKS) ? "✅" : "❌"})
 
 *3. sᴛᴀᴛᴜs sʏsᴛᴇᴍ*
-╰ 3.1 - AUTO_STATUS_SEEN (${isEnabled(config.AUTO_STATUS_SEEN) ? "✅" : "❌"})
-╰ 3.2 - AUTO_STATUS_REPLY (${isEnabled(config.AUTO_STATUS_REPLY) ? "✅" : "❌"})
-╰ 3.3 - AUTO_STATUS_REACT (${isEnabled(config.AUTO_STATUS_REACT) ? "✅" : "❌"})
+╰ 3.1 - 𝐀𝐔𝐓𝐎_𝐒𝐓𝐀𝐓𝐔𝐒_𝐒𝐄𝐄𝐍 (${isEnabled(config.AUTO_STATUS_SEEN) ? "✅" : "❌"})
+╰ 3.2 - 𝐀𝐔𝐓𝐎_𝐒𝐓𝐀𝐓𝐔𝐒_𝐑𝐄𝐏𝐋𝐘 (${isEnabled(config.AUTO_STATUS_REPLY) ? "✅" : "❌"})
+╰ 3.3 - 𝐀𝐔𝐓𝐎_𝐒𝐓𝐀𝐓𝐔𝐒_𝐑𝐄𝐀𝐂𝐓 (${isEnabled(config.AUTO_STATUS_REACT) ? "✅" : "❌"})
 
 *4. Core*
-╰ 4.1 - ALWAYS_ONLINE (${isEnabled(config.ALWAYS_ONLINE) ? "✅" : "❌"})
-╰ 4.2 - READ_MESSAGE (${isEnabled(config.READ_MESSAGE) ? "✅" : "❌"})
-╰ 4.3 - READ_CMD (${isEnabled(config.READ_CMD) ? "✅" : "❌"})
-╰ 4.4 - PUBLIC_MODE (${isEnabled(config.PUBLIC_MODE) ? "✅" : "❌"})
+╰ 4.1 - 𝐀𝐋𝐖𝐀𝐘𝐒_𝐎𝐍𝐋𝐈𝐍𝐄 (${isEnabled(config.ALWAYS_ONLINE) ? "✅" : "❌"})
+╰ 4.2 - 𝐑𝐄𝐀𝐃_𝐌𝐄𝐒𝐒𝐀𝐆𝐄 (${isEnabled(config.READ_MESSAGE) ? "✅" : "❌"})
+╰ 4.3 - 𝐑𝐄𝐀𝐃_𝐂𝐌𝐃 (${isEnabled(config.READ_CMD) ? "✅" : "❌"})
+╰ 4.4 - 𝐏𝐔𝐁𝐋𝐈𝐂_𝐌𝐎𝐃𝐄 (${isEnabled(config.PUBLIC_MODE) ? "✅" : "❌"})
 
 *5. ᴛʏᴘɪɴɢ/ʀᴇᴄᴏʀᴅɪɴɢ*
-╰ 5.1 - AUTO_TYPING (${isEnabled(config.AUTO_TYPING) ? "✅" : "❌"})
-╰ 5.2 - AUTO_RECORDING (${isEnabled(config.AUTO_RECORDING) ? "✅" : "❌"})
+╰ 5.1 - 𝐀𝐔𝐓𝐎_𝐓𝐘𝐏𝐈𝐍𝐆 (${isEnabled(config.AUTO_TYPING) ? "✅" : "❌"})
+╰ 5.2 - 𝐀𝐔𝐓𝐎_𝐑𝐄𝐂𝐎𝐑𝐃𝐈𝐍𝐆 (${isEnabled(config.AUTO_RECORDING) ? "✅" : "❌"})
 
 _ʀᴇᴘʟʏ ᴡɪᴛʜ: 1.1, 2.2, ᴇᴛᴄ ᴛᴏ ᴛᴏɢɢʟᴇ ᴏɴ/ᴏғғ_
 `;
@@ -91,7 +88,7 @@ _ʀᴇᴘʟʏ ᴡɪᴛʜ: 1.1, 2.2, ᴇᴛᴄ ᴛᴏ ᴛᴏɢɢʟᴇ ᴏɴ/ᴏғ
         const text = msg.message?.conversation || msg.message?.extendedTextMessage?.text || "";
 
         const map = {
-            "1.1": "AUTO_REPLY", "1.2": "AUTO_REACT", "1.3": "AUTO_STICKER", "1.4": "AUTO_VOICE",
+            "1.2": "AUTO_REACT", "1.3":,
             "2.1": "ANTI_LINK", "2.2": "ANTI_BAD", "2.3": "DELETE_LINKS",
             "3.1": "AUTO_STATUS_SEEN", "3.2": "AUTO_STATUS_REPLY", "3.3": "AUTO_STATUS_REACT",
             "4.1": "ALWAYS_ONLINE", "4.2": "READ_MESSAGE", "4.3": "READ_CMD", "4.4": "PUBLIC_MODE",
