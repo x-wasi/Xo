@@ -53,7 +53,7 @@ async (conn, mek, m, { from, reply, isCreator }) => {
 ╰ 3.2 - 𝐀𝐔𝐓𝐎_𝐒𝐓𝐀𝐓𝐔𝐒_𝐑𝐄𝐏𝐋𝐘 (${isEnabled(config.AUTO_STATUS_REPLY) ? "✅" : "❌"})
 ╰ 3.3 - 𝐀𝐔𝐓𝐎_𝐒𝐓𝐀𝐓𝐔𝐒_𝐑𝐄𝐀𝐂𝐓 (${isEnabled(config.AUTO_STATUS_REACT) ? "✅" : "❌"})
 
-*4. Core*
+*4. ᴄᴏʀᴇ*
 ╰ 4.1 - 𝐀𝐋𝐖𝐀𝐘𝐒_𝐎𝐍𝐋𝐈𝐍𝐄 (${isEnabled(config.ALWAYS_ONLINE) ? "✅" : "❌"})
 ╰ 4.2 - 𝐑𝐄𝐀𝐃_𝐌𝐄𝐒𝐒𝐀𝐆𝐄 (${isEnabled(config.READ_MESSAGE) ? "✅" : "❌"})
 ╰ 4.3 - 𝐑𝐄𝐀𝐃_𝐂𝐌𝐃 (${isEnabled(config.READ_CMD) ? "✅" : "❌"})
