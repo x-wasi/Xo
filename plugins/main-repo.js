@@ -46,7 +46,7 @@ async (conn, mek, m, { from, reply }) => {
 ╰───────────────────`;
 
         // Charger l'image locale
-        const imagePath = path.join(__dirname, '../media/alive.png');
+        const imagePath = path.join(__dirname, '../data/alive.png');
         if (!fs.existsSync(imagePath)) throw new Error("ɪᴍᴀɢᴇ ʟᴏᴄᴀʟᴇ ɴᴏɴ ᴛʀᴏᴜᴠéᴇ : ᴍᴇᴅɪᴀ/ᴀʟɪᴠᴇ.ᴘɴɢ");
         const imageBuffer = fs.readFileSync(imagePath);
 
