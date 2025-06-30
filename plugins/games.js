@@ -4,10 +4,6 @@ const { cmd } = require("../command");
 const WordChainGame = require("../lib/wcg");
 const wcg = new WordChainGame();
 
-// Tic‑Tac‑Toe (lib/ttt.js exports the class)
-const TicTacToe = require("../lib/ttt");
-const ttt = new TicTacToe();
-
 // Trivia (lib/trivia.js exports the class)
 const TriviaGame = require("../lib/trivia");
 const triviaGame = new TriviaGame();
@@ -112,88 +108,6 @@ sᴛᴀʀᴛ ᴡɪᴛʜ ᴀɴʏ ᴡᴏʀᴅ ᴏғ ᴀᴛ ʟᴇᴀsᴛ ${game.min
   }
 );
 
- // Make sure this is instantiated correctly at the top
-
-cmd(
-  {
-    pattern: "ttt",
-    desc: "Start a Tic Tac Toe game.",
-    category: "games",
-    react: "❌⭕",
-    filename: __filename,
-  },
-  async (conn, mek, m, { from, reply }) => {
-    try {
-      const chatId = m.chat;
-      let game = ttt.getGame(chatId);
-      
-      // Check if a game is already in progress
-      if (game && game.status !== "ended") {
-        return reply("ᴀ ᴛɪᴄ ᴛᴀᴄ ᴛᴏᴇ ɢᴀᴍᴇ ɪs ᴀʟʀᴇᴀᴅʏ ɪɴ ᴘʀᴏɢʀᴇss!\n" + game.renderBoard() );
-      }
-
-      // If no game exists, create a new one
-      game = ttt.createGame(chatId);
-      const symbol = game.addPlayer(m.sender);
-
-      return reply(
-        `*_ᴛɪᴄᴛᴀᴄᴛᴏᴇ sᴛᴀʀᴛᴇᴅ!_*\n\n1. ᴜsᴇ 1-9 to ᴘʟᴀᴄᴇ ʏᴏᴜʀ ᴍᴀʀᴋ\n2. ɢᴇᴛ 3 ɪɴ ᴀ ʀᴏᴡ ᴛᴏ ᴡɪɴ\n\n${m.sender} ᴀs ${symbol}\nᴛʏᴘᴇ "ᴊᴏɪɴ" ᴛᴏ ᴘʟᴀʏ!\n\n${game.renderBoard()}`
-     );
-    } catch (error) {
-      console.error(error);
-      return reply("An error occurred while starting the Tic Tac Toe game.");
-    }
-  }
-);
-
-// Tic-Tac-Toe Join Command
-cmd(
-  {
-    pattern: "join",
-    desc: "Join a Tic Tac Toe game.",
-    category: "games",
-    react: "❌⭕",
-    filename: __filename,
-  },
-  async (conn, mek, m, { from, reply }) => {
-    try {
-      const chatId = m.chat;
-      const game = ttt.getGame(chatId);
-
-      if (!game) return reply("ɴᴏ ᴛɪᴄ ᴛᴀᴄ ᴛᴏᴇ ɢᴀᴍᴇ ɪs ɪɴ ᴘʀᴏɢʀᴇss.");
-
-      const text = m.text.toLowerCase();
-      if (text === "join" && game.status === "waiting") {
-        const symbol = game.addPlayer(m.sender);
-        if (symbol) {
-          return reply(`${m.sender} ᴊᴏɪɴᴇᴅ ᴀs ${symbol}\nGame sᴛᴀʀᴛs ɴᴏᴡ!\n\n${game.players.X} (X) ɢᴏᴇs ғɪʀsᴛ\n${game.renderBoard()}`);
-        }
-      }
-
-      if (game.status === "active") {
-        const position = parseInt(text);
-        if (isNaN(position)) return;
-
-        const result = game.makeMove(m.sender, position);
-        if (!result.valid) return reply(result.reason);
-
-        if (result.gameEnd) {
-          ttt.deleteGame(chatId);
-          if (result.reason === "win") {
-            return reply(`*_ɢᴀᴍᴇ ᴏᴠᴇʀ! ${m.sender} wins!_*\n\n` + game.renderBoard() );
-          } else {
-            return reply("*_ɢᴀᴍᴇ ᴏᴠᴇʀ! ɪᴛ's ᴀ ᴅʀᴀᴡ!_*\n\n" + game.renderBoard() );
-          }
-        }
-
-        return reply(`${m.sender} ᴘʟᴀᴄᴇᴅ ${game.currentTurn === "X" ? "O" : "X"} ᴀᴛ ᴘᴏsɪᴛɪᴏɴ ${position}\n${game.players[game.currentTurn]}'s turn (${game.currentTurn})\n\n${game.renderBoard()}`, );
-      }
-    } catch (error) {
-      console.error(error);
-      return reply("An error occurred while joining the Tic Tac Toe game.");
-    }
-  }
-);
 
 // Trivia Game Command
 cmd(
