@@ -77,5 +77,3 @@ cmd({
         reply("❌ An error occurred while contacting the AI.");
     }
 });
-
-
