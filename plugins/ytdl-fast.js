@@ -56,36 +56,39 @@ cmd({
 
 // MP3 song download 
 
+
 cmd({ 
     pattern: "play", 
     alias: ["song02", "mp3"], 
     react: "🎶", 
     desc: "Download YouTube song", 
     category: "download", 
-    use: '.song <query>', 
+    use: '.play <query>', 
     filename: __filename 
 }, async (conn, mek, m, { from, sender, reply, q }) => { 
     try {
-        if (!q) return reply("ᴘʟᴇᴀsᴇ ᴘʀᴏᴠɪᴅᴇ ᴀ sᴏɴɢ ɴᴀᴍᴇ ᴏʀ ʏᴏᴜᴛᴜʙᴇ ʟɪɴᴋ.");
+        if (!q) return reply("❌ Please provide a song name or YouTube link.\n\nExample: `.play Unholy Sam Smith`");
 
         const yt = await ytsearch(q);
-        if (!yt.results.length) return reply("No results found!");
+        if (!yt.videos.length) return reply("❌ No results found!");
 
-        const song = yt.results[0];
-        const apiUrl = `https://apis.davidcyriltech.my.id/youtube/mp3?url=${encodeURIComponent(song.url)}`;
+        const song = yt.videos[0];
+        const apiUrl = `https://ochinpo-helper.hf.space/yt?query=${encodeURIComponent(song.url)}`;
         
         const res = await fetch(apiUrl);
+        if (!res.ok) return reply("❌ Failed to contact download server.");
         const data = await res.json();
 
-        if (!data?.result?.downloadUrl) return reply("Download failed. Try again later.");
+        if (!data?.result?.downloadUrl) return reply("❌ Download failed. Try again later.");
 
-    await conn.sendMessage(from, {
-    audio: { url: data.result.downloadUrl },
-    mimetype: "audio/mpeg",
-    fileName: `${song.title}.mp3`}, { quoted: mek });
+        await conn.sendMessage(from, {
+            audio: { url: data.result.downloadUrl },
+            mimetype: "audio/mpeg",
+            fileName: `${song.title}.mp3`
+        }, { quoted: mek });
 
     } catch (error) {
         console.error(error);
-        reply("An error occurred. Please try again.");
+        reply("❌ An error occurred. Please try again.");
     }
 });
