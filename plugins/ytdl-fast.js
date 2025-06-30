@@ -13,47 +13,47 @@ cmd({
     react: "🎥", 
     desc: "Download YouTube video", 
     category: "download", 
-    use: '.mp4 < YouTube link or song name >', 
+    use: '.mp4 < Yt url or Name >', 
     filename: __filename 
-}, async (conn, mek, m, { from, q, reply }) => { 
+}, async (conn, mek, m, { from, prefix, quoted, q, reply }) => { 
     try { 
-        if (!q) return await reply("❌ Please provide a YouTube URL or video name.");
-
-        const yt = await ytsearch(q);
-        if (!yt.videos.length) return reply("❌ No results found!");
-
-        const video = yt.videos[0];
-        const apiUrl = `https://ochinpo-helper.hf.space/yt?query=${encodeURIComponent(video.url)}`;
+        if (!q) return await reply("ᴘʟᴇᴀsᴇ ᴘʀᴏᴠɪᴅᴇ ᴀ ʏᴏᴜᴛᴜʙᴇ ᴜʀʟ ᴏʀ ᴠɪᴅᴇᴏ ɴᴀᴍᴇ.");
         
-        const res = await fetch(apiUrl);
-        if (!res.ok) return reply("❌ Failed to contact API server.");
-        const data = await res.json();
-
-        if (!data?.result?.downloadUrl) {
-            return reply("❌ Failed to fetch the video. Please try again later.");
+        const yt = await ytsearch(q);
+        if (yt.results.length < 1) return reply("No results found!");
+        
+        let yts = yt.results[0];  
+        let apiUrl = `https://apis.davidcyriltech.my.id/download/ytmp4?url=${encodeURIComponent(yts.url)}`;
+        
+        let response = await fetch(apiUrl);
+        let data = await response.json();
+        
+        if (data.status !== 200 || !data.success || !data.result.download_url) {
+            return reply("Failed to fetch the video. Please try again later.");
         }
 
-        const caption = `📹 *YouTube Video Downloader*
-🎬 *Title:* ${video.title}
-⏳ *Duration:* ${video.timestamp}
-👀 *Views:* ${video.views}
-👤 *Author:* ${video.author.name}
-🔗 *Link:* ${video.url}
-🚀 *Powered by Dyby Tech*`;
+        let ytmsg = `📹 *ᴠɪᴅᴇᴏ ᴅᴏᴡɴʟᴏᴀᴅᴇʀ*
+🎬 *ᴛɪᴛʟᴇ:* ${yts.title}
+⏳ *ᴅᴜʀᴀᴛɪᴏɴ:* ${yts.timestamp}
+👀 *ᴠɪᴇᴡs:* ${yts.views}
+👤 *ᴀᴜᴛʜᴏʀ:* ${yts.author.name}
+🔗 *ʟɪɴᴋ:* ${yts.url}
+> ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅʏʙʏ ᴛᴇᴄʜ `;
 
+        // Send video directly with caption
         await conn.sendMessage(
             from, 
             { 
-                video: { url: data.result.downloadUrl }, 
-                caption: caption,
+                video: { url: data.result.download_url }, 
+                caption: ytmsg,
                 mimetype: "video/mp4"
             }, 
             { quoted: mek }
         );
 
     } catch (e) {
-        console.error(e);
-        reply("❌ An error occurred. Please try again later.");
+        console.log(e);
+        reply("An error occurred. Please try again later.");
     }
 });
 // MP3 song download 
