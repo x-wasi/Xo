@@ -16,8 +16,8 @@ function formatRemainingTime(ms) {
 }
 
 cmd({
-  pattern: "alive",
-  alias: ["alivee"],
+  pattern: "runtime",
+  alias: ["uptime", "run"],
   react: "⏳",
   desc: "Show bot alive status and uptime",
   category: "system",
@@ -31,6 +31,7 @@ cmd({
     const status = `
 *𝐌𝐄𝐆𝐀𝐋𝐎𝐃𝐎𝐍-𝐌𝐃 𝐈𝐒 𝐑𝐔𝐍𝐍𝐈𝐍𝐆!!*
 *𝐌𝐄𝐆𝐀𝐋𝐎𝐃𝐎𝐍-𝐌𝐃 𝐔𝐏𝐓𝐈𝐌𝐄 𝐈𝐍𝐅𝐎:*
+
 *╭═════════════════⊷*
 ${uptimeFormatted}
 *╰═════════════════⊷*
