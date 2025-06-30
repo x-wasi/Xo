@@ -161,11 +161,7 @@ async (conn, mek, m, {
 
 // kickall private 
 
-const { cmd } = require('../command');
 
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
 
 cmd({
     pattern: "purger",
