@@ -7,7 +7,6 @@ const AdmZip = require("adm-zip");
 const { getBuffer, getGroupAdmins, getRandom, h2k, isUrl, Json, sleep, fetchJson } = require('../lib/functions2');
 const { writeFileSync } = require('fs');
 const path = require('path');
-const { getAnti, setAnti } = require('../data/antidel');
 
 
 
@@ -476,7 +475,7 @@ async (conn, mek, m, { from, args, isCreator, reply }) => {
         await reply(`*🫟 ᴇxᴀᴍᴘʟᴇ: .ᴀᴜᴛᴏ-ʀᴇᴀᴄᴛ ᴏɴ*`);
     }
 });
-//--------------------------------------------
+//--------------------------------
 //  STATUS-REPLY COMMANDS
 //--------------------------------------------
 cmd({
@@ -493,10 +492,10 @@ async (conn, mek, m, { from, args, isCreator, reply }) => {
     // Check the argument for enabling or disabling the anticall feature
     if (args[0] === "on") {
         config.AUTO_STATUS_REPLY = "true";
-        return reply("status-reply feature is now enabled.");
+        return reply("sᴛᴀᴛᴜs-ʀᴇᴘʟʏ ғᴇᴀᴛᴜʀᴇ ɪs ɴᴏᴡ ᴇɴᴀʙʟᴇᴅ.");
     } else if (args[0] === "off") {
         config.AUTO_STATUS_REPLY = "false";
-        return reply("status-reply feature is now disabled.");
+        return reply("sᴛᴀᴛᴜs-ʀᴇᴘʟʏ ғᴇᴀᴛᴜʀᴇ ɪs ɴᴏᴡ ᴅɪsᴀʙʟᴇᴅ.");
     } else {
         return reply(`*🫟 ᴇxᴀᴍᴘʟᴇ:  .sᴛᴀᴛᴜs-ʀᴇᴘʟʏ ᴏɴ*`);
     }
@@ -779,90 +778,7 @@ cmd({
     reply("An error occurred while processing the message.");
   }
 });
-//--------------------------------------------
-//  ANI-DELETE COMMANDS
-//--------------------------------------------
-cmd({
-    pattern: "antidelete",
-    alias: ['antidel', 'ad'],
-    desc: "Manage AntiDelete Settings with Reply Menu",
-    react: "🔄",
-    category: "misc",
-    filename: __filename,
-},
-async (conn, mek, m, { from, reply, isCreator }) => {
-    if (!isCreator) return reply("*ᴏɴʟʏ ᴛʜᴇ ʙᴏᴛ ᴏᴡɴᴇʀ ᴄᴀɴ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ!*");
 
-    const dmStatus = config.ANTI_DEL_PATH === "log";
-
-    const menuText = `> *𝐀𝐍𝐓𝐈-𝐃𝐄𝐋𝐄𝐓𝐄 𝐌𝐎𝐃𝐄 𝐒𝐄𝐓𝐓𝐈𝐍𝐆𝐒*
-
-> Current DM: ${dmStatus ? "✅ ON (log)" : "❌ OFF (same)"}
-
-Reply with:
-
-*1.* To Enable Antidelete for All (Group,DM) Same Chat  
-*2.* To ᴇɴᴀʙʟᴇ ᴀɴᴛɪᴅᴇʟᴇᴛᴇ ғᴏʀ ᴀʟʟ (Group,DM) dm Chat  
-*3.* To ᴅɪsᴀʙʟᴇ ᴀʟʟ ᴀɴᴛɪᴅᴇʟᴇᴛᴇ ᴀɴᴅ ʀᴇsᴇᴛ
-
-╭────────────────◆  
-│ *ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅʏʙʏ ᴛᴇᴄʜ*  
-╰─────────────────◆`;
-
-    const sentMsg = await conn.sendMessage(from, {
-        image: { url: "https://files.catbox.moe/2ozipw.jpg" },
-        caption: menuText
-    }, { quoted: mek });
-
-    const messageID = sentMsg.key.id;
-
-    const handler = async (msgData) => {
-        try {
-            const receivedMsg = msgData.messages[0];
-            if (!receivedMsg?.message || !receivedMsg.key?.remoteJid) return;
-
-            const quotedId = receivedMsg.message?.extendedTextMessage?.contextInfo?.stanzaId;
-            const isReply = quotedId === messageID;
-            if (!isReply) return;
-
-            const replyText =
-                receivedMsg.message?.conversation ||
-                receivedMsg.message?.extendedTextMessage?.text || "";
-
-            let responseText = "";
-
-            if (replyText === "1") {
-                await setAnti('gc', true);
-                await setAnti('dm', true);
-                config.ANTI_DEL_PATH = "same";
-                fs.writeFileSync('./config.js', `module.exports = ${JSON.stringify(config, null, 2)};`);
-                responseText = "✅ ᴀɴᴛɪᴅᴇʟᴇᴛᴇ ᴇɴᴀʙʟᴇᴅ.\nᴀɴᴅ ᴍᴏᴅᴇ ɪs sᴀᴍᴇ ᴄʜᴀᴛ\nGroup: ᴏɴ\nᴅᴍ: ᴏɴ (same)";
-            } else if (replyText === "2") {
-                await setAnti('gc', true);
-                await setAnti('dm', true);
-                config.ANTI_DEL_PATH = "log";
-                fs.writeFileSync('./config.js', `module.exports = ${JSON.stringify(config, null, 2)};`);
-                responseText = "✅ ᴀɴᴛɪᴅᴇʟᴇᴛᴇ ᴍᴏᴅᴇ ᴄʜᴀɴɢᴇᴅ ᴛᴏ ᴅᴍ ʟᴏɢ.\nɢʀᴏᴜᴘ: ᴏɴ\nDM: ᴏɴ (ʟᴏɢ)";
-            } else if (replyText === "3") {
-                await setAnti('gc', false);
-                await setAnti('dm', false);
-                config.ANTI_DEL_PATH = "same";
-                fs.writeFileSync('./config.js', `module.exports = ${JSON.stringify(config, null, 2)};`);
-                responseText = "❌ ᴀɴᴛɪᴅᴇʟᴇᴛᴇ ᴛᴜʀɴᴇᴅ ᴏғғ ғᴏʀ ʙᴏᴛʜ ɢʀᴏᴜᴘ ᴀɴᴅ ᴅᴍ.";
-            } else {
-                responseText = "❌ ɪɴᴠᴀʟɪᴅ ɪɴᴘᴜᴛ. ᴘʟᴇᴀsᴇ ʀᴇᴘʟʏ ᴡɪᴛʜ *1*, *2*, or *3*.";
-            }
-
-            await conn.sendMessage(from, { text: responseText }, { quoted: receivedMsg });
-            conn.ev.off("messages.upsert", handler);
-        } catch (err) {
-            console.error("AntiDelete handler error:", err);
-        }
-    };
-
-    conn.ev.on("messages.upsert", handler);
-    setTimeout(() => conn.ev.off("messages.upsert", handler), 30 * 60 * 1000); // 30 دقیقه
-});
 
 //--------------------------------------------
 //  ANI-BAD COMMANDS
@@ -881,12 +797,12 @@ async (conn, mek, m, { from, args, isCreator, reply }) => {
     // Check the argument for enabling or disabling the anticall feature
     if (args[0] === "on") {
         config.ANTI_BAD_WORD = "true";
-        return reply("*ᴀɴᴛɪ ʙᴀᴅ ᴡᴏʀᴅ ɪs ɴᴏᴡ enabled.*");
+        return reply("*ᴀɴᴛɪ ʙᴀᴅ ᴡᴏʀᴅ ɪs ɴᴏᴡ ᴇɴᴀʙʟᴇᴅ.*");
     } else if (args[0] === "off") {
         config.ANTI_BAD_WORD = "false";
-        return reply("*anti bad word feature is now disabled*");
+        return reply("*ᴀɴᴛɪ ʙᴀᴅ ᴡᴏʀᴅ ғᴇᴀᴛᴜʀᴇ ɪs ɴᴏᴡ ᴅɪsᴀʙʟᴇᴅ*");
     } else {
-        return reply(`_example:  .antibad on_`);
+        return reply(`_ᴇxᴀᴍᴘʟᴇ:  .ᴀɴᴛɪʙᴀᴅ ᴏɴ_`);
     }
 });
 // Anti-Bad Words System
