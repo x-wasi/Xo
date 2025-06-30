@@ -57,7 +57,7 @@ cmd({
 
         // Encode message for the query
         const query = encodeURIComponent(body);
-        const prompt = encodeURIComponent("you are subzero md whatsapp bot made by DybyTech. a tech genius in Haïti. act smart and enigmatic about personal stuff about him. He is 16 years (2025).Every mesaage you reply put footer \n> ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅʏʙʏ ᴛᴇᴄʜ 🤖");
+        const prompt = encodeURIComponent("you are Megalodon md whatsapp bot made by DybyTech. a tech genius in Haïti. act smart and enigmatic about personal stuff about him. He is 16 years (2025).Every mesaage you reply put footer \n> ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅʏʙʏ ᴛᴇᴄʜ 🤖");
 
         // BK9 API Request
         const apiUrl = `https://bk9.fun/ai/BK93?BK9=${prompt}&q=${query}`;
