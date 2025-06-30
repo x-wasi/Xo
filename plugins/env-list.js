@@ -88,12 +88,12 @@ _ʀᴇᴘʟʏ ᴡɪᴛʜ: 1.1, 2.2, ᴇᴛᴄ ᴛᴏ ᴛᴏɢɢʟᴇ ᴏɴ/ᴏғ
         const text = msg.message?.conversation || msg.message?.extendedTextMessage?.text || "";
 
         const map = {
-            "1.2": "AUTO_REACT", "1.3":,
-            "2.1": "ANTI_LINK", "2.2": "ANTI_BAD", "2.3": "DELETE_LINKS",
-            "3.1": "AUTO_STATUS_SEEN", "3.2": "AUTO_STATUS_REPLY", "3.3": "AUTO_STATUS_REACT",
-            "4.1": "ALWAYS_ONLINE", "4.2": "READ_MESSAGE", "4.3": "READ_CMD", "4.4": "PUBLIC_MODE",
-            "5.1": "AUTO_TYPING", "5.2": "AUTO_RECORDING"
-        };
+    "1.2": "AUTO_REACT",
+    "2.1": "ANTI_LINK", "2.2": "ANTI_BAD", "2.3": "DELETE_LINKS",
+    "3.1": "AUTO_STATUS_SEEN", "3.2": "AUTO_STATUS_REPLY", "3.3": "AUTO_STATUS_REACT",
+    "4.1": "ALWAYS_ONLINE", "4.2": "READ_MESSAGE", "4.3": "READ_CMD", "4.4": "PUBLIC_MODE",
+    "5.1": "AUTO_TYPING", "5.2": "AUTO_RECORDING"
+};
 
         const key = map[text];
 
