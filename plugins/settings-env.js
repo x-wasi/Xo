@@ -26,9 +26,9 @@ cmd({
   category: "owner",
   react: "✅",
   filename: __filename
-}, async (conn, mek, m, { args, isCreator, reply }) => {
+}, async (conn, mek, m, { args, isCreator, reply, isOwner }) => {
   try {
-    if (!isCreator) return reply("❗ ᴏɴʟʏ ᴛʜᴇ ʙᴏᴛ ᴏᴡɴᴇʀ ᴄᴀɴ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ.");
+    if (!isOwner && !isCreator) return reply("❗ ᴏɴʟʏ ᴛʜᴇ ʙᴏᴛ ᴏᴡɴᴇʀ ᴄᴀɴ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ.");
 
     let imageUrl = args[0];
 
@@ -82,8 +82,8 @@ cmd({
   category: "owner",
   react: "✅",
   filename: __filename
-}, async (conn, mek, m, { args, isCreator, reply }) => {
-  if (!isCreator) return reply("❗ ᴏɴʟʏ ᴛʜᴇ ʙᴏᴛ ᴏᴡɴᴇʀ ᴄᴀɴ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ.");
+}, async (conn, mek, m, { args, isCreator, reply, isOwner }) => {
+  if (!isOwner && !isCreator) return reply("❗ ᴏɴʟʏ ᴛʜᴇ ʙᴏᴛ ᴏᴡɴᴇʀ ᴄᴀɴ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ.");
   const newPrefix = args[0]?.trim();
   if (!newPrefix || newPrefix.length > 2) return reply("❌ ᴘʀᴏᴠɪᴅᴇ ᴀ ᴠᴀʟɪᴅ ᴘʀᴇғɪx (1–2 characters).");
 
@@ -104,8 +104,8 @@ cmd({
   category: "owner",
   react: "✅",
   filename: __filename
-}, async (conn, mek, m, { args, isCreator, reply }) => {
-  if (!isCreator) return reply("❗ ᴏɴʟʏ ᴛʜᴇ ʙᴏᴛ ᴏᴡɴᴇʀ ᴄᴀɴ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ.");
+}, async (conn, mek, m, { args, isCreator, reply, isOwner }) => {
+  if (!isOwner && !isCreator) return reply("❗ ᴏɴʟʏ ᴛʜᴇ ʙᴏᴛ ᴏᴡɴᴇʀ ᴄᴀɴ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ.");
   const name = args.join(" ").trim();
   if (!name) return reply("❌ ᴘʀᴏᴠɪᴅᴇ ᴀɴ ᴏᴡɴᴇʀ ɴᴀᴍᴇ.");
 
