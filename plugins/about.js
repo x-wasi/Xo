@@ -35,7 +35,7 @@ let about = `
 *•────────────•⟢*
 `
 await conn.sendMessage(from, {
-    image: { url: 'https://files.catbox.moe/vmqovi.jpg' },
+    image: { url: 'https://files.catbox.moe/ekjfua.mp4' },
     caption: about,
     contextInfo: {
         mentionedJid: [m.sender],
