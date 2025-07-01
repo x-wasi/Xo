@@ -6,23 +6,22 @@ let settings = loadSettings();
 let welcomeSettings = settings.welcome || {};
 let goodbyeSettings = settings.goodbye || {};
 
-// Commande: .welcome
+// .welcome
 cmd({
   pattern: "welcome",
-  desc: "Set custom welcome message for group\nUsage: welcome on | welcome off | welcome <custom message>\nAvailable placeholders: {user}, {group}, {count}, {desc}, {date}, {time}",
+  desc: "Set custom welcome message for group\nUsage: .welcome on | .welcome off | .welcome <custom message>\nPlaceholders: {user}, {group}, {count}, {desc}, {date}, {time}",
   category: "group",
   filename: __filename,
 }, async (conn, mek, m, { from, args, reply, isGroup, isBotAdmins }) => {
-  if (!isGroup) return reply("❌ This command can only be used in groups.");
-  if (!isBotAdmins) return reply("❌ I need to be an admin to set welcome messages.");
+  if (!isGroup) return reply("❌ This command only works in group chats.");
+  if (!isBotAdmins) return reply("❌ I must be admin to set welcome messages.");
 
-  // Récupération de la configuration actuelle ou du message par défaut
   const setting = welcomeSettings[from] || { enabled: false, message: defaultWelcomeMessage };
 
   if (args.length === 0) {
     return reply(setting.enabled
       ? `✅ Welcome is enabled.\n\nMessage:\n${setting.message}`
-      : `❌ Welcome is currently disabled.`);
+      : `❌ Welcome is disabled.`);
   }
 
   const option = args[0].toLowerCase();
@@ -38,32 +37,30 @@ cmd({
     saveSettings(settings);
     return reply("❌ Welcome disabled.");
   } else {
-    // Personnalisation
     const customMessage = args.join(" ");
     welcomeSettings[from] = { enabled: true, message: customMessage };
     settings.welcome = welcomeSettings;
     saveSettings(settings);
-    return reply(`✅ Custom welcome message set:\n\n${customMessage}\n\nAvailable placeholders:\n{user}, {group}, {count}, {desc}, {date}, {time}`);
+    return reply(`✅ Custom welcome message saved:\n\n${customMessage}\n\n📌 Placeholders:\n{user}, {group}, {count}, {desc}, {date}, {time}`);
   }
 });
 
-// Commande: .goodbye
+// .goodbye
 cmd({
   pattern: "goodbye",
-  desc: "Set custom goodbye message for group\nUsage: goodbye on | goodbye off | goodbye <custom message>\nAvailable placeholders: {user}, {group}, {count}, {desc}, {date}, {time}",
+  desc: "Set custom goodbye message for group\nUsage: .goodbye on | .goodbye off | .goodbye <custom message>\nPlaceholders: {user}, {group}, {count}, {desc}, {date}, {time}",
   category: "group",
   filename: __filename,
 }, async (conn, mek, m, { from, args, reply, isGroup, isBotAdmins }) => {
-  if (!isGroup) return reply("❌ This command can only be used in groups.");
-  if (!isBotAdmins) return reply("❌ I need to be an admin to set goodbye messages.");
+  if (!isGroup) return reply("❌ This command only works in group chats.");
+  if (!isBotAdmins) return reply("❌ I must be admin to set goodbye messages.");
 
-  // Récupération de la configuration actuelle ou du message par défaut
   const setting = goodbyeSettings[from] || { enabled: false, message: defaultGoodbyeMessage };
 
   if (args.length === 0) {
     return reply(setting.enabled
       ? `✅ Goodbye is enabled.\n\nMessage:\n${setting.message}`
-      : `❌ Goodbye is currently disabled.`);
+      : `❌ Goodbye is disabled.`);
   }
 
   const option = args[0].toLowerCase();
@@ -79,11 +76,10 @@ cmd({
     saveSettings(settings);
     return reply("❌ Goodbye disabled.");
   } else {
-    // Personnalisation
     const customMessage = args.join(" ");
     goodbyeSettings[from] = { enabled: true, message: customMessage };
     settings.goodbye = goodbyeSettings;
     saveSettings(settings);
-    return reply(`✅ Custom goodbye message set:\n\n${customMessage}\n\nAvailable placeholders:\n{user}, {group}, {count}, {desc}, {date}, {time}`);
+    return reply(`✅ Custom goodbye message saved:\n\n${customMessage}\n\n📌 Placeholders:\n{user}, {group}, {count}, {desc}, {date}, {time}`);
   }
 });
