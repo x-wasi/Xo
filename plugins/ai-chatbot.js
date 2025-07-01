@@ -1,61 +1,79 @@
 const axios = require('axios');
-const { cmd } = require('../command');
+const { cmd, commands } = require('../command');
 const config = require("../config");
 const { setConfig, getConfig } = require("../lib/configdb");
 
-// AI Configuration
-let AI_ENABLED = "false";
+// Default AI state if not set
+let AI_ENABLED = "false"; // Default enabled
 
-// Initialize AI state
+cmd({
+    pattern: "aichat",
+    alias: ["chatbot", "megalodon"],
+    desc: "Enable or disable AI chatbot responses",
+    category: "settings",
+    filename: __filename,
+    react: "✅"
+}, async (conn, mek, m, { from, args, isOwner, reply }) => {
+    if (!isOwner) return reply("*📛 ᴏɴʟʏ ᴛʜᴇ ᴏᴡɴᴇʀ ᴄᴀɴ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ!*");
+
+    const status = args[0]?.toLowerCase();
+    if (status === "on") {
+        AI_ENABLED = "true";
+        await setConfig("AI_ENABLED", "true");
+        return reply("🤖 ᴀɪ ᴄʜᴀᴛʙᴏᴛ ɪs ɴᴏᴡ ᴇɴᴀʙʟᴇᴅ");
+    } else if (status === "off") {
+        AI_ENABLED = "false";
+        await setConfig("AI_ENABLED", "false");
+        return reply("🤖 ᴀɪ ᴄʜᴀᴛʙᴏᴛ ɪs ɴᴏᴡ ᴅɪsᴀʙʟᴇᴅ");
+    } else {
+        return reply(`ᴄᴜʀʀᴇɴᴛ ᴀɪ sᴛᴀᴛᴇ: ${AI_ENABLED === "true" ? "ON" : "OFF"}\nUsage: ${prefix}ᴀɪᴄʜᴀᴛ ᴏɴ/ᴏғғ`);
+    }
+});
+
+// Initialize AI state on startup
 (async () => {
     const savedState = await getConfig("AI_ENABLED");
     if (savedState) AI_ENABLED = savedState;
 })();
 
-// Simple toggle command
+// AI Chatbot - DybyTech 
 cmd({
-    pattern: "aichat",
-    alias: ["chatbot"],
-    desc: "Toggle AI auto-reply",
-    category: "utility",
-    filename: __filename,
-    react: "🤖"
-}, async (Void, citel, text, { isOwner }) => {
-    if (!isOwner) return citel.reply("*Owner only command!*");
-    
-    AI_ENABLED = AI_ENABLED === "true" ? "false" : "true";
-    await setConfig("AI_ENABLED", AI_ENABLED);
-    return citel.reply(`🤖 AI auto-reply is now *${AI_ENABLED === "true" ? "ENABLED" : "DISABLED"}*`);
-});
-
-// Main message handler - SIMPLIFIED AND GUARANTEED TO WORK
-Void.ev.on('messages.upsert', async (m) => {
+    on: "body"
+}, async (conn, m, store, {
+    from,
+    body,
+    sender,
+    isGroup,
+    isBotAdmins,
+    isAdmins,
+    reply
+}) => {
     try {
+        // Check if AI is disabled
         if (AI_ENABLED !== "true") return;
 
-        const message = m.messages[0];
-        if (!message || !message.message || message.key.fromMe) return;
+        // Optional: Prevent bot responding to its own messages or commands
+        if (!body || m.key.fromMe || body.startsWith(config.PREFIX)) return;
 
-        // Skip non-text messages
-        if (!message.message.conversation && !message.message.extendedTextMessage?.text) return;
+        // Encode message for the query
+        const query = encodeURIComponent(body);
+        const prompt = encodeURIComponent("you are Megalodon md whatsapp bot made by DybyTech. Need DybyTech ? \n\nhttps://contacte-dyby-tech.vercel.app/ \n> ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅʏʙʏ ᴛᴇᴄʜ 🤖");
 
-        const text = message.message.conversation || message.message.extendedTextMessage.text;
-        const from = message.key.remoteJid;
+        // BK9 API Request
+        const apiUrl = `https://bk9.fun/ai/BK93?BK9=${prompt}&q=${query}`;
 
-        // Basic response logic
-        let response;
-        if (text.toLowerCase().includes('hi') || text.toLowerCase().includes('hello')) {
-            response = "Hello there! How can I help you today? ⚡ Powered by DybyTech";
+        const { data } = await axios.get(apiUrl);
+
+        if (data && data.status && data.BK9) {
+            await conn.sendMessage(from, {
+                text: data.BK9
+            }, { quoted: m });
         } else {
-            // Fallback to API if you want smarter responses
-            const apiUrl = `https://bk9.fun/ai/BK93?BK9=${encodeURIComponent("You are a helpful assistant")}&q=${encodeURIComponent(text)}`;
-            const { data } = await axios.get(apiUrl);
-            response = data?.BK9 || "I'm here! What can I do for you? ⚡ Powered by DybyTech";
+            reply("⚠️ Megalodon AI failed to generate a response.");
         }
 
-        await Void.sendMessage(from, { text: response }, { quoted: message });
-
-    } catch (error) {
-        console.error("AI Error:", error);
+    } catch (err) {
+        console.error("AI Chatbot Error:", err.message);
+        reply("❌ An error occurred while contacting the AI.");
     }
 });
