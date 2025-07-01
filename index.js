@@ -30,12 +30,14 @@ const {
   const ff = require('fluent-ffmpeg')
   const P = require('pino')
   const config = require('./config')
+  const GroupEvents = require('./lib/groupevents');
   const qrcode = require('qrcode-terminal')
   const StickersTypes = require('wa-sticker-formatter')
   const util = require('util')
   const { sms, downloadMediaMessage, AntiDelete } = require('./lib')
   const { registerAntiNewsletter } = require('./plugins/antinewsletter')
   const { updateActivity } = require('./lib/activity')
+  const { registerGroupMessages } = require('./plugins/groupMessages')
   const FileType = require('file-type');
   const { File } = require('megajs');
   const axios = require('axios')
@@ -49,7 +51,7 @@ const {
   
   const ownerNumber = ['50948336180']
   //=============================================
-const tempDir = path.join(os.tmpdir(), 'cache-temp')
+  const tempDir = path.join(os.tmpdir(), 'cache-temp')
   if (!fs.existsSync(tempDir)) {
       fs.mkdirSync(tempDir)
   }
@@ -113,11 +115,10 @@ const port = process.env.PORT || 9090;
   require("./plugins/" + plugin);
   }
   });
-
-	  
-  console.log('💫 MEGALODON CONNECTED SUCCESSFULLY ✅')
+  console.log('Plugins installed successful ✅')
+  console.log('Bot connected to whatsapp ✅')
   
-   let up = `> *╭──────────────●●*
+  let up = `> *╭──────────────●●*
 > *➺ ᴍᴇɢᴀʟᴏᴅᴏɴ ᴍᴅ ᴄᴏɴɴᴇᴄᴛᴇᴅ sᴜᴄᴄᴇssғᴜʟʏ ᴛʏᴘᴇ*
 > *.ᴍᴇɴᴜ ᴛᴏ sᴇᴇ ᴛʜᴇ ғᴜʟʟ ᴄᴏᴍᴍᴀɴᴅ ʟɪsᴛ💫*
 
@@ -129,12 +130,10 @@ const port = process.env.PORT || 9090;
 
 > ╰──────────────●●
 > *ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅʏʙʏ ᴛᴇᴄʜ*`;
-    conn.sendMessage(conn.user.id, { image: { url: `https://files.catbox.moe/w1l8b0.jpg` }, caption: up })
+    conn.sendMessage(conn.user.id, { image: { url: `https://files.catbox.moe/2ozipw.jpg` }, caption: up })
   }
   })
   conn.ev.on('creds.update', saveCreds)
-
-  //==============================
 
 // =====================================
 conn.ev.on('call', async (calls) => {
@@ -265,13 +264,13 @@ conn.ev.on('messages.upsert', async (msg) => {
     }
   });
 //=========WELCOME & GOODBYE =======
-	  
+	
+registerGroupMessages(conn);
 
 setupLinkDetection(conn);
 
 registerAntiNewsletter(conn);
-	  
-	  
+
 
  /// READ STATUS       
   conn.ev.on('messages.upsert', async(mek) => {
