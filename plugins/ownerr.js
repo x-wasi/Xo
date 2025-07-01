@@ -227,8 +227,8 @@ cmd({
     desc: "Set bot mode to private or public.",
     category: "owner",
     filename: __filename,
-}, async (conn, mek, m, { from, args, isCreator, reply }) => {
-    if (!isCreator) return reply("_*❗ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ ᴄᴀɴ ᴏɴʟʏ ʙᴇ ᴜsᴇᴅ ʙʏ ᴍʏ ᴏᴡɴᴇʀ !*_");
+}, async (conn, mek, m, { from, args, isCreator, reply, isOwner }) => {
+    if (!isOwner && !isCreator) return reply("_*❗ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ ᴄᴀɴ ᴏɴʟʏ ʙᴇ ᴜsᴇᴅ ʙʏ ᴍʏ ᴏᴡɴᴇʀ !*_");
 
     if (!args[0]) {
         const text = `> *𝐌𝐎𝐃𝐄 𝐒𝐄𝐓𝐓𝐈𝐍𝐆𝐒*\n\n> ᴄᴜʀʀᴇɴᴛ ᴍᴏᴅᴇ: *ᴘᴜʙʟɪᴄ*\n\nʀᴇᴘʟʏ ᴡɪᴛʜ:\n\n*1.* ᴛᴏ ᴇɴᴀʙʟᴇ ᴘᴜʙʟɪᴄ ᴍᴏᴅᴇ\n*2.* ᴛᴏ ᴇɴᴀʙʟᴇ ᴘʀɪᴠᴀᴛᴇ ᴍᴏᴅᴇ\n*3.* ᴛᴏ ᴇɴᴀʙʟᴇ ɪɴʙᴏx ᴍᴏᴅᴇ\n*4.* ᴛᴏ ᴇɴᴀʙʟᴇ ɢʀᴏᴜᴘs ᴍᴏᴅᴇ\n\n╭────────────────\n│ *ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅʏʙʏ ᴛᴇᴄʜ*\n╰─────────────────◆`;
@@ -306,8 +306,8 @@ cmd({
     category: "owner",
     filename: __filename
 },    
-async (conn, mek, m, { from, args, isCreator, reply }) => {
-    if (!isCreator) return reply("_*❗ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ ᴄᴀɴ ᴏɴʟʏ ʙᴇ ᴜsᴇᴅ ʙʏ ᴍʏ ᴏᴡɴᴇʀ !*_");
+async (conn, mek, m, { from, args, isCreator, reply, isOwner }) => {
+    if (!isOwner && !isCreator) return reply("_*❗ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ ᴄᴀɴ ᴏɴʟʏ ʙᴇ ᴜsᴇᴅ ʙʏ ᴍʏ ᴏᴡɴᴇʀ !*_");
 
     const status = args[0]?.toLowerCase();
     if (!["on", "off"].includes(status)) {
@@ -328,8 +328,8 @@ cmd({
     category: "owner",
     filename: __filename
 },
-async (conn, mek, m, { from, args, isCreator, reply }) => {
-    if (!isCreator) return reply("_*❗ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ ᴄᴀɴ ᴏɴʟʏ ʙᴇ ᴜsᴇᴅ ʙʏ ᴍʏ ᴏᴡɴᴇʀ !*_");
+async (conn, mek, m, { from, args, isCreator, reply, isOwner }) => {
+    if (!isOwner && !isCreator) return reply("_*❗ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ ᴄᴀɴ ᴏɴʟʏ ʙᴇ ᴜsᴇᴅ ʙʏ ᴍʏ ᴏᴡɴᴇʀ !*_");
 
     const status = args[0]?.toLowerCase();
     if (status === "on") {
@@ -353,8 +353,8 @@ cmd({
     category: "owner",
     filename: __filename
 },    
-async (conn, mek, m, { from, args, isCreator, reply }) => {
-    if (!isCreator) return reply("_*❗ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ ᴄᴀɴ ᴏɴʟʏ ʙᴇ ᴜsᴇᴅ ʙʏ ᴍʏ ᴏᴡɴᴇʀ !*_");
+async (conn, mek, m, { from, args, isCreator, reply, isOwner }) => {
+    if (!isOwner && !isCreator) return reply("_*❗ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ ᴄᴀɴ ᴏɴʟʏ ʙᴇ ᴜsᴇᴅ ʙʏ ᴍʏ ᴏᴡɴᴇʀ !*_");
 
     const status = args[0]?.toLowerCase();
     if (!["on", "off"].includes(status)) {
@@ -380,8 +380,8 @@ cmd({
     category: "owner",
     filename: __filename
 },    
-async (conn, mek, m, { from, args, isCreator, reply }) => {
-    if (!isCreator) return reply("_*❗ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ ᴄᴀɴ ᴏɴʟʏ ʙᴇ ᴜsᴇᴅ ʙʏ ᴍʏ ᴏᴡɴᴇʀ !*_");
+async (conn, mek, m, { from, args, isCreator, reply, isOwner }) => {
+    if (!isOwner && !isCreator) return reply("_*❗ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ ᴄᴀɴ ᴏɴʟʏ ʙᴇ ᴜsᴇᴅ ʙʏ ᴍʏ ᴏᴡɴᴇʀ !*_");
 
     const status = args[0]?.toLowerCase();
     // Default value for AUTO_VIEW_STATUS is "false"
@@ -405,8 +405,8 @@ cmd({
     category: "owner",
     filename: __filename
 },    
-async (conn, mek, m, { from, args, isCreator, reply }) => {
-    if (!isCreator) return reply("_*❗ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ ᴄᴀɴ ᴏɴʟʏ ʙᴇ ᴜsᴇᴅ ʙʏ ᴍʏ ᴏᴡɴᴇʀ !*_");
+async (conn, mek, m, { from, args, isCreator, reply, isOwner }) => {
+    if (!isOwner && !isCreator) return reply("_*❗ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ ᴄᴀɴ ᴏɴʟʏ ʙᴇ ᴜsᴇᴅ ʙʏ ᴍʏ ᴏᴡɴᴇʀ !*_");
 
     const status = args[0]?.toLowerCase();
     // Default value for AUTO_LIKE_STATUS is "false"
@@ -431,8 +431,8 @@ cmd({
     category: "owner",
     filename: __filename
 },    
-async (conn, mek, m, { from, args, isCreator, reply }) => {
-    if (!isCreator) return reply("_*❗ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ ᴄᴀɴ ᴏɴʟʏ ʙᴇ ᴜsᴇᴅ ʙʏ ᴍʏ ᴏᴡɴᴇʀ !*_");
+async (conn, mek, m, { from, args, isCreator, reply, isOwner }) => {
+    if (!isOwner && !isCreator) return reply("_*❗ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ ᴄᴀɴ ᴏɴʟʏ ʙᴇ ᴜsᴇᴅ ʙʏ ᴍʏ ᴏᴡɴᴇʀ !*_");
 
     const status = args[0]?.toLowerCase();
     // Check the argument for enabling or disabling the anticall feature
@@ -460,8 +460,8 @@ cmd({
     category: "owner",
     filename: __filename
 },    
-async (conn, mek, m, { from, args, isCreator, reply }) => {
-    if (!isCreator) return reply("_*❗ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ ᴄᴀɴ ᴏɴʟʏ ʙᴇ ᴜsᴇᴅ ʙʏ ᴍʏ ᴏᴡɴᴇʀ !*_");
+async (conn, mek, m, { from, args, isCreator, reply, isOwner }) => {
+    if (!isOwner && !isCreator) return reply("_*❗ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ ᴄᴀɴ ᴏɴʟʏ ʙᴇ ᴜsᴇᴅ ʙʏ ᴍʏ ᴏᴡɴᴇʀ !*_");
 
     const status = args[0]?.toLowerCase();
     // Check the argument for enabling or disabling the anticall feature
@@ -485,8 +485,8 @@ cmd({
     category: "owner",
     filename: __filename
 },    
-async (conn, mek, m, { from, args, isCreator, reply }) => {
-    if (!isCreator) return reply("_*❗ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ ᴄᴀɴ ᴏɴʟʏ ʙᴇ ᴜsᴇᴅ ʙʏ ᴍʏ ᴏᴡɴᴇʀ !*_");
+async (conn, mek, m, { from, args, isCreator, reply, isOwner }) => {
+    if (!isOwner && !isCreator) return reply("_*❗ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ ᴄᴀɴ ᴏɴʟʏ ʙᴇ ᴜsᴇᴅ ʙʏ ᴍʏ ᴏᴡɴᴇʀ !*_");
 
     const status = args[0]?.toLowerCase();
     // Check the argument for enabling or disabling the anticall feature
@@ -509,9 +509,9 @@ cmd({
   category: "owner",
   react: "🛡️",
   filename: __filename
-}, async (conn, mek, m, { from, isGroup, isAdmins, isBotAdmins, isCreator, reply }) => {
+}, async (conn, mek, m, { from, isGroup, isAdmins, isBotAdmins, isCreator, reply, isOwner }) => {
   try {
-    if (!isCreator) return reply("_*❗ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ ᴄᴀɴ ᴏɴʟʏ ʙᴇ ᴜsᴇᴅ ʙʏ ᴍʏ ᴏᴡɴᴇʀ !*_");
+    if (!isOwner && !isCreator) return reply("_*❗ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ ᴄᴀɴ ᴏɴʟʏ ʙᴇ ᴜsᴇᴅ ʙʏ ᴍʏ ᴏᴡɴᴇʀ !*_");
 
     const currentMode =
       config.ANTILINK_KICK === "true"
@@ -790,8 +790,8 @@ cmd({
     category: "owner",
     filename: __filename
 },    
-async (conn, mek, m, { from, args, isCreator, reply }) => {
-    if (!isCreator) return reply("_*❗ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ ᴄᴀɴ ᴏɴʟʏ ʙᴇ ᴜsᴇᴅ ʙʏ ᴍʏ ᴏᴡɴᴇʀ !*_");
+async (conn, mek, m, { from, args, isCreator, reply, isOwner  }) => {
+    if (!isOwner && !isCreator) return reply("_*❗ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ ᴄᴀɴ ᴏɴʟʏ ʙᴇ ᴜsᴇᴅ ʙʏ ᴍʏ ᴏᴡɴᴇʀ !*_");
 
     const status = args[0]?.toLowerCase();
     // Check the argument for enabling or disabling the anticall feature
