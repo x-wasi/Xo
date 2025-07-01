@@ -267,7 +267,6 @@ conn.ev.on('messages.upsert', async (msg) => {
   });
 //=========WELCOME & GOODBYE =======
 	
-registerGroupMessages(conn);
 
 setupLinkDetection(conn);
 
