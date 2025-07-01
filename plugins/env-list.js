@@ -36,8 +36,8 @@ cmd({
     react: "⚙️",
     filename: __filename
 }, 
-async (conn, mek, m, { from, reply, isCreator }) => {
-    if (!isCreator) return reply("ᴄᴏᴍᴍᴀɴᴅ ʀᴇsᴇʀᴠᴇᴅ ғᴏʀ ᴏᴡɴᴇʀ ᴀɴᴅ ᴍʏ ᴄʀᴇᴀᴛᴏʀ ᴀʟᴏɴᴇ");
+async (conn, mek, m, { from, reply, isCreator, !isOwner }) => {
+    if (!isOwner && !isCreator) return reply("ᴄᴏᴍᴍᴀɴᴅ ʀᴇsᴇʀᴠᴇᴅ ғᴏʀ ᴏᴡɴᴇʀ ᴀɴᴅ ᴍʏ ᴄʀᴇᴀᴛᴏʀ ᴀʟᴏɴᴇ");
 
     const menu = `
 *1. ᴀᴜᴛᴏ ғᴇᴀᴛᴜ
