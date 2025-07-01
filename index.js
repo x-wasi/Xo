@@ -37,7 +37,6 @@ const {
   const { sms, downloadMediaMessage, AntiDelete } = require('./lib')
   const { registerAntiNewsletter } = require('./plugins/antinewsletter')
   const { updateActivity } = require('./lib/activity')
-  const { registerGroupMessages } = require('./plugins/groupMessages')
   const FileType = require('file-type');
   const { File } = require('megajs');
   const axios = require('axios')
