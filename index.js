@@ -115,8 +115,8 @@ const port = process.env.PORT || 9090;
   require("./plugins/" + plugin);
   }
   });
-  console.log('Plugins installed successful ✅')
-  console.log('MEGALODON CONNECTED SUCCESSFULLY ✅')
+  console.log('💫 Plugins installed successful ✅')
+  console.log('💫 MEGALODON CONNECTED SUCCESSFULLY ✅')
   
    let up = `> *╭──────────────●●*
 > *➺ ᴍᴇɢᴀʟᴏᴅᴏɴ ᴍᴅ ᴄᴏɴɴᴇᴄᴛᴇᴅ sᴜᴄᴄᴇssғᴜʟʏ ᴛʏᴘᴇ*
@@ -266,13 +266,14 @@ conn.ev.on('messages.upsert', async (msg) => {
     }
   });
 //=========WELCOME & GOODBYE =======
-	
+	  
+conn.ev.on("group-participants.update", (update) => GroupEvents(conn, update));	  
+
 
 setupLinkDetection(conn);
 
 registerAntiNewsletter(conn);
 	  
-conn.ev.on("group-participants.update", (update) => GroupEvents(conn, update));	  
 
  /// READ STATUS       
   conn.ev.on('messages.upsert', async(mek) => {
