@@ -7,9 +7,9 @@ cmd({
     category: "owner",  
     filename: __filename  
 },  
-async (conn, mek, m, { reply, isCreator }) => {  
+async (conn, mek, m, { reply, isCreator, isOwner }) => {  
     try {  
-        if (!isCreator) {  
+        if (!isOwner && !isCreator) {  
             return reply("ᴏɴʟy ᴛʜᴇ ʙᴏᴛ ᴏᴡɴᴇʀ ᴄᴀɴ ᴜꜱᴇ ᴛʜɪꜱ ᴄᴏᴍᴍᴀɴᴅ.");  
         }  
 
