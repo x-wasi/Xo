@@ -14,8 +14,8 @@ cmd({
     category: "misc",
     filename: __filename,
     usage: `${config.PREFIX}ᴀᴜᴛᴏʙɪᴏ [on/off]`
-}, async (conn, mek, m, { args, reply, isOwner }) => {
-    if (!isOwner) return reply("❌ ᴏɴʟʏ ᴛʜᴇ ʙᴏᴛ ᴏᴡɴᴇʀ ᴄᴀɴ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ");
+}, async (conn, mek, m, { args, reply, isOwner, isCreator }) => {
+    if (!isOwner && !isCreator) return reply("❌ ᴏɴʟʏ ᴛʜᴇ ʙᴏᴛ ᴏᴡɴᴇʀ ᴄᴀɴ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ");
     
    const response = await axios.get("http://api.forismatic.com/api/1.0/", {
       params: {
