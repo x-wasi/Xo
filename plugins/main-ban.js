@@ -13,9 +13,9 @@ cmd({
     category: "owner",
     react: "⛔",
     filename: __filename
-}, async (conn, mek, m, { from, args, isCreator, reply }) => {
+}, async (conn, mek, m, { from, args, isCreator, reply, isOwner }) => {
     try {
-        if (!isCreator) return reply("_❗ᴏɴʟʏ ᴛʜᴇ ʙᴏᴛ ᴏᴡɴᴇʀ ᴄᴀɴ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ!_");
+        if (!isOwner && !isCreator) return reply("_❗ᴏɴʟʏ ᴛʜᴇ ʙᴏᴛ ᴏᴡɴᴇʀ ᴄᴀɴ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ!_");
 
         let target = m.mentionedJid?.[0] 
             || (m.quoted?.sender ?? null)
@@ -54,9 +54,9 @@ cmd({
     category: "owner",
     react: "✅",
     filename: __filename
-}, async (conn, mek, m, { from, args, isCreator, reply }) => {
+}, async (conn, mek, m, { from, args, isCreator, reply, isOwner }) => {
     try {
-        if (!isCreator) return reply("_❗ᴏɴʟʏ ᴛʜᴇ ʙᴏᴛ ᴏᴡɴᴇʀ ᴄᴀɴ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ!_");
+        if (!isOwner && !isCreator) return reply("_❗ᴏɴʟʏ ᴛʜᴇ ʙᴏᴛ ᴏᴡɴᴇʀ ᴄᴀɴ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ!_");
 
         let target = m.mentionedJid?.[0] 
             || (m.quoted?.sender ?? null)
@@ -91,9 +91,9 @@ cmd({
     category: "owner",
     react: "📋",
     filename: __filename
-}, async (conn, mek, m, { from, isCreator, reply }) => {
+}, async (conn, mek, m, { from, isCreator, reply, isOwner }) => {
     try {
-        if (!isCreator) return reply("_❗ᴏɴʟʏ ᴛʜᴇ ʙᴏᴛ ᴏᴡɴᴇʀ ᴄᴀɴ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ!_");
+        if (!isOwner && !isCreator) return reply("_❗ᴏɴʟʏ ᴛʜᴇ ʙᴏᴛ ᴏᴡɴᴇʀ ᴄᴀɴ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ!_");
 
         let banned = JSON.parse(fs.readFileSync("./lib/ban.json", "utf-8"));
         banned = [...new Set(banned)];
