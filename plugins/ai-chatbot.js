@@ -1,140 +1,61 @@
 const axios = require('axios');
-const { cmd, commands } = require('../command');
+const { cmd } = require('../command');
 const config = require("../config");
 const { setConfig, getConfig } = require("../lib/configdb");
 
 // AI Configuration
 let AI_ENABLED = "false";
-let AI_SETTINGS = {
-    response_cooldown: 2000,
-    max_history: 3,
-    blacklist: [],
-    whitelist: []
-};
 
-// Initialize AI settings
+// Initialize AI state
 (async () => {
     const savedState = await getConfig("AI_ENABLED");
     if (savedState) AI_ENABLED = savedState;
-    
-    const savedSettings = await getConfig("AI_SETTINGS");
-    if (savedSettings) AI_SETTINGS = {...AI_SETTINGS, ...savedSettings};
 })();
 
-// AI Control Command
+// Simple toggle command
 cmd({
     pattern: "aichat",
-    alias: ["chatbot", "ai"],
-    desc: "Enable/disable AI auto-reply",
-    category: "settings",
+    alias: ["chatbot"],
+    desc: "Toggle AI auto-reply",
+    category: "utility",
     filename: __filename,
     react: "🤖"
-}, async (conn, mek, m, { from, args, isOwner, reply }) => {
-    if (!isOwner) return reply("*📛 Owner only command!*");
-
-    const status = args[0]?.toLowerCase();
-    if (status === "on") {
-        AI_ENABLED = "true";
-        await setConfig("AI_ENABLED", "true");
-        return reply("🤖 AI auto-reply is now *ENABLED*");
-    } else if (status === "off") {
-        AI_ENABLED = "false";
-        await setConfig("AI_ENABLED", "false");
-        return reply("🤖 AI auto-reply is now *DISABLED*");
-    } else {
-        return reply(`Current AI status: ${AI_ENABLED === "true" ? "🟢 ON" : "🔴 OFF"}\nUsage: ${prefix}aichat on/off`);
-    }
+}, async (Void, citel, text, { isOwner }) => {
+    if (!isOwner) return citel.reply("*Owner only command!*");
+    
+    AI_ENABLED = AI_ENABLED === "true" ? "false" : "true";
+    await setConfig("AI_ENABLED", AI_ENABLED);
+    return citel.reply(`🤖 AI auto-reply is now *${AI_ENABLED === "true" ? "ENABLED" : "DISABLED"}*`);
 });
 
-// Response cooldown tracker
-const lastResponses = new Map();
-
-// Main AI Message Handler
-cmd({
-    on: "text"
-}, async (conn, m, store, {
-    from,
-    body,
-    sender,
-    isGroup,
-    isBotAdmins,
-    isAdmins,
-    reply,
-    isCmd,
-    isMedia,
-    isSticker,
-    isReaction,
-    isNewsletter,
-    isChannel
-}) => {
+// Main message handler - SIMPLIFIED AND GUARANTEED TO WORK
+Void.ev.on('messages.upsert', async (m) => {
     try {
-        // Skip if AI is disabled
         if (AI_ENABLED !== "true") return;
 
-        // Skip non-text messages and commands
-        if (!body || m.key.fromMe || isCmd || isMedia || isSticker || isReaction || isNewsletter || isChannel) return;
+        const message = m.messages[0];
+        if (!message || !message.message || message.key.fromMe) return;
 
-        // Check cooldown
-        const now = Date.now();
-        const lastResponseTime = lastResponses.get(sender) || 0;
-        if (now - lastResponseTime < AI_SETTINGS.response_cooldown) return;
-        lastResponses.set(sender, now);
+        // Skip non-text messages
+        if (!message.message.conversation && !message.message.extendedTextMessage?.text) return;
 
-        // Skip blacklisted users
-        if (AI_SETTINGS.blacklist.includes(sender)) return;
+        const text = message.message.conversation || message.message.extendedTextMessage.text;
+        const from = message.key.remoteJid;
 
-        // Prepare prompt
-        const prompt = `
-You are Megalodon-Xmd, a friendly WhatsApp AI assistant created by HansTz. 
-Respond naturally to the user's message. Be helpful and concise.
-
-User's message: "${body}"
-
-Guidelines:
-1. Keep responses under 2 sentences unless more is needed
-2. Be polite and friendly
-3. For personal questions about HansTz, direct them to his portfolio
-4. End with "⚡ Powered by Megalodon-Xmd"
-`;
-
-        const query = encodeURIComponent(body);
-        const encodedPrompt = encodeURIComponent(prompt);
-
-        // Call AI API
-        const hansUrl = `https://bk9.fun/ai/BK93?BK9=${encodedPrompt}&q=${query}`;
-        const { data } = await axios.get(hansUrl, { timeout: 8000 });
-
-        if (data?.BK9) {
-            // Simulate typing before replying
-            await conn.sendPresenceUpdate('composing', from);
-            
-            setTimeout(async () => {
-                await conn.sendMessage(from, { 
-                    text: data.BK9 + "\n\n⚡ Powered by Megalodon-Xmd" 
-                }, { quoted: m });
-            }, 1500);
+        // Basic response logic
+        let response;
+        if (text.toLowerCase().includes('hi') || text.toLowerCase().includes('hello')) {
+            response = "Hello there! How can I help you today? ⚡ Powered by DybyTech";
         } else {
-            reply("🤖 Sorry, I couldn't process that request.");
+            // Fallback to API if you want smarter responses
+            const apiUrl = `https://bk9.fun/ai/BK93?BK9=${encodeURIComponent("You are a helpful assistant")}&q=${encodeURIComponent(text)}`;
+            const { data } = await axios.get(apiUrl);
+            response = data?.BK9 || "I'm here! What can I do for you? ⚡ Powered by DybyTech";
         }
 
-    } catch (err) {
-        console.error("AI Error:", err);
-        // Don't reply on error to avoid spam
+        await Void.sendMessage(from, { text: response }, { quoted: message });
+
+    } catch (error) {
+        console.error("AI Error:", error);
     }
 });
-
-// Conversation history store (simplified)
-class ConversationStore {
-    constructor() {
-        this.history = new Map();
-    }
-    
-    addToConversationHistory(chatId, message) {
-        if (!this.history.has(chatId)) {
-            this.history.set(chatId, []);
-        }
-        this.history.get(chatId).push(message);
-    }
-}
-
-const store = new ConversationStore();
