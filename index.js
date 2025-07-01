@@ -267,8 +267,6 @@ conn.ev.on('messages.upsert', async (msg) => {
   });
 //=========WELCOME & GOODBYE =======
 	  
-conn.ev.on("group-participants.update", (update) => GroupEvents(conn, update));	  
-
 
 setupLinkDetection(conn);
 
