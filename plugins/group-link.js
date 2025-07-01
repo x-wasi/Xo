@@ -1,66 +1,68 @@
 const { cmd } = require('../command');
 const config = require('../config');
+const { getBuffer } = require('../lib/functions2');
 const prefix = config.PREFIX;
-const fs = require('fs');
-const { getBuffer } = require('../lib/functions2'); // Assure-toi que cette fonction récupère bien les buffers via axios
-const path = require('path');
 
 cmd({
     pattern: "linkgroup",
-    alias: ["link", "invite", "grouplink", "satan-link"],
+    alias: ["link", "invite", "grouplink", "linkgc"],
     desc: "Get group invite link.",
     category: "group",
     filename: __filename,
-}, async (conn, mek, m, { from, quoted, body, args, q, isGroup, sender, reply }) => {
+}, async (conn, mek, m, {
+    from, quoted, isGroup, sender, reply
+}) => {
     try {
-        if (!isGroup) return reply("❌ This feature is only available in groups.");
+        if (!isGroup) return reply("❌ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ ᴄᴀɴ ᴏɴʟʏ ʙᴇ ᴜsᴇᴅ ɪɴ ɢʀᴏᴜᴘs.");
 
         const senderNumber = sender.split('@')[0];
-        const botNumber = conn.user.id.split(':')[0];
+        const botNumber = conn.user.id.split(':')[0] + '@s.whatsapp.net';
 
         const groupMetadata = await conn.groupMetadata(from);
-        const groupAdmins = groupMetadata.participants.filter(member => member.admin);
-        const isBotAdmins = groupAdmins.some(admin => admin.id === botNumber + '@s.whatsapp.net');
-        const isAdmins = groupAdmins.some(admin => admin.id === sender);
+        const participants = groupMetadata.participants || [];
 
-        if (!isBotAdmins) return reply("❌ ɪ ɴᴇᴇᴅ ᴛᴏ ʙᴇ ᴀɴ ᴀᴅᴍɪɴ ᴛᴏ ғᴇᴛᴄʜ ᴛʜᴇ ɢʀᴏᴜᴘ ʟɪɴᴋ.");
-        if (!isAdmins) return reply("❌ ᴏɴʟʏ ɢʀᴏᴜᴘ ᴀᴅᴍɪɴs ᴏʀ ᴛʜᴇ ʙᴏᴛ ᴏᴡɴᴇʀ ᴄᴀɴ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ.");
+        const groupAdmins = participants.filter(p => p.admin);
+        const isBotAdmin = groupAdmins.some(p => p.id === botNumber);
+        const isSenderAdmin = groupAdmins.some(p => p.id === sender);
+
+        if (!isBotAdmin) return reply("❌ ɪ ɴᴇᴇᴅ ᴛᴏ ʙᴇ ᴀɴ ᴀᴅᴍɪɴ ᴛᴏ ɢᴇᴛ ᴛʜᴇ ɢʀᴏᴜᴘ ʟɪɴᴋ.");
+        if (!isSenderAdmin) return reply("❌ ᴏɴʟʏ ɢʀᴏᴜᴘ ᴀᴅᴍɪɴs ᴄᴀɴ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ.");
 
         const inviteCode = await conn.groupInviteCode(from);
-        if (!inviteCode) return reply("❌ ғᴀɪʟᴇᴅ ᴛᴏ ʀᴇᴛʀɪᴇᴠᴇ ᴛʜᴇ ɪɴᴠɪᴛᴇ ᴄᴏᴅᴇ.");
+        if (!inviteCode) return reply("❌ ᴄᴏᴜʟᴅɴ'ᴛ ꜰᴇᴛᴄʜ ᴛʜᴇ ɪɴᴠɪᴛᴇ ᴄᴏᴅᴇ.");
 
-        const inviteLink = `https://chat.whatsapp.com/${inviteCode}`;
-        const ownerJid = groupMetadata.owner || '';
-        const groupOwner = ownerJid ? '@' + ownerJid.split('@')[0] : 'Unknown';
-        const groupName = groupMetadata.subject || 'Unknown';
+        const groupLink = `https://chat.whatsapp.com/${inviteCode}`;
+        const groupName = groupMetadata.subject || "ᴜɴᴋɴᴏᴡɴ";
+        const groupOwner = groupMetadata.owner ? '@' + groupMetadata.owner.split('@')[0] : "ᴜɴᴋɴᴏᴡɴ";
         const groupId = groupMetadata.id || from;
-        const memberCount = groupMetadata.participants.length;
+        const memberCount = participants.length;
 
-        const infoText = `╭──〔 *𝐆𝐑𝐎𝐔𝐏 𝐋𝐈𝐍𝐊* 〕──⬣\n` +
-                         `┃ 📍 *ɴᴀᴍᴇ:* ${groupName}\n` +
-                         `┃ 👑 *ᴏᴡɴᴇʀ:* ${groupOwner}\n` +
-                         `┃ 🆔 *ɪᴅ:* ${groupId}\n` +
-                         `┃ 🔗 *ɪɴᴠɪᴛᴇ ʟɪɴᴋ:* ${inviteLink}\n` +
-                         `┃ 👥 *ᴍᴇᴍʙᴇʀs:* ${memberCount}\n` +
-                         `╰──────────────⬣\n\n> *ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅʏʙʏ ᴛᴇᴄʜ*`;
+        const caption = `
+╭──〔 *𝙶𝚁𝙾𝚄𝙿 𝙻𝙸𝙽𝙺* 〕──⬣
+┃ 📍 *ɴᴀᴍᴇ:*  ${groupName}
+┃ 👑 *ᴏᴡɴᴇʀ:* ${groupOwner}
+┃ 🆔 *ɪᴅ:* ${groupId}
+┃ 🔗 *ɪɴᴠɪᴛᴇ ʟɪɴᴋ:* ${groupLink}
+┃ 👥 *ᴍᴇᴍʙᴇʀs:* ${memberCount}
+╰──────────────⬣
 
-        let ppUrl;
+> *ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅʏʙʏ ᴛᴇᴄʜ*
+        `.trim();
+
+        let ppUrl = 'https://telegra.ph/file/6880771a42bad09dd6087.jpg';
         try {
             ppUrl = await conn.profilePictureUrl(from, 'image');
-        } catch {
-            ppUrl = 'https://telegra.ph/file/6880771a42bad09dd6087.jpg'; // Fallback photo
-        }
+        } catch (e) { }
 
         const buffer = await getBuffer(ppUrl);
-
         return conn.sendMessage(from, {
             image: buffer,
-            caption: infoText,
-            mentions: [ownerJid]
+            caption,
+            mentions: [groupMetadata.owner]
         }, { quoted: m });
 
-    } catch (error) {
-        console.error("❌ Error in linkgroup command:", error);
-        reply(`⚠️ An error occurred: ${error.message || "Unknown error"}`);
+    } catch (err) {
+        console.error("❌ Error in .linkgroup:", err);
+        return reply(`⚠️ ᴀɴ ᴇʀʀᴏʀ ᴏᴄᴄᴜʀʀᴇᴅ: ${err.message || 'ᴜɴᴋɴᴏᴡɴ ᴇʀʀᴏʀ'}`);
     }
 });
