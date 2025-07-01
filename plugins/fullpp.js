@@ -8,13 +8,13 @@ cmd({
   desc: "Set full image as bot's profile picture",
   category: "tools",
   filename: __filename
-}, async (client, message, match, { from, isCreator }) => {
+}, async (client, message, match, { from, isCreator, !isOwner }) => {
   try {
     // Get bot's JID (two possible methods)
     const botJid = client.user?.id || (client.user.id.split(":")[0] + "@s.whatsapp.net");
     
     // Allow both bot owner and bot itself to use the command
-    if (message.sender !== botJid && !isCreator) {
+    if (message.sender !== botJid && !isCreator && !isOwner) {
       return await client.sendMessage(from, {
         text: "*📛 ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ ᴄᴀɴ ᴏɴʟʏ ʙᴇ ᴜsᴇᴅ ʙʏ ᴛʜᴇ ʙᴏᴛ ᴏʀ*"
       }, { quoted: message });
