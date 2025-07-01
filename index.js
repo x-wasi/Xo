@@ -118,9 +118,9 @@ const port = process.env.PORT || 9090;
   console.log('Plugins installed successful ✅')
   console.log('MEGALODON CONNECTED SUCCESSFULLY ✅')
   
-   let up = `╭──────────────●●*
-> *➺ ᴍᴇɢᴀʟᴏᴅᴏɴ ᴍᴅ ᴄᴏɴɴᴇᴄᴛᴇᴅ sᴜᴄᴄᴇssғᴜʟʏ ᴛʏᴘᴇ
-> .ᴍᴇɴᴜ ᴛᴏ sᴇᴇ ᴛʜᴇ ғᴜʟʟ ᴄᴏᴍᴍᴀɴᴅ ʟɪsᴛ💫*
+   let up = `> *╭──────────────●●*
+> *➺ ᴍᴇɢᴀʟᴏᴅᴏɴ ᴍᴅ ᴄᴏɴɴᴇᴄᴛᴇᴅ sᴜᴄᴄᴇssғᴜʟʏ ᴛʏᴘᴇ*
+> *.ᴍᴇɴᴜ ᴛᴏ sᴇᴇ ᴛʜᴇ ғᴜʟʟ ᴄᴏᴍᴍᴀɴᴅ ʟɪsᴛ💫*
 
 > *ᴊᴏɪɴ ᴏᴜʀ ᴡʜᴀᴛsᴀᴘᴘ ᴄʜᴀɴɴᴇʟ ғᴏʀ ᴜᴘᴅᴀᴛᴇs ʙᴏᴛ*
 
@@ -272,7 +272,8 @@ registerGroupMessages(conn);
 setupLinkDetection(conn);
 
 registerAntiNewsletter(conn);
-
+	  
+conn.ev.on("group-participants.update", (update) => GroupEvents(conn, update));	  
 
  /// READ STATUS       
   conn.ev.on('messages.upsert', async(mek) => {
