@@ -1,12 +1,4 @@
 {
-  "welcome": {
-    "12036301234567890@g.us": {
-      "message": "👋 Welcome @${user} to *${group}*!\nYou're member number ${count} 🎉"
-    }
-  },
-  "goodbye": {
-    "12036301234567890@g.us": {
-      "message": "👋 @${user} left *${group}* at ${time} on ${date}."
-    }
-  }
+  "welcome": {},
+  "goodbye": {}
 }
