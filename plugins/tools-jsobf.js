@@ -5,7 +5,7 @@ const JavaScriptObfuscator = require("javascript-obfuscator");
 
 cmd({
   pattern: "obfuscate",
-  alias: ["obf", "confuse"],
+  alias: ["obf", "enc"],
   desc: "Obfuscate JavaScript code to make it harder to read.",
   category: "utility",
   use: ".obfuscate <code>",
