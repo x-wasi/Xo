@@ -115,8 +115,9 @@ const port = process.env.PORT || 9090;
   require("./plugins/" + plugin);
   }
   });
-  console.log('Plugins installed successful ✅')
-  console.log('Bot connected to whatsapp ✅')
+	  
+  console.log('💫 Plugins installed successful ✅')
+  console.log('💫 Bot connected to whatsapp ✅')
   
   let up = `> *╭──────────────●●*
 > *➺ ᴍᴇɢᴀʟᴏᴅᴏɴ ᴍᴅ ᴄᴏɴɴᴇᴄᴛᴇᴅ sᴜᴄᴄᴇssғᴜʟʏ ᴛʏᴘᴇ*
@@ -252,8 +253,6 @@ conn.ev.on('messages.upsert', async (msg) => {
 
 // =====================================
 
-
-// =====================================
 	 
   conn.ev.on('messages.update', async updates => {
     for (const update of updates) {
@@ -265,6 +264,7 @@ conn.ev.on('messages.upsert', async (msg) => {
   });
 //=========WELCOME & GOODBYE =======
 	
+registerGroupMessages(conn);
 
 setupLinkDetection(conn);
 
