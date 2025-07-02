@@ -110,7 +110,7 @@ const port = process.env.PORT || 9090;
   connectToWA()
   }
   } else if (connection === 'open') {
-  console.log('Plugins installed successfully ✅️')
+  console.log('Plugins installed ✅️')
   const path = require('path');
   fs.readdirSync("./plugins/").forEach((plugin) => {
   if (path.extname(plugin).toLowerCase() == ".js") {
