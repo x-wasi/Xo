@@ -1,126 +1,101 @@
 const { cmd } = require('../command');
-
 const { loadSettings, saveSettings } = require('../lib/groupMessagesStorage');
 
-// Load persistent settings.
-
 let settings = loadSettings();
+
 let welcomeSettings = settings.welcome || {};
 let goodbyeSettings = settings.goodbye || {};
 
-const defaultWelcomeMessage = "🎉 ᴡᴇʟᴄᴏᴍᴇ {user} ᴛᴏ {group}!\n👥 ᴍᴇᴍʙᴇʀs: {count}\n📅 {date} • 🕐 {time}\n📌 ᴅᴇsᴄʀɪᴘᴛɪᴏɴ: {desc}";
-const defaultGoodbyeMessage = "👋 {user} ʟᴇғᴛ {group}.\nᴡᴇ ᴀʀᴇ ɴᴏᴡ {count} ᴍᴇᴍʙᴇʀs.";
+const defaultWelcomeMessage = "Welcome {user} to {group}!\n📅 {date} ⏰ {time}\n👥 Members: {count}\n📝 {desc}";
+const defaultGoodbyeMessage = "Goodbye {user} from {group}.\n📅 {date} ⏰ {time}\n👥 Members left: {count}\n📝 {desc}";
 
-/**
- * Replace placeholders
- */
-function formatMessage(template, userMention, groupName, memberCount, groupDesc) {
-  const now = new Date();
-  const dateStr = now.toLocaleDateString('en-US');
-  const timeStr = now.toLocaleTimeString('en-US');
-
+function formatMessage(template, userMention, groupName, extras = {}) {
   return template
-    .replace("{user}", userMention)
-    .replace("{group}", groupName)
-    .replace("{count}", memberCount)
-    .replace("{desc}", groupDesc)
-    .replace("{date}", dateStr)
-    .replace("{time}", timeStr);
+    .replace(/{user}/g, userMention)
+    .replace(/{group}/g, groupName)
+    .replace(/{date}/g, extras.date || "")
+    .replace(/{time}/g, extras.time || "")
+    .replace(/{count}/g, extras.count || "")
+    .replace(/{desc}/g, extras.desc || "");
 }
 
-/**
- * Welcome command
- */
+// === Command: welcome ===
 cmd({
   pattern: "welcome",
-  desc: "sᴇᴛ ᴏʀ ᴅɪsᴀʙʟᴇ ᴡᴇʟᴄᴏᴍᴇ ᴍᴇssᴀɢᴇs\nUsage: welcome on | welcome off | welcome <custom>",
+  desc: "Set or disable the welcome message for new members.\nUsage: welcome on | off | <custom message>",
   category: "group",
   filename: __filename,
 }, async (conn, mek, m, { from, args, reply, isGroup, isBotAdmins }) => {
-  try {
-    if (!isGroup) return reply("❌ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ ᴏɴʟʏ ᴡᴏʀᴋs ɪɴ ɢʀᴏᴜᴘs.");
-    if (!isBotAdmins) return reply("❌ ɪ ɴᴇᴇᴅ ᴀᴅᴍɪɴ ᴘᴏᴡᴇʀs.");
+  if (!isGroup) return reply("This command can only be used in groups.");
+  if (!isBotAdmins) return reply("I'm not admin.");
 
-    const setting = welcomeSettings[from] || { enabled: false, message: defaultWelcomeMessage };
+  if (args.length === 0) {
+    const setting = welcomeSettings[from];
+    return reply(setting && setting.enabled
+      ? `✅ Welcome is *ON*\n📩 Message:\n${setting.message}`
+      : "❌ Welcome is *OFF*.");
+  }
 
-    if (args.length === 0) {
-      return reply(setting.enabled
-        ? `✅ ᴡᴇʟᴄᴏᴍᴇ ᴇɴᴀʙʟᴇᴅ\nᴍᴇssᴀɢᴇ: ${setting.message}`
-        : `❌ ᴡᴇʟᴄᴏᴍᴇ ɪs ᴏғғ`);
-    }
+  const option = args[0].toLowerCase();
 
-    const option = args[0].toLowerCase();
-    if (option === "on") {
-      welcomeSettings[from] = { enabled: true, message: defaultWelcomeMessage };
-      settings.welcome = welcomeSettings;
-      saveSettings(settings);
-      return reply("✅ ᴡᴇʟᴄᴏᴍᴇ ᴇɴᴀʙʟᴇᴅ ᴡɪᴛʜ ᴅᴇғᴀᴜʟᴛ ᴍᴇssᴀɢᴇ.");
-    } else if (option === "off") {
-      welcomeSettings[from] = { enabled: false, message: "" };
-      settings.welcome = welcomeSettings;
-      saveSettings(settings);
-      return reply("❌ ᴡᴇʟᴄᴏᴍᴇ ᴅɪsᴀʙʟᴇᴅ.");
-    } else {
-      const customMsg = args.join(" ");
-      welcomeSettings[from] = { enabled: true, message: customMsg };
-      settings.welcome = welcomeSettings;
-      saveSettings(settings);
-      return reply(`✅ ᴄᴜsᴛᴏᴍ ᴍᴇssᴀɢᴇ sᴇᴛ:\n${customMsg}\n\n📌 Available placeholders:\n{user}, {group}, {count}, {desc}, {date}, {time}`);
-    }
-  } catch (e) {
-    console.log(e);
-    m.reply(`${e}`);
+  if (option === "on") {
+    welcomeSettings[from] = { enabled: true, message: defaultWelcomeMessage };
+    settings.welcome = welcomeSettings;
+    saveSettings(settings);
+    return reply("✅ Welcome enabled with default message.");
+  } else if (option === "off") {
+    welcomeSettings[from] = { enabled: false, message: "" };
+    settings.welcome = welcomeSettings;
+    saveSettings(settings);
+    return reply("❌ Welcome disabled.");
+  } else {
+    const customMsg = args.join(" ");
+    welcomeSettings[from] = { enabled: true, message: customMsg };
+    settings.welcome = welcomeSettings;
+    saveSettings(settings);
+    return reply(`✅ Custom welcome message set:\n${customMsg}`);
   }
 });
 
-/**
- * Goodbye command
- */
+// === Command: goodbye ===
 cmd({
   pattern: "goodbye",
-  desc: "sᴇᴛ ᴏʀ ᴅɪsᴀʙʟᴇ ɢᴏᴏᴅʙʏᴇ ᴍᴇssᴀɢᴇs\nUsage: goodbye on | goodbye off | goodbye <custom>",
+  desc: "Set or disable the goodbye message for members who leave.\nUsage: goodbye on | off | <custom message>",
   category: "group",
   filename: __filename,
 }, async (conn, mek, m, { from, args, reply, isGroup, isBotAdmins }) => {
-  try {
-    if (!isGroup) return reply("❌ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ ᴏɴʟʏ ᴡᴏʀᴋs ɪɴ ɢʀᴏᴜᴘs.");
-    if (!isBotAdmins) return reply("❌ ɪ ɴᴇᴇᴅ ᴀᴅᴍɪɴ ᴘᴏᴡᴇʀs.");
+  if (!isGroup) return reply("This command can only be used in groups.");
+  if (!isBotAdmins) return reply("I'm not admin.");
 
-    const setting = goodbyeSettings[from] || { enabled: false, message: defaultGoodbyeMessage };
+  if (args.length === 0) {
+    const setting = goodbyeSettings[from];
+    return reply(setting && setting.enabled
+      ? `✅ Goodbye is *ON*\n📩 Message:\n${setting.message}`
+      : "❌ Goodbye is *OFF*.");
+  }
 
-    if (args.length === 0) {
-      return reply(setting.enabled
-        ? `✅ ɢᴏᴏᴅʙʏᴇ ᴇɴᴀʙʟᴇᴅ\nᴍᴇssᴀɢᴇ: ${setting.message}`
-        : `❌ ɢᴏᴏᴅʙʏᴇ ɪs ᴏғғ`);
-    }
+  const option = args[0].toLowerCase();
 
-    const option = args[0].toLowerCase();
-    if (option === "on") {
-      goodbyeSettings[from] = { enabled: true, message: defaultGoodbyeMessage };
-      settings.goodbye = goodbyeSettings;
-      saveSettings(settings);
-      return reply("✅ ɢᴏᴏᴅʙʏᴇ ᴇɴᴀʙʟᴇᴅ ᴡɪᴛʜ ᴅᴇғᴀᴜʟᴛ.");
-    } else if (option === "off") {
-      goodbyeSettings[from] = { enabled: false, message: "" };
-      settings.goodbye = goodbyeSettings;
-      saveSettings(settings);
-      return reply("❌ ɢᴏᴏᴅʙʏᴇ ᴅɪsᴀʙʟᴇᴅ.");
-    } else {
-      const customMsg = args.join(" ");
-      goodbyeSettings[from] = { enabled: true, message: customMsg };
-      settings.goodbye = goodbyeSettings;
-      saveSettings(settings);
-      return reply(`✅ ᴄᴜsᴛᴏᴍ ᴍᴇssᴀɢᴇ sᴇᴛ:\n${customMsg}\n\n📌 Available placeholders:\n{user}, {group}, {count}, {desc}, {date}, {time}`);
-    }
-  } catch (e) {
-    console.log(e);
-    m.reply(`${e}`);
+  if (option === "on") {
+    goodbyeSettings[from] = { enabled: true, message: defaultGoodbyeMessage };
+    settings.goodbye = goodbyeSettings;
+    saveSettings(settings);
+    return reply("✅ Goodbye enabled with default message.");
+  } else if (option === "off") {
+    goodbyeSettings[from] = { enabled: false, message: "" };
+    settings.goodbye = goodbyeSettings;
+    saveSettings(settings);
+    return reply("❌ Goodbye disabled.");
+  } else {
+    const customMsg = args.join(" ");
+    goodbyeSettings[from] = { enabled: true, message: customMsg };
+    settings.goodbye = goodbyeSettings;
+    saveSettings(settings);
+    return reply(`✅ Custom goodbye message set:\n${customMsg}`);
   }
 });
 
-/**
- * Event registration
- */
+// === Group Event Listener ===
 function registerGroupMessages(conn) {
   conn.ev.on("group-participants.update", async (update) => {
     const groupId = update.id;
@@ -129,37 +104,64 @@ function registerGroupMessages(conn) {
     try {
       groupMetadata = await conn.groupMetadata(groupId);
     } catch (e) {
-      console.error("❌ Group metadata error:", e);
+      console.error("Group metadata error:", e);
     }
 
-    const groupName = groupMetadata?.subject || "Group";
-    const memberCount = groupMetadata?.participants?.length || 0;
-    const groupDesc = groupMetadata?.desc || "No description.";
+    const groupName = groupMetadata?.subject || "this group";
+    const groupDesc = groupMetadata?.desc || "No description";
+    const memberCount = groupMetadata?.participants?.length || "N/A";
 
-    for (let participant of update.participants) {
-      const mention = `@${participant.split("@")[0]}`;
-      let dpUrl = "";
+    const now = new Date();
+    const time = now.toLocaleTimeString("en-US", { hour: '2-digit', minute: '2-digit' });
+    const date = now.toLocaleDateString("en-US");
 
-      try {
-        dpUrl = await conn.profilePictureUrl(participant, "image");
-      } catch {
-        dpUrl = "https://files.catbox.moe/49gzva.png";
-      }
+    const actionMap = {
+      "add": {
+        setting: welcomeSettings[groupId],
+        defaultMsg: defaultWelcomeMessage,
+      },
+      "remove": {
+        setting: goodbyeSettings[groupId],
+        defaultMsg: defaultGoodbyeMessage,
+      },
+    };
 
-      if (update.action === "add") {
-        const setting = welcomeSettings[groupId];
-        if (setting?.enabled) {
-          const msg = formatMessage(setting.message || defaultWelcomeMessage, mention, groupName, memberCount, groupDesc);
-          await conn.sendMessage(groupId, { image: { url: dpUrl }, caption: msg, mentions: [participant] });
+    if (actionMap[update.action]) {
+      for (const participant of update.participants) {
+        const { setting, defaultMsg } = actionMap[update.action];
+
+        if (setting && setting.enabled) {
+          let pp = "";
+          try {
+            pp = await conn.profilePictureUrl(participant, "image");
+          } catch {
+            pp = "https://files.catbox.moe/49gzva.png";
+          }
+
+          const mention = `@${participant.split("@")[0]}`;
+          const message = formatMessage(setting.message || defaultMsg, mention, groupName, {
+            date, time, count: memberCount, desc: groupDesc
+          });
+
+          await conn.sendMessage(groupId, {
+            image: { url: pp },
+            caption: message,
+            mentions: [participant]
+          });
         }
       }
+    }
 
-      if (update.action === "remove") {
-        const setting = goodbyeSettings[groupId];
-        if (setting?.enabled) {
-          const msg = formatMessage(setting.message || defaultGoodbyeMessage, mention, groupName, memberCount, groupDesc);
-          await conn.sendMessage(groupId, { image: { url: dpUrl }, caption: msg, mentions: [participant] });
-        }
+    // Promote/Demote logic (facultatif, inchangé)
+    if (update.action === "promote" || update.action === "demote") {
+      for (let participant of update.participants) {
+        const msg = update.action === "promote"
+          ? `Hey @${participant.split("@")[0]}, you're now an admin! 🎉`
+          : `@${participant.split("@")[0]}, you've been demoted. 😔`;
+        await conn.sendMessage(groupId, {
+          text: msg,
+          mentions: [participant],
+        });
       }
     }
   });
