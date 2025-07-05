@@ -52,7 +52,7 @@ cmd({
 
         const dec = "✅ sᴜᴄᴄᴇssғᴜʟʟʏ ᴀᴅᴅᴇᴅ ᴜsᴇʀ ᴀs ᴛᴇᴍᴘᴏʀᴀʀʏ ᴏᴡɴᴇʀ";
         await conn.sendMessage(from, {  // استفاده از await در اینجا درست است
-            image: { url: "https://files.catbox.moe/2ozipw.jpg" },
+            image: { url: "https://files.catbox.moe/roubzi.jpg" },
             caption: dec
         }, { quoted: mek });
     } catch (err) {
@@ -91,7 +91,7 @@ cmd({
 
         const dec = "✅ sᴜᴄᴄᴇssғᴜʟʟʏ ʀᴇᴍᴏᴠᴇᴅ User ᴀs ᴛᴇᴍᴘᴏʀᴀʀʏ ᴏᴡɴᴇʀ";
         await conn.sendMessage(from, {  // استفاده از await در اینجا درست است
-            image: { url: "https://files.catbox.moe/2ozipw.jpg" },
+            image: { url: "https://files.catbox.moe/roubzi.jpg" },
             caption: dec
         }, { quoted: mek });
     } catch (err) {
@@ -132,7 +132,7 @@ cmd({
 
         // Send the message with an image and formatted caption
         await conn.sendMessage(from, {
-            image: { url: "https://files.catbox.moe/2ozipw.jpg" },
+            image: { url: "https://files.catbox.moe/roubzi.jpg" },
             caption: listMessage
         }, { quoted: mek });
     } catch (err) {
@@ -234,7 +234,7 @@ cmd({
         const text = `> *𝐌𝐎𝐃𝐄 𝐒𝐄𝐓𝐓𝐈𝐍𝐆𝐒*\n\n> ᴄᴜʀʀᴇɴᴛ ᴍᴏᴅᴇ: *ᴘᴜʙʟɪᴄ*\n\nʀᴇᴘʟʏ ᴡɪᴛʜ:\n\n*1.* ᴛᴏ ᴇɴᴀʙʟᴇ ᴘᴜʙʟɪᴄ ᴍᴏᴅᴇ\n*2.* ᴛᴏ ᴇɴᴀʙʟᴇ ᴘʀɪᴠᴀᴛᴇ ᴍᴏᴅᴇ\n*3.* ᴛᴏ ᴇɴᴀʙʟᴇ ɪɴʙᴏx ᴍᴏᴅᴇ\n*4.* ᴛᴏ ᴇɴᴀʙʟᴇ ɢʀᴏᴜᴘs ᴍᴏᴅᴇ\n\n╭────────────────\n│ *ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅʏʙʏ ᴛᴇᴄʜ*\n╰─────────────────◆`;
 
         const sentMsg = await conn.sendMessage(from, {
-            image: { url: "https://files.catbox.moe/2ozipw.jpg" },  // تصویر منوی مد
+            image: { url: "https://files.catbox.moe/roubzi.jpg" },  // تصویر منوی مد
             caption: text
         }, { quoted: mek });
 
@@ -522,10 +522,10 @@ cmd({
         ? "Delete"
         : "Disabled";
 
-    const text = `> *𝐀𝐍𝐓𝐈𝐋𝐈𝐍𝐊 𝐒𝐄𝐓𝐓𝐈𝐍𝐆𝐒*\n\n> ᴄᴜʀʀᴇɴᴛ ᴍᴏᴅᴇ: *${currentMode}*\n\nʀᴇᴘʟʏ ᴡɪᴛʜ:\n\n*1.* ᴇɴᴀʙʟᴇ ᴀɴᴛɪʟɪɴᴋ => ᴡᴀʀɴ\n*2.* ᴇɴᴀʙʟᴇ ᴀɴᴛɪʟɪɴᴋ => Delete\n*3.* Enable ANTILINK => ʀᴇᴍᴏᴠᴇ/ᴋɪᴄᴋ\n*4.* ᴅɪsᴀʙʟᴇ ᴀʟʟ ᴀɴᴛɪʟɪɴᴋ ᴍᴏᴅᴇs\n\n╭────────────────\n│ *ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅʏʙʏ ᴛᴇᴄʜ*\n╰─────────────────◆`;
+    const text = `> *𝐀𝐍𝐓𝐈𝐋𝐈𝐍𝐊 𝐒𝐄𝐓𝐓𝐈𝐍𝐆𝐒*\n\n> ᴄᴜʀʀᴇɴᴛ ᴍᴏᴅᴇ: *${currentMode}*\n\nʀᴇᴘʟʏ ᴡɪᴛʜ:\n\n*1.* ᴇɴᴀʙʟᴇ ᴀɴᴛɪʟɪɴᴋ => ᴡᴀʀɴ\n*2.* ᴇɴᴀʙʟᴇ ᴀɴᴛɪʟɪɴᴋ => Delete\n*3.* ᴇɴᴀʙʟᴇ ᴀɴᴛɪʟɪɴᴋ => ʀᴇᴍᴏᴠᴇ/ᴋɪᴄᴋ\n*4.* ᴅɪsᴀʙʟᴇ ᴀʟʟ ᴀɴᴛɪʟɪɴᴋ ᴍᴏᴅᴇs\n\n╭────────────────\n│ *ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅʏʙʏ ᴛᴇᴄʜ*\n╰─────────────────◆`;
 
     const sentMsg = await conn.sendMessage(from, {
-      image: { url: "https://files.catbox.moe/2ozipw.jpg" },
+      image: { url: "https://files.catbox.moe/roubzi.jpg" },
       caption: text
     }, { quoted: mek });
 
