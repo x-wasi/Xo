@@ -22,22 +22,21 @@ const ensureOwnerFile = () => {
 
 // افزودن شماره به owner.json
 cmd({
-    pattern: "addsudo",
-    alias: ["setsudo"],
+    pattern: "setsudo",
+    alias: ["addsudo"],
     desc: "Add a temporary owner",
     category: "owner",
     react: "🙂‍↔️",
     filename: __filename
 }, async (conn, mek, m, { from, args, q, isCreator, reply, isOwner }) => {
     try {
-        if (!isCreator) return reply("* ᴄᴏᴍᴍᴀɴᴅ ʀᴇsᴇʀᴠᴇᴅ ғᴏʀ ᴏᴡɴᴇʀ ᴀɴᴅ ᴏɴʟʏ!*");
+        if (!isCreator) return reply("📛 *ᴄᴏᴍᴍᴀɴᴅ ʀᴇsᴇʀᴠᴇᴅ ғᴏʀ ᴏᴡɴᴇʀ ᴀɴᴅ ᴏɴʟʏ!*");
 
-        // پیدا کردن هدف (شماره یا کاربر)
+        // Target
         let target = m.mentionedJid?.[0] 
             || (m.quoted?.sender ?? null)
             || (args[0]?.replace(/[^0-9]/g, '') + "@s.whatsapp.net");
 
-        // اگر هیچ هدفی وارد نشده بود، پیام خطا بده
         if (!target) return reply("*ᴘʟᴇᴀsᴇ ᴘʀᴏᴠɪᴅᴇ ᴀ ɴᴜᴍʙᴇʀ ᴏʀ ᴛᴀɢ/ʀᴇᴘʟʏ ᴀ ᴜsᴇʀ.*");
 
         let own = JSON.parse(fs.readFileSync("./lib/owner.json", "utf-8"));
@@ -50,11 +49,14 @@ cmd({
         const uniqueOwners = [...new Set(own)];
         fs.writeFileSync("./lib/owner.json", JSON.stringify(uniqueOwners, null, 2));
 
-        const dec = "✅ sᴜᴄᴄᴇssғᴜʟʟʏ ᴀᴅᴅᴇᴅ ᴜsᴇʀ ᴀs ᴛᴇᴍᴘᴏʀᴀʀʏ ᴏᴡɴᴇʀ";
-        await conn.sendMessage(from, {  // استفاده از await در اینجا درست است
+        const dec = `✅ @${target.split("@")[0]} ʜᴀs ʙᴇᴇɴ ᴀᴅᴅᴇᴅ ᴀs ᴀ ᴛᴇᴍᴘᴏʀᴀʀʏ ᴏᴡɴᴇʀ`;
+
+        await conn.sendMessage(from, {
             image: { url: "https://files.catbox.moe/roubzi.jpg" },
-            caption: dec
+            caption: dec,
+            mentions: [target] // 🔥 Ceci active le tag du user
         }, { quoted: mek });
+
     } catch (err) {
         console.error(err);
         reply("❌ Error: " + err.message);
@@ -64,14 +66,14 @@ cmd({
 // حذف شماره از owner.json
 cmd({
     pattern: "delsudo",
-    alias: [],
+    alias: ["sudodel"],
     desc: "Remove a temporary owner",
     category: "owner",
     react: "🫩",
     filename: __filename
 }, async (conn, mek, m, { from, args, q, isCreator, reply, isOwner }) => {
     try {
-        if (!isCreator) return reply("*ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ ᴄᴀɴ ᴏɴʟʏ ʙᴇ ᴜsᴇᴅ ʙʏ ᴍʏ ᴏᴡɴᴇʀ !*");
+        if (!isCreator) return reply("📛 *ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ ᴄᴀɴ ᴏɴʟʏ ʙᴇ ᴜsᴇᴅ ʙʏ ᴍʏ ᴏᴡɴᴇʀ !*");
 
         let target = m.mentionedJid?.[0] 
             || (m.quoted?.sender ?? null)
@@ -101,15 +103,15 @@ cmd({
 });
 
 cmd({
-    pattern: "listsudo",
-    alias: [],
+    pattern: "getsudo",
+    alias: ["listsudo"],
     desc: "List all temporary owners",
     category: "owner",
     react: "📋",
     filename: __filename
 }, async (conn, mek, m, { from, args, isCreator, reply, isOwner }) => {
     try {
-    if (!isCreator) return reply("*ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ ᴄᴀɴ ᴏɴʟʏ ʙᴇ ᴜsᴇᴅ ʙʏ ᴍʏ ᴏᴡɴᴇʀ !*");
+    if (!isCreator) return reply("📛 *ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ ᴄᴀɴ ᴏɴʟʏ ʙᴇ ᴜsᴇᴅ ʙʏ ᴍʏ ᴏᴡɴᴇʀ !*");
         // Check if the user is the owner
         if (!isOwner) {
             return reply("❌ ʏᴏᴜ ᴀʀᴇ ɴᴏᴛ ᴛʜᴇ ʙᴏᴛ ᴏᴡɴᴇʀ.");
