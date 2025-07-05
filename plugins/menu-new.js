@@ -7,7 +7,7 @@ cmd({
   category: "menu",
   react: "🧾",
   filename: __filename
-}, async (conn, mek, m, { from, sender }) => {
+}, async (conn, mek, m, { from, sender, pushname }) => {
   try {
     // Catégories mappées à des numéros
     const categories = {
