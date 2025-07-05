@@ -1,5 +1,3 @@
-const fs = require('fs');
-const path = require('path');
 const fetch = require('node-fetch');
 const { cmd } = require('../command');
 
@@ -13,6 +11,7 @@ cmd({
 },
 async (conn, mek, m, { from, reply }) => {
     const githubRepoURL = 'https://github.com/DybyTech/MEGALODON-MD';
+    const imageURL = 'https://files.catbox.moe/roubzi.jpg';
 
     try {
         const match = githubRepoURL.match(/github\.com\/([^/]+)\/([^/]+)/);
@@ -45,12 +44,11 @@ async (conn, mek, m, { from, reply }) => {
 │✞ *sᴇssɪᴏɴ:* meg-lodon-session.up.railway.app
 ╰───────────────────`;
 
-        // Charger l'image locale
-        const imagePath = path.join(__dirname, '../data/alive.png');
-        if (!fs.existsSync(imagePath)) throw new Error("ɪᴍᴀɢᴇ ʟᴏᴄᴀʟᴇ ɴᴏɴ ᴛʀᴏᴜᴠéᴇ : ᴍᴇᴅɪᴀ/ᴀʟɪᴠᴇ.ᴘɴɢ");
-        const imageBuffer = fs.readFileSync(imagePath);
+        // Télécharger l’image distante
+        const imgResponse = await fetch(imageURL);
+        if (!imgResponse.ok) throw new Error("Éᴄʜᴇᴄ ᴅᴜ ᴛéʟéᴄʜᴀʀɢᴇᴍᴇɴᴛ ᴅᴇ ʟ'ɪᴍᴀɢᴇ ᴅɪsᴛᴀɴᴛᴇ");
+        const imageBuffer = await imgResponse.buffer();
 
-        // Envoyer le message avec newsletter forwarding
         await conn.sendMessage(from, {
             image: imageBuffer,
             caption,
@@ -61,7 +59,7 @@ async (conn, mek, m, { from, reply }) => {
                 forwardedNewsletterMessageInfo: {
                     newsletterJid: '120363401051937059@newsletter',
                     newsletterName: '𝐌𝐄𝐆𝐀𝐋𝐎𝐃𝐎𝐍-𝐌𝐃',
-                    serverMessageId: 143 // Assure-toi que ce messageId est valide
+                    serverMessageId: 143
                 }
             }
         }, { quoted: mek });
