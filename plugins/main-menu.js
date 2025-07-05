@@ -96,7 +96,7 @@ async (dyby, mek, m, { from, reply }) => {
     // Construction du menu par catégorie
     const sortedKeys = Object.keys(categories).sort();
     for (let key of sortedKeys) {
-      const emoji = emojiByCategory[key] || '❓';
+      const emoji = emojiByCategory[key] || '💫';
       dybymenu += `\n\n┌── 『 ${emoji} *${toUpperStylized(key)} ᴍᴇɴᴜ* 』`;
 
       const cmds = categories[key].filter(c => c.pattern).sort((a, b) => a.pattern.localeCompare(b.pattern));
