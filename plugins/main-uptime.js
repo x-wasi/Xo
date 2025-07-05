@@ -38,7 +38,7 @@ ${uptimeFormatted}
     `;
 
     await client.sendMessage(message.chat, {
-      image: { url: "https://files.catbox.moe/2ozipw.jpg" },
+      image: { url: "https://files.catbox.moe/roubzi.jpg" },
       caption: status.trim(),
     }, { quoted: message });
         
