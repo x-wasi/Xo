@@ -41,7 +41,7 @@ END:VCARD
 > *ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅʏʙʏ ᴛᴇᴄʜ*`;
 
         await conn.sendMessage(from, {
-            image: { url: 'https://files.catbox.moe/2ozipw.jpg' },
+            image: { url: 'https://files.catbox.moe/roubzi.jpg' },
             caption,
             contextInfo: {
                 mentionedJid: [`${ownerNumber.replace('+', '')}@s.whatsapp.net`], 
