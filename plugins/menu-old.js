@@ -1,5 +1,8 @@
 const config = require('../config');
-const { cmd, commands } = require('../command');
+const { cmd } = require('../command');
+const { runtime } = require('../lib/functions');
+const os = require("os");
+const axios = require('axios');
 
 const menuMap = {
     "1": "download",
