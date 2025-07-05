@@ -68,7 +68,7 @@ _ʀᴇᴘʟʏ ᴡɪᴛʜ: 1.1, 2.2, ᴇᴛᴄ ᴛᴏ ᴛᴏɢɢʟᴇ ᴏɴ/ᴏғ
 
     const sent = await conn.sendMessage(from, {
     caption: menu,
-    image: { url: "https://files.catbox.moe/2ozipw.jpg" }  // عکس تستی
+    image: { url: "https://files.catbox.moe/roubzi.jpg" }  // عکس تستی
 }, { quoted: mek });
 
     const messageID = sent.key.id;
