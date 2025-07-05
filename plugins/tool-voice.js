@@ -36,7 +36,7 @@ async (conn, mek, m, {
     try {
         // Check if args[0] exists (user provided text)
         if (!args[0]) {
-            return reply("Please provide text after the command.\nExample: .aivoice hello");
+            return reply("ᴘʟᴇᴀsᴇ ᴘʀᴏᴠɪᴅᴇ ᴛᴇxᴛ ᴀғᴛᴇʀ ᴛʜᴇ ᴄᴏᴍᴍᴀɴᴅ.\nᴇxᴀᴍᴘʟᴇ: .ᴀɪᴠᴏɪᴄᴇ ʜᴇʟʟᴏ");
         }
 
         // Get the full input text
@@ -64,16 +64,16 @@ async (conn, mek, m, {
         ];
 
         // Create menu text
-        let menuText = "╭━━━〔 *AI VOICE MODELS* 〕━━━⊷\n";
+        let menuText = "╭━━━〔 *𝐀𝐈 𝐕𝐎𝐈𝐂𝐄 𝐌𝐎𝐃𝐄𝐋𝐒* 〕━━━⊷\n";
         voiceModels.forEach(model => {
             menuText += `┃▸ ${model.number}. ${model.name}\n`;
         });
         menuText += "╰━━━⪼\n\n";
-        menuText += `📌 *Reply with the number to select voice model for:*\n"${inputText}"`;
+        menuText += `📌 *ʀᴇᴘʟʏ ᴡɪᴛʜ ᴛʜᴇ ɴᴜᴍʙᴇʀ ᴛᴏ sᴇʟᴇᴄᴛ ᴠᴏɪᴄᴇ ᴍᴏᴅᴇʟ ғᴏʀ:*\n"${inputText}"`;
 
         // Send menu message with image
         const sentMsg = await conn.sendMessage(from, {  
-            image: { url: "https://files.catbox.moe/yv8zy4.jpg" },
+            image: { url: "https://files.catbox.moe/roubzi.jpg" },
             caption: menuText
         }, { quoted: m });
 
@@ -84,7 +84,7 @@ async (conn, mek, m, {
         const handlerTimeout = setTimeout(() => {
             handlerActive = false;
             conn.ev.off("messages.upsert", messageHandler);
-            reply("⌛ Voice selection timed out. Please try the command again.");
+            reply("⌛ ᴠᴏɪᴄᴇ sᴇʟᴇᴄᴛɪᴏɴ ᴛɪᴍᴇᴅ ᴏᴜᴛ. ᴘʟᴇᴀsᴇ ᴛʀʏ ᴛʜᴇ ᴄᴏᴍᴍᴀɴᴅ ᴀɢᴀɪɴ.");
         }, 120000);
 
         // Message handler function
@@ -113,7 +113,7 @@ async (conn, mek, m, {
                 const selectedModel = voiceModels.find(model => model.number === selectedNumber);
 
                 if (!selectedModel) {
-                    return reply("❌ Invalid option! Please reply with a number from the menu.");
+                    return reply("❌ ɪɴᴠᴀʟɪᴅ ᴏᴘᴛɪᴏɴ! ᴘʟᴇᴀsᴇ ʀᴇᴘʟʏ ᴡɪᴛʜ ᴀ ɴᴜᴍʙᴇʀ ғʀᴏᴍ ᴛʜᴇ ᴍᴇɴᴜ.");
                 }
 
                 try {
