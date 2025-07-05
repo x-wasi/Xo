@@ -6,7 +6,7 @@ const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
 const { spawn } = require('child_process');
 
 // Configuration
-const COVER_URL = 'https://files.catbox.moe/yv8zy4.jpg';
+const COVER_URL = 'https://files.catbox.moe/roubzi.jpg';
 const TEMP_DIR = path.join(__dirname, '../temp');
 const MAX_RETRIES = 3;
 
