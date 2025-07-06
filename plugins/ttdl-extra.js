@@ -5,7 +5,7 @@ cmd({
     pattern: "tiktok2",
     alias: ["tt2", "tiktokdl2", "ttdown2", "tiktokvid2", "ttdl"],
     desc: "Download TikTok videos using a link.",
-    category: "downloader",
+    category: "download",
     filename: __filename
 },
 async (conn, mek, m, { from, args, quoted, reply }) => {
