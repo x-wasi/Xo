@@ -77,9 +77,9 @@ async (dyby, mek, m, { from, reply }) => {
 *┃◆* ᴜꜱᴇʀ : @${sender.split("@")[0]}
 *┃◆* ʀᴜɴᴛɪᴍᴇ : ${uptime()}
 *┃◆* ᴍᴏᴅᴇ : *${config.MODE}*
-*┃◆* ᴘʀᴇғɪx : [${config.PREFIX}]
-*┃◆* ᴏᴡɴᴇʀ : [${config.OWNER_NAME}]
-*┃◆* ᴘʟᴜɢɪɴꜱ : ${totalCommands}
+*┃◆* ᴘʀᴇғɪx : 「 ${config.PREFIX} 」
+*┃◆* ᴏᴡɴᴇʀ : ${config.OWNER_NAME}
+*┃◆* ᴘʟᴜɢɪɴꜱ : 『 ${totalCommands} 』
 *┃◆* ᴅᴇᴠ : ᴅʏʙʏ ᴛᴇᴄʜ
 *┃◆* ᴠᴇʀꜱɪᴏɴ : 1.0.0
 *╰════════════════⊷*`;
