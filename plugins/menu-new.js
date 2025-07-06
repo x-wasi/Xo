@@ -32,12 +32,12 @@ cmd({
       return "ɢᴏᴏᴅ ᴇᴠᴇɴɪɴɢ 🌚";
     };
 
-    const menuCaption = `*┌──◆*
+    const menuCaption = `*┌──○*
 *│ 『 𝐌𝐄𝐆𝐀𝐋𝐎𝐃𝐎𝐍-𝐌𝐃 』*
-*└─┬◆*
+*└─┬○*
 *┌─┤ ${getGreeting()}*
 *│  ╰────────────────╯*
-*│◓ ᴜsᴇʀ : ${pushname}
+*│◓ ᴜsᴇʀ : ${pushname}*
 *│◓ ᴏᴡɴᴇʀ : ${config.OWNER_NAME}*
 *│◓ ʙᴀɪʟᴇʏs : ᴍᴜʟᴛɪ ᴅᴇᴠɪᴄᴇ*
 *│◓ ᴛʏᴘᴇ : ɴᴏᴅᴇᴊs*
