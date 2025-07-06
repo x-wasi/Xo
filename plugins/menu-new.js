@@ -5,7 +5,7 @@ cmd({
   pattern: "menu2",
   alias: ["mainmenu", "help2"],
   desc: "Interactive menu with categories",
-  category: "menu",
+  category: "main",
   react: "🧾",
   filename: __filename
 }, async (conn, mek, m, {
@@ -47,7 +47,7 @@ cmd({
 *│◓ ᴠᴇʀsɪᴏɴ : 1.0.0 ʙᴇᴛᴀ*
 *╰─────────────────⊷*
 
-> *╭∘━━➣* *𝐌𝐄𝐍𝐔 *
+> *╭∘━━>* 〔 〔 *𝐌𝐄𝐍𝐔-𝐋𝐈𝐒𝐓* 〕 〕
 > *│☆* ❶ *ᴅᴏᴡɴʟᴏᴀᴅ ᴍᴇɴᴜ*
 > *│☆* ❷ *ɢʀᴏᴜᴘ ᴍᴇɴᴜ*
 > *│☆* ❸ *ғᴜɴ ᴍᴇɴᴜ*
