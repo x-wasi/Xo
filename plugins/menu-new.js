@@ -9,7 +9,7 @@ cmd({
   react: "🧾",
   filename: __filename
 }, async (conn, mek, m, {
-  from, sender, reply
+  from, sender, pushname, reply
 }) => {
   try {
     const categories = {
@@ -27,22 +27,23 @@ cmd({
 
     const getGreeting = () => {
       const h = new Date().getHours();
-      if (h >= 5 && h < 12) return "🌅 ɢᴏᴏᴅ ᴍᴏʀɴɪɴɢ";
-      if (h >= 12 && h < 18) return "🌞 ɢᴏᴏᴅ ᴀꜰᴛᴇʀɴᴏᴏɴ";
-      return "🌙 ɢᴏᴏᴅ ᴇᴠᴇɴɪɴɢ";
+      if (h >= 5 && h < 12) return "ɢᴏᴏᴅ ᴍᴏʀɴɪɴɢ 🌅";
+      if (h >= 12 && h < 18) return "ɢᴏᴏᴅ ᴀꜰᴛᴇʀɴᴏᴏɴ 🌞";
+      return "ɢᴏᴏᴅ ᴇᴠᴇɴɪɴɢ 🌚";
     };
 
     const menuCaption = `*┌──◆*
 *│ 『 𝐌𝐄𝐆𝐀𝐋𝐎𝐃𝐎𝐍-𝐌𝐃 』*
 *└─┬◆*
-*┌─┤ ${getGreeting()} 💫*
+*┌─┤ ${getGreeting()}*
 *│  ╰────────────────╯*
+*│◓ ᴜsᴇʀ : ${pushname}
 *│◓ ᴏᴡɴᴇʀ : ${config.OWNER_NAME}*
 *│◓ ʙᴀɪʟᴇʏs : ᴍᴜʟᴛɪ ᴅᴇᴠɪᴄᴇ*
 *│◓ ᴛʏᴘᴇ : ɴᴏᴅᴇᴊs*
 *│◓ ᴅᴇᴠ : ᴅʏʙʏ ᴛᴇᴄʜ*
 *│◓ ᴍᴏᴅᴇ : ${config.MODE}*
-*│◓ ᴘʀᴇғɪx : *「 ${config.PREFIX} 」
+*│◓ ᴘʀᴇғɪx :*「 ${config.PREFIX} 」
 *│◓ ᴠᴇʀsɪᴏɴ : 1.0.0 ʙᴇᴛᴀ*
 *╰─────────────────⊷*
 
@@ -98,11 +99,11 @@ _ʀᴇᴘʟʏ ᴡɪᴛʜ ᴀ ɴᴜᴍʙᴇʀ (1–10) ᴛᴏ ᴠɪᴇᴡ ᴛʜ�
         }
 
         const list = commands.filter(cmd => cmd.category?.toLowerCase() === cat)
-          .map(cmd => `> |➤ *${config.PREFIX}${cmd.pattern}*`)
+          .map(cmd => `> |➳ *${config.PREFIX}${cmd.pattern}*`)
           .join("\n") || "_No commands found in this category._";
 
         await conn.sendMessage(from, {
-          text: `*📂 ${cat.toUpperCase()} MENU*\n\n${list}`
+          text: `> *📂 ${cat.toUpperCase()} MENU*\n\n${list}`
         }, { quoted: received });
       }
     };
