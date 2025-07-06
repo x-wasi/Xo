@@ -5,7 +5,7 @@ cmd({
     pattern: "countryinfo",
     alias: ["cinfo", "country","cinfo2"],
     desc: "Get information about a country",
-    category: "fun-extra",
+    category: "search",
     react: "🌍",
     filename: __filename
 },
