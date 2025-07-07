@@ -14,10 +14,10 @@ cmd({
   reply
 }) => {
   try {
-    if (!q) return reply("❎ ᴘʟᴇᴀsᴇ ᴘʀᴏᴠɪᴅᴇ ᴀ ᴡʜᴀᴛsᴀᴘᴘ ᴄʜᴀɴɴᴇʟ ʟɪɴᴋ.\n\n*ᴇxᴀᴍᴘʟᴇ:* .ᴄɪɴғᴏ https://whatsapp.com/channel/123456789");
+    if (!q) return reply("📛 ᴘʟᴇᴀsᴇ ᴘʀᴏᴠɪᴅᴇ ᴀ ᴡʜᴀᴛsᴀᴘᴘ ᴄʜᴀɴɴᴇʟ ʟɪɴᴋ.\n\n*ᴇxᴀᴍᴘʟᴇ:* .ᴄɪᴅ https://whatsapp.com/channel/123456789");
 
     const match = q.match(/whatsapp\.com\/channel\/([\w-]+)/);
-    if (!match) return reply("⚠️ *ɪɴᴠᴀʟɪᴅ ᴄʜᴀɴɴᴇʟ ʟɪɴᴋ ғᴏʀᴍᴀᴛ.*\n\nMake sᴜʀᴇ ɪᴛ ʟᴏᴏᴋs like:\nhttps://whatsapp.com/channel/xxxxxxxxx");
+    if (!match) return reply("⚠️ *ɪɴᴠᴀʟɪᴅ ᴄʜᴀɴɴᴇʟ ʟɪɴᴋ ғᴏʀᴍᴀᴛ.*\n\nMake sᴜʀᴇ ɪᴛ ʟᴏᴏᴋs ʟɪᴋᴇ:\nhttps://whatsapp.com/channel/xxxxxxxxx");
 
     const inviteId = match[1];
 
