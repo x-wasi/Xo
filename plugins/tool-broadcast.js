@@ -12,10 +12,9 @@ cmd({
   desc: "Bot makes a broadcast in all groups",
   filename: __filename,
   use: "<ᴛᴇxᴛ ғᴏʀ ʙʀᴏᴀᴅᴄᴀsᴛ.>"
-}, async (conn, mek, m, { q, isGroup, isAdmins, reply }) => {
+}, async (conn, mek, m, { q, isGroup, isCreator, reply }) => {
   try {
-    if (!isGroup) return reply("❌ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ ᴄᴀɴ ᴏɴʟʏ ʙᴇ ᴜsᴇᴅ ɪɴ ɢʀᴏᴜᴘs!");
-    if (!isAdmins) return reply("❌ ʏᴏᴜ ɴᴇᴇᴅ ᴛᴏ ʙᴇ ᴀɴ ᴀᴅᴍɪɴ ᴛᴏ ʙʀᴏᴀᴅᴄᴀsᴛ ɪɴ ᴛʜɪs ɢʀᴏᴜᴘ!");
+    if (!isCreator) return reply("❌ ᴏɴʟʏ ᴛʜᴇ ᴏᴡɴᴇʀ ᴄᴀɴ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ!");
 
     if (!q) return reply("❌ ᴘʀᴏᴠɪᴅᴇ ᴛᴇxᴛ ᴛᴏ ʙʀᴏᴀᴅᴄᴀsᴛ ɪɴ ᴀʟʟ ɢʀᴏᴜᴘs!");
 
@@ -34,7 +33,7 @@ cmd({
     }
 
     return reply(`✅ sᴜᴄᴄᴇssғᴜʟʟʏ sᴇɴᴛ ʙʀᴏᴀᴅᴄᴀsᴛ ᴛᴏ ${groupIds.length} ɢʀᴏᴜᴘs!`);
-    
+
   } catch (err) {
     await m.error(`❌ Error: ${err}\n\nCommand: broadcast`, err);
   }
