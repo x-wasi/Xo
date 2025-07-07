@@ -6,7 +6,7 @@ let welcomeSettings = settings.welcome || {};
 let goodbyeSettings = settings.goodbye || {};
 
 const defaultWelcomeMessage = "👋 ᴡᴇʟᴄᴏᴍᴇ {user} ᴛᴏ {group}!\n📅 {date} ⏰ {time}\n👥 ᴍᴇᴍʙᴇʀs: {count}\n📝 {desc}";
-const defaultGoodbyeMessage = "👋 ɢᴏᴏᴅʙʏᴇ {user} ғʀᴏᴍ {group}.\n📅 {date} ⏰ {time}\n👥 ᴍᴇᴍʙᴇʀs left: {count}\n📝 {desc}";
+const defaultGoodbyeMessage = "👋 ɢᴏᴏᴅʙʏᴇ {user} ғʀᴏᴍ {group}.\n📅 {date} ⏰ {time}\n👥 ᴍᴇᴍʙᴇʀs ʟᴇғᴛ: {count}\n📝 {desc}";
 
 function formatMessage(template, userMention, groupName, extras = {}) {
   return template
@@ -18,7 +18,7 @@ function formatMessage(template, userMention, groupName, extras = {}) {
     .replace(/{desc}/g, extras.desc || "");
 }
 
-// === .welcome command ===
+// === .welcome ===
 cmd({
   pattern: "welcome",
   desc: "Enable/disable or customize welcome message\nUsage: welcome on | off | <message>",
@@ -26,8 +26,7 @@ cmd({
   filename: __filename,
 }, async (conn, mek, m, { from, args, reply, isGroup, isBotAdmins, isOwner }) => {
   if (!isGroup) return reply("❌ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ ɪs ғᴏʀ ɢʀᴏᴜᴘs ᴏɴʟʏ.");
-  if (!isBotAdmins) return reply("❌ ɪ ᴍᴜsᴛ ʙᴇ ᴀᴅᴍɪɴ ᴛᴏ ᴍᴀɴᴀɢᴇ ᴡᴇʟᴄᴏᴍᴇ ᴍᴇssᴀɢᴇs.");
-  if (!isOwner) return reply("❌ ᴏɴʟʏ ʙᴏᴛ ᴏᴡɴᴇʀ ᴄᴀɴ ᴍᴏᴅɪғʏ ᴡᴇʟᴄᴏᴍᴇ sᴇᴛᴛɪɴɢs.");
+  if (!isBotAdmins && !isOwner) return reply("❌ ɪ ᴍᴜsᴛ ʙᴇ ᴀᴅᴍɪɴ ᴏʀ ʏᴏᴜ ᴍᴜsᴛ ʙᴇ ᴛʜᴇ ʙᴏᴛ ᴏᴡɴᴇʀ.");
 
   if (args.length === 0) {
     const setting = welcomeSettings[from];
@@ -55,16 +54,15 @@ cmd({
     : `✅ Welcome message ${option === "on" ? "enabled" : "set with custom text"}:\n${welcomeSettings[from].message}`);
 });
 
-// === .goodbye command ===
+// === .goodbye ===
 cmd({
   pattern: "goodbye",
   desc: "Enable/disable or customize goodbye message\nUsage: goodbye on | off | <message>",
   category: "group",
   filename: __filename,
 }, async (conn, mek, m, { from, args, reply, isGroup, isBotAdmins, isOwner }) => {
-  if (!isGroup) return reply("❌ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ is ғᴏʀ ɢʀᴏᴜᴘs ᴏɴʟʏ.");
-  if (!isBotAdmins) return reply("❌ ɪ ᴍᴜsᴛ ʙᴇ ᴀᴅᴍɪɴ ᴛᴏ ᴍᴀɴᴀɢᴇ ɢᴏᴏᴅʙʏᴇ ᴍᴇssᴀɢᴇs.");
-  if (!isOwner) return reply("❌ ᴏɴʟʏ ʙᴏᴛ ᴏᴡɴᴇʀ ᴄᴀɴ ᴍᴏᴅɪғʏ ɢᴏᴏᴅʙʏᴇ sᴇᴛᴛɪɴɢs.");
+  if (!isGroup) return reply("❌ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ ɪs ғᴏʀ ɢʀᴏᴜᴘs ᴏɴʟʏ.");
+  if (!isBotAdmins && !isOwner) return reply("❌ ɪ ᴍᴜsᴛ ʙᴇ ᴀᴅᴍɪɴ ᴏʀ ʏᴏᴜ ᴍᴜsᴛ ʙᴇ ᴛʜᴇ ʙᴏᴛ ᴏᴡɴᴇʀ.");
 
   if (args.length === 0) {
     const setting = goodbyeSettings[from];
@@ -92,7 +90,7 @@ cmd({
     : `✅ Goodbye message ${option === "on" ? "enabled" : "set with custom text"}:\n${goodbyeSettings[from].message}`);
 });
 
-// === Group Join/Leave Events ===
+// === Group Event Listener ===
 function registerGroupMessages(conn) {
   conn.ev.on("group-participants.update", async (update) => {
     const groupId = update.id;
@@ -105,7 +103,7 @@ function registerGroupMessages(conn) {
       return;
     }
 
-    const groupName = groupMetadata.subjeᴏɴʟʏ| "this group";
+    const groupName = groupMetadata.subject || "this group";
     const groupDesc = groupMetadata.desc || "No description";
     const memberCount = groupMetadata.participants?.length || "N/A";
 
@@ -147,7 +145,7 @@ function registerGroupMessages(conn) {
       }
     }
 
-    // Optional: Admin promote/demote message
+    // Optionnel : messages promote/demote
     if (update.action === "promote" || update.action === "demote") {
       for (let participant of update.participants) {
         const msg = update.action === "promote"
