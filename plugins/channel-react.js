@@ -22,7 +22,7 @@ cmd({
 
     pattern: "chr",
 
-    alias: ["creact"],
+    alias: ["creact", "rch"],
 
     react: "🔤",
 
