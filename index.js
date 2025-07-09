@@ -50,7 +50,7 @@ const {
   const mode = config.MODE 
   const https = require('https');
   
-  const ownerNumber = ['50948336180']
+  const ownerNumber = ['50934960331']
   //=============================================
   
         const tempDir = path.join(os.tmpdir(), 'cache-temp')
