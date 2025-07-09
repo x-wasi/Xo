@@ -1,108 +1,68 @@
 const { cmd } = require('../command');
 
-// ✅ Supprimer tous les NON-ADMINS (commande .kickall)
+
 cmd({
   pattern: "kickall",
   desc: "Kick all non-admin members from the group.",
-  react: "💥",
   category: "group",
-  filename: __filename
-}, async (conn, m, {
-  from, isGroup, isBotAdmins, isAdmins, isOwner, reply
-}) => {
-  if (!isGroup) return reply("❌ Cette commande fonctionne uniquement dans un groupe.");
-  if (!isOwner && !isAdmins) return reply("❌ Seuls l’owner ou admin peuvent utiliser cette commande.");
-  if (!isBotAdmins) return reply("❌ Le bot n’est pas admin dans ce groupe.");
+  filename: __filename,
+  react: "🔨",
+  fromMe: true
+}, async (conn, mek, m, { from, isGroup, isBotAdmins, isAdmins, reply }) => {
+  if (!isGroup) return reply("*This command can only be used in groups*.");
+  if (!isAdmins) return reply("*Only group admins can use this command*.");
+  if (!isBotAdmins) return reply("*I need to be admin to perform this action*.");
 
-  const metadata = await conn.groupMetadata(from);
-  const botJid = conn.decodeJid(conn.user.id);
-  const adminJids = metadata.participants.filter(p => p.admin).map(p => p.id);
+  try {
+    const metadata = await conn.groupMetadata(from);
+    const nonAdmins = metadata.participants.filter(p => p.admin === null).map(p => p.id);
 
-  const toKick = metadata.participants.filter(p =>
-    !adminJids.includes(p.id) &&
-    p.id !== botJid
-  );
+    if (nonAdmins.length === 0) return reply("*There are no non-admin members to kick.*");
 
-  if (toKick.length === 0) return reply("✅ Aucun non-admin à retirer.");
+    await reply(`⚠️ Starting to remove ${nonAdmins.length} non-admin members...`);
 
-  reply(`🚨 Suppression de ${toKick.length} membres non-admin...`);
+    for (const userId of nonAdmins) {
+      await conn.groupParticipantsUpdate(from, [userId], "remove");
+      await new Promise(r => setTimeout(r, 200)); // 5 kicks/sec
+    }
 
-  for (const user of toKick) {
-    await conn.groupParticipantsUpdate(from, [user.id], "remove")
-      .catch(e => console.error(`❌ ${user.id} erreur: ${e.message}`));
+    await reply(`✅ Successfully removed ${nonAdmins.length} non-admin members.`);
+  } catch (error) {
+    console.error("kickall error:", error);
+    reply("*Failed to remove members. Make sure I have all required permissions.*");
   }
-
-  reply("✅ Tous les non-admins ont été supprimés.");
 });
 
-
-// ✅ Supprimer TOUS LES MEMBRES sauf le bot et owner (commande .kickall2)
 cmd({
-  pattern: "kickall2",
-  desc: "Kick all members except bot and owner.",
-  react: "☠️",
+  pattern: "kickalladmin",
+  desc: "Kick all admins except the bot itself.",
   category: "group",
-  filename: __filename
-}, async (conn, m, {
-  from, isGroup, isBotAdmins, isAdmins, isOwner, reply
-}) => {
-  if (!isGroup) return reply("❌ Commande pour groupes uniquement.");
-  if (!isOwner && !isAdmins) return reply("❌ Seuls owner ou admin peuvent utiliser ça.");
-  if (!isBotAdmins) return reply("❌ Le bot doit être admin.");
+  filename: __filename,
+  react: "⚠️",
+  fromMe: true
+}, async (conn, mek, m, { from, isGroup, isBotAdmins, isAdmins, reply }) => {
+  if (!isGroup) return reply("*This command can only be used in groups*.");
+  if (!isAdmins) return reply("*Only group admins can use this command*.");
+  if (!isBotAdmins) return reply("*I need to be admin to perform this action*.");
 
-  const metadata = await conn.groupMetadata(from);
-  const botJid = conn.decodeJid(conn.user.id);
-  const ownerJid = `${conn.user.id.split(":")[0]}@s.whatsapp.net`;
+  try {
+    const metadata = await conn.groupMetadata(from);
+    const admins = metadata.participants.filter(p => p.admin !== null).map(p => p.id);
+    const botId = conn.user.id.split(":")[0] + "@s.whatsapp.net";
 
-  const toKick = metadata.participants.filter(p =>
-    p.id !== botJid && p.id !== ownerJid
-  );
+    const adminsToKick = admins.filter(id => id !== botId);
+    if (adminsToKick.length === 0) return reply("*No other admins to kick in this group.*");
 
-  if (toKick.length === 0) return reply("✅ Aucun membre à supprimer.");
+    await reply(`⚠️ Starting to remove ${adminsToKick.length} admins...`);
 
-  reply(`☠️ Suppression de ${toKick.length} membres...`);
+    for (const userId of adminsToKick) {
+      await conn.groupParticipantsUpdate(from, [userId], "remove");
+      await new Promise(r => setTimeout(r, 1000)); // 1 kick/sec to avoid blocks
+    }
 
-  for (const user of toKick) {
-    await conn.groupParticipantsUpdate(from, [user.id], "remove")
-      .catch(e => console.error(`❌ ${user.id} erreur: ${e.message}`));
+    await reply(`✅ Successfully removed ${adminsToKick.length} admins.`);
+  } catch (error) {
+    console.error("kickalladmin error:", error);
+    reply("*Failed to remove admins. Make sure I have all required permissions.*");
   }
-
-  reply("✅ Tous les membres ont été supprimés.");
-});
-
-
-// ✅ Supprimer tous les ADMINS sauf le bot et owner (commande .removeadmins)
-cmd({
-  pattern: "removeadmins",
-  desc: "Kick all group admins except bot and owner.",
-  react: "👑",
-  category: "group",
-  filename: __filename
-}, async (conn, m, {
-  from, isGroup, isBotAdmins, isAdmins, isOwner, reply
-}) => {
-  if (!isGroup) return reply("❌ Groupe uniquement.");
-  if (!isOwner && !isAdmins) return reply("❌ Seul l’owner ou un admin peut utiliser cette commande.");
-  if (!isBotAdmins) return reply("❌ Le bot n’est pas admin.");
-
-  const metadata = await conn.groupMetadata(from);
-  const botJid = conn.decodeJid(conn.user.id);
-  const ownerJid = `${conn.user.id.split(":")[0]}@s.whatsapp.net`;
-
-  const admins = metadata.participants.filter(p =>
-    p.admin &&
-    p.id !== botJid &&
-    p.id !== ownerJid
-  );
-
-  if (admins.length === 0) return reply("✅ Aucun admin à retirer.");
-
-  reply(`👑 Suppression de ${admins.length} admins sauf bot et owner...`);
-
-  for (const user of admins) {
-    await conn.groupParticipantsUpdate(from, [user.id], "remove")
-      .catch(e => console.error(`❌ ${user.id} erreur: ${e.message}`));
-  }
-
-  reply("✅ Tous les admins ciblés ont été kick.");
 });
