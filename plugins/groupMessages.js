@@ -25,8 +25,8 @@ cmd({
   category: "group",
   filename: __filename,
 }, async (conn, mek, m, { from, args, reply, isGroup, isOwner }) => {
-  if (!isGroup) return reply("❌ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ ɪs ғᴏʀ ɢʀᴏᴜᴘs ᴏɴʟʏ.");
-  if (!isOwner) return reply("❌ ᴏɴʟʏ ᴛʜᴇ ʙᴏᴛ ᴏᴡɴᴇʀ ᴄᴀɴ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ.");
+  if (!isGroup) return reply("❌ This command is for groups only.");
+  if (!isOwner) return reply("❌ Only the bot owner can use this command.");
 
   if (args.length === 0) {
     const setting = welcomeSettings[from];
@@ -61,8 +61,8 @@ cmd({
   category: "group",
   filename: __filename,
 }, async (conn, mek, m, { from, args, reply, isGroup, isOwner }) => {
-  if (!isGroup) return reply("❌ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ ɪs ғᴏʀ ɢʀᴏᴜᴘs ᴏɴʟʏ.");
-  if (!isOwner) return reply("❌ ᴏɴʟʏ ᴛʜᴇ ʙᴏᴛ ᴏᴡɴᴇʀ ᴄᴀɴ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ.");
+  if (!isGroup) return reply("❌ This command is for groups only.");
+  if (!isOwner) return reply("❌ Only the bot owner can use this command.");
 
   if (args.length === 0) {
     const setting = goodbyeSettings[from];
@@ -148,8 +148,8 @@ function registerGroupMessages(conn) {
     if (update.action === "promote" || update.action === "demote") {
       for (let participant of update.participants) {
         const msg = update.action === "promote"
-          ? `🎉 @${participant.split("@")[0]} ɪs ɴᴏᴡ ᴀɴ ᴀᴅᴍɪɴ!`
-          : `😔 @${participant.split("@")[0]} ɪs ɴᴏ ʟᴏɴɢᴇʀ ᴀᴅᴍɪɴ.`;
+          ? `🎉 @${participant.split("@")[0]} is now an admin!`
+          : `😔 @${participant.split("@")[0]} is no longer an admin.`;
         await conn.sendMessage(groupId, {
           text: msg,
           mentions: [participant],
