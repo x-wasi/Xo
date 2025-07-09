@@ -24,9 +24,9 @@ cmd({
   desc: "Enable/disable or customize welcome message\nUsage: welcome on | off | <message>",
   category: "group",
   filename: __filename,
-}, async (conn, mek, m, { from, args, reply, isGroup, isBotAdmins, isOwner }) => {
+}, async (conn, mek, m, { from, args, reply, isGroup, isOwner }) => {
   if (!isGroup) return reply("❌ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ ɪs ғᴏʀ ɢʀᴏᴜᴘs ᴏɴʟʏ.");
-  if (!isBotAdmins && !isOwner) return reply("❌ ɪ ᴍᴜsᴛ ʙᴇ ᴀᴅᴍɪɴ ᴏʀ ʏᴏᴜ ᴍᴜsᴛ ʙᴇ ᴛʜᴇ ʙᴏᴛ ᴏᴡɴᴇʀ.");
+  if (!isOwner) return reply("❌ ᴏɴʟʏ ᴛʜᴇ ʙᴏᴛ ᴏᴡɴᴇʀ ᴄᴀɴ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ.");
 
   if (args.length === 0) {
     const setting = welcomeSettings[from];
@@ -60,9 +60,9 @@ cmd({
   desc: "Enable/disable or customize goodbye message\nUsage: goodbye on | off | <message>",
   category: "group",
   filename: __filename,
-}, async (conn, mek, m, { from, args, reply, isGroup, isBotAdmins, isOwner }) => {
+}, async (conn, mek, m, { from, args, reply, isGroup, isOwner }) => {
   if (!isGroup) return reply("❌ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ ɪs ғᴏʀ ɢʀᴏᴜᴘs ᴏɴʟʏ.");
-  if (!isBotAdmins && !isOwner) return reply("❌ ɪ ᴍᴜsᴛ ʙᴇ ᴀᴅᴍɪɴ ᴏʀ ʏᴏᴜ ᴍᴜsᴛ ʙᴇ ᴛʜᴇ ʙᴏᴛ ᴏᴡɴᴇʀ.");
+  if (!isOwner) return reply("❌ ᴏɴʟʏ ᴛʜᴇ ʙᴏᴛ ᴏᴡɴᴇʀ ᴄᴀɴ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ.");
 
   if (args.length === 0) {
     const setting = goodbyeSettings[from];
@@ -145,7 +145,6 @@ function registerGroupMessages(conn) {
       }
     }
 
-    // Optionnel : messages promote/demote
     if (update.action === "promote" || update.action === "demote") {
       for (let participant of update.participants) {
         const msg = update.action === "promote"
