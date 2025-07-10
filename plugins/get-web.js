@@ -28,10 +28,12 @@ cmd({
     reply("⏳ Fetching website...");
     const res = await axios.get(fullUrl);
     const html = res.data;
+
+    // Création dossier temporaire
     const tmpDir = path.join(__dirname, "tmp_" + Date.now());
     fs.mkdirSync(tmpDir);
 
-    // Save HTML
+    // Sauvegarde HTML
     fs.writeFileSync(path.join(tmpDir, "index.html"), html);
 
     const $ = cheerio.load(html);
@@ -43,25 +45,24 @@ cmd({
         const finalUrl = new URL(src, base).href;
         const data = await axios.get(finalUrl, { responseType: "arraybuffer" });
         const fullpath = path.join(tmpDir, filepath);
-
-        // Make sure directory exists
         fs.mkdirSync(path.dirname(fullpath), { recursive: true });
         fs.writeFileSync(fullpath, data.data);
+        // console.log("✅ Downloaded:", finalUrl);
       } catch (e) {
         console.warn("❌ Failed to download:", src);
       }
     };
 
-    // Télécharger CSS (dans dossier css)
+    // CSS
     $('link[rel="stylesheet"]').each((_, el) => {
       const href = $(el).attr("href");
       if (href) {
-        const filename = path.basename(href.split("?")[0]); // enlever query string
+        const filename = path.basename(href.split("?")[0]);
         assets.push(downloadAsset(href, path.join("css", filename)));
       }
     });
 
-    // Télécharger JS (dans dossier js)
+    // JS
     $('script[src]').each((_, el) => {
       const src = $(el).attr("src");
       if (src) {
@@ -70,7 +71,7 @@ cmd({
       }
     });
 
-    // Télécharger images (dans dossier images)
+    // Images
     $('img[src]').each((_, el) => {
       const src = $(el).attr("src");
       if (src) {
@@ -79,7 +80,7 @@ cmd({
       }
     });
 
-    // Télécharger vidéos (dans dossier videos)
+    // Videos
     $('video[src]').each((_, el) => {
       const src = $(el).attr("src");
       if (src) {
@@ -88,7 +89,7 @@ cmd({
       }
     });
 
-    // Télécharger sources audio (dans dossier audio)
+    // Audio
     $('audio[src]').each((_, el) => {
       const src = $(el).attr("src");
       if (src) {
@@ -97,7 +98,7 @@ cmd({
       }
     });
 
-    // Télécharger sources <source> (ex: vidéo, audio, picture)
+    // Sources (audio/video)
     $('source[src]').each((_, el) => {
       const src = $(el).attr("src");
       if (src) {
@@ -106,10 +107,9 @@ cmd({
       }
     });
 
-    // Attendre que tous les assets soient téléchargés
     await Promise.all(assets);
 
-    // ** BONUS ** : lire les fichiers CSS téléchargés et extraire les urls dans `url(...)` pour télécharger les polices ou images CSS (à faire ici de façon basique)
+    // Parse CSS pour récupérer url(...) dedans (ex: fonts, images)
     const cssDir = path.join(tmpDir, "css");
     if (fs.existsSync(cssDir)) {
       const cssFiles = fs.readdirSync(cssDir);
@@ -120,9 +120,8 @@ cmd({
         let match;
         while ((match = urlRegex.exec(content)) !== null) {
           const assetUrl = match[1];
-          if (!assetUrl.startsWith("data:")) { // ignore base64 inline
+          if (!assetUrl.startsWith("data:")) {
             const filename = path.basename(assetUrl.split("?")[0]);
-            // Télécharger dans css/assets
             await downloadAsset(assetUrl, path.join("css", "assets", filename));
           }
         }
@@ -136,12 +135,27 @@ cmd({
     const zipPath = path.join(__dirname, `${domain}.zip`);
     zip.writeZip(zipPath);
 
-    await conn.sendMessage(m.chat, {
-      document: fs.readFileSync(zipPath),
-      fileName: `${domain}.zip`,
-      mimetype: "application/zip",
-      caption: `📁 Website Source Code from: ${fullUrl}\n\n> ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅʏʙʏ ᴛᴇᴄʜ`
-    }, { quoted: m });
+    // Vérifier zip avant envoi
+    if (!fs.existsSync(zipPath)) {
+      return reply("❌ Zip file was not created.");
+    }
+    const stats = fs.statSync(zipPath);
+    if (stats.size > 100 * 1024 * 1024) { // 100 Mo
+      return reply("❌ Zip file is too large to send via WhatsApp.");
+    }
+
+    // Envoi zip avec stream + gestion erreurs
+    try {
+      await conn.sendMessage(m.chat, {
+        document: fs.createReadStream(zipPath),
+        fileName: `${domain}.zip`,
+        mimetype: "application/zip",
+        caption: `📁 Website Source Code from: ${fullUrl}\n\n> ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅʏʙʏ ᴛᴇᴄʜ`
+      }, { quoted: m });
+    } catch (e) {
+      console.error("Send message error:", e);
+      return reply("❌ Error sending zip file.");
+    }
 
     // Cleanup
     fs.rmSync(tmpDir, { recursive: true, force: true });
