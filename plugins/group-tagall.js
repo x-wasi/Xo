@@ -1,56 +1,58 @@
-const config = require('../config')
-const { cmd, commands } = require('../command')
-const { getBuffer, getGroupAdmins, getRandom, h2k, isUrl, Json, runtime, sleep, fetchJson} = require('../lib/functions')
+const config = require('../config');
+const { cmd } = require('../command');
+const { getGroupAdmins } = require('../lib/functions');
 
 cmd({
     pattern: "tagall",
-    react: "🔊",
     alias: ["gc_tagall"],
-    desc: "To Tag all Members",
+    react: "🔊",
+    desc: "Tag all group members",
     category: "group",
-    use: '.tagall [message]',
+    use: '.tagall [ᴍᴇssᴀɢᴇ]',
     filename: __filename
-},
-async (conn, mek, m, { from, participants, reply, isGroup, senderNumber, groupAdmins, prefix, command, args, body }) => {
+}, async (conn, m, msg, {
+    from,
+    participants,
+    reply,
+    isGroup,
+    senderNumber,
+    groupAdmins,
+    command,
+    body
+}) => {
     try {
-        if (!isGroup) return reply("❌ This command can only be used in groups.");
-        
-        const botOwner = conn.user.id.split(":")[0]; // Extract bot owner's number
+        if (!isGroup) return reply("❌ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ ɪs ᴏɴʟʏ ғᴏʀ ɢʀᴏᴜᴘs.");
+
+        const botOwner = conn.user.id.split(':')[0];
         const senderJid = senderNumber + "@s.whatsapp.net";
+        const isAllowed = groupAdmins.includes(senderJid) || senderNumber === botOwner;
 
-        if (!groupAdmins.includes(senderJid) && senderNumber !== botOwner) {
-            return reply("❌ Only group admins or the bot owner can use this command.");
+        if (!isAllowed) return reply("❌ ᴏɴʟʏ ɢʀᴏᴜᴘ ᴀᴅᴍɪɴs ᴏʀ ʙᴏᴛ ᴏᴡɴᴇʀ ᴄᴀɴ ᴜsᴇ ᴛʜɪs.");
+
+        const groupMeta = await conn.groupMetadata(from).catch(() => null);
+        if (!groupMeta) return reply("❌ ᴄᴏᴜʟᴅɴ'ᴛ ғᴇᴛᴄʜ ɢʀᴏᴜᴘ ɪɴғᴏ.");
+
+        const groupName = groupMeta.subject || "Group";
+        const total = participants.length || 0;
+        const emojis = ['📢', '🔊', '🌐', '🔰', '💥', '🧨', '🚨', '⚠️', '🔥', '🎯'];
+        const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+
+        let text = body.slice(body.indexOf(command) + command.length).trim();
+        if (!text) text = "ᴛᴀɢɢɪɴɢ ᴇᴠᴇʀʏᴏɴᴇ...";
+
+        let caption = `▢ ɢʀᴏᴜᴘ: *${groupName}*\n▢ ᴍᴇᴍʙᴇʀs: *${total}*\n▢ ᴍᴇssᴀɢᴇ: *${text}*\n\n┌───⊷ *ᴍᴇɴᴛɪᴏɴs*\n`;
+        for (let u of participants) {
+            caption += `${emoji} @${u.id.split("@")[0]}\n`;
         }
+        caption += "└── ᴍᴇɢᴀʟᴏᴅᴏɴ-ᴍᴅ ʙᴏᴛ";
 
-        // Ensure group metadata is fetched properly
-        let groupInfo = await conn.groupMetadata(from).catch(() => null);
-        if (!groupInfo) return reply("❌ Failed to fetch group information.");
+        await conn.sendMessage(from, {
+            text: caption,
+            mentions: participants.map(p => p.id)
+        }, { quoted: m });
 
-        let groupName = groupInfo.subject || "Unknown Group";
-        let totalMembers = participants ? participants.length : 0;
-        if (totalMembers === 0) return reply("❌ No members found in this group.");
-
-        let emojis = ['📢', '🔊', '🌐', '🔰', '❤‍🩹', '🤍', '🖤', '🩵', '📝', '💗', '🔖', '🪩', '📦', '🎉', '🛡️', '💸', '⏳', '🗿', '🚀', '❄️', '👨‍💻', '❄️', '❄️', '❄️', '❄️', '❄️', '⚠️', '🔥'];
-        let randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
-
-        // Proper message extraction
-        let message = body.slice(body.indexOf(command) + command.length).trim();
-        if (!message) message = "Attention Everyone"; // Default message
-
-        let teks = `▢ Group : *${groupName}*\n▢ Members : *${totalMembers}*\n▢ Message: *${message}*\n\n┌───⊷ *MENTIONS*\n`;
-
-        for (let mem of participants) {
-            if (!mem.id) continue; // Prevent undefined errors
-            teks += `${randomEmoji} @${mem.id.split('@')[0]}\n`;
-        }
-
-        teks += "└── 𝐌𝐄𝐆𝐀𝐋𝐎𝐃𝐎𝐍-𝐌𝐃 ──";
-
-        conn.sendMessage(from, { text: teks, mentions: participants.map(a => a.id) }, { quoted: mek });
-
-    } catch (e) {
-        console.error("TagAll Error:", e);
-        reply(`❌ *Error Occurred !!*\n\n${e.message || e}`);
+    } catch (err) {
+        console.error("❌ tagall error:", err);
+        reply("❌ Error: " + (err.message || err));
     }
 });
-
