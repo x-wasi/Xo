@@ -1,5 +1,7 @@
 const { cmd } = require('../command');
-const prefix = config.PREFIX; 
+const config = require('../config');
+const prefix = config.PREFIX;
+
 cmd({
     pattern: "selectbutton",
     alias: ["listbutton", "selbtn"],
@@ -30,8 +32,8 @@ cmd({
                         rowId: "statistics"
                     },
                     {
-                        title: "ALL MENU",
-                        rowId: "${prefix}menu"
+                        title: "📜 All Menu",
+                        rowId: `${prefix}menu` // ✅ fixed here
                     }
                 ]
             }
