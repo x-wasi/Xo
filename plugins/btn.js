@@ -1,13 +1,13 @@
 const { cmd } = require('../command');
 const config = require('../config');
-const prefix = config.PREFIX;
+const prefix = config.PREFIX
 
 cmd({
-    pattern: "selectbutton",
+    pattern: "btn",
     alias: ["listbutton", "selbtn"],
     desc: "Send a select (list) button",
     react: "🎴",
-    category: "dev",
+    category: "main",
     filename: __filename
 }, async (conn, m, msg, { from, reply }) => {
     try {
@@ -16,12 +16,12 @@ cmd({
                 title: "📌 Main Options",
                 rows: [
                     {
-                        title: "👤 View Profile",
-                        rowId: "view_profile"
+                        title: "👤 ALIVE",
+                        rowId: `${prefix}Alive`
                     },
                     {
                         title: "⚙️ Settings",
-                        rowId: "settings"
+                        rowId: `${prefix}Env`
                     }
                 ]
             },
@@ -34,17 +34,17 @@ cmd({
                     },
                     {
                         title: "📜 All Menu",
-                        rowId: `${prefix}menu` // ✅ fixed here
+                        rowId: `${prefix}Menu` // ✅ fixed here
                     }
                 ]
             }
         ];
 
         const listMessage = {
-            text: "👋 *Welcome to the interactive menu*",
-            footer: "📍 Select an option below",
-            title: "✨ MEGALODON-MD Menu",
-            buttonText: "📋 Open Menu",
+            text: "👋 *ᴡᴇʟᴄᴏᴍᴇ ᴛᴏ ᴛʜᴇ ɪɴᴛᴇʀᴀᴄᴛɪᴠᴇ ᴍᴇɴᴜ*",
+            footer: "📍 sᴇʟᴇᴄᴛ ᴀɴ ᴏᴘᴛɪᴏɴ ʙᴇʟᴏᴡ",
+            title: "✨ ᴍᴇɢᴀʟᴏᴅᴏɴ-ᴍᴅ ᴍᴇɴᴜ",
+            buttonText: "📋 ӨPΣП MΣПЦ",
             sections
         };
 
