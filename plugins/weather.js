@@ -10,25 +10,25 @@ cmd({
 },
 async (conn, mek, m, { from, q, reply }) => {
     try {
-        if (!q) return reply("❗ Please provide a city name. Usage: .weather [city name]");
+        if (!q) return reply("❗ ᴘʟᴇᴀsᴇ ᴘʀᴏᴠɪᴅᴇ ᴀ ᴄɪᴛʏ ɴᴀᴍᴇ. ᴜsᴀɢᴇ: .ᴡᴇᴀᴛʜᴇʀ [ᴄɪᴛʏ ɴᴀᴍᴇ]");
         const apiKey = '2d61a72574c11c4f36173b627f8cb177'; 
         const city = q;
         const url = `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
         const response = await axios.get(url);
         const data = response.data;
         const weather = `
-> 🌍 *Weather Information for ${data.name}, ${data.sys.country}* 🌍
-> 🌡️ *Temperature*: ${data.main.temp}°C
-> 🌡️ *Feels Like*: ${data.main.feels_like}°C
-> 🌡️ *Min Temp*: ${data.main.temp_min}°C
-> 🌡️ *Max Temp*: ${data.main.temp_max}°C
-> 💧 *Humidity*: ${data.main.humidity}%
-> ☁️ *Weather*: ${data.weather[0].main}
-> 🌫️ *Description*: ${data.weather[0].description}
-> 💨 *Wind Speed*: ${data.wind.speed} m/s
-> 🔽 *Pressure*: ${data.main.pressure} hPa
+> 🌍 *ᴡᴇᴀᴛʜᴇʀ ɪɴғᴏʀᴍᴀᴛɪᴏɴ ғᴏʀ ${data.name}, ${data.sys.country}* 🌍
+> 🌡️ *ᴛᴇᴍᴘᴇʀᴀᴛᴜʀᴇ*: ${data.main.temp}°C
+> 🌡️ *ғᴇᴇʟs ʟɪᴋᴇ*: ${data.main.feels_like}°C
+> 🌡️ *ᴍɪɴ ᴛᴇᴍᴘ*: ${data.main.temp_min}°C
+> 🌡️ *ᴍᴀx ᴛᴇᴍᴘ*: ${data.main.temp_max}°C
+> 💧 *ʜᴜᴍɪᴅɪᴛʏ*: ${data.main.humidity}%
+> ☁️ *ᴡᴇᴀᴛʜᴇʀ*: ${data.weather[0].main}
+> 🌫️ *ᴅᴇsᴄʀɪᴘᴛɪᴏɴ*: ${data.weather[0].description}
+> 💨 *ᴡɪɴᴅ sᴘᴇᴇᴅ*: ${data.wind.speed} m/s
+> 🔽 *ᴘʀᴇssᴜʀᴇ*: ${data.main.pressure} hPa
 
-> *© Powdered By David X*
+> *© ᴘᴏᴡᴅᴇʀᴇᴅ ʙʏ ᴅʏʙʏ ᴛᴇᴄʜ*
 `;
         return reply(weather);
     } catch (e) {
