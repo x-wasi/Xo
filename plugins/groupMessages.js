@@ -5,8 +5,26 @@ let settings = loadSettings();
 let welcomeSettings = settings.welcome || {};
 let goodbyeSettings = settings.goodbye || {};
 
-const defaultWelcomeMessage = "👋 ᴡᴇʟᴄᴏᴍᴇ {user} ᴛᴏ {group}!\n📅 {date} ⏰ {time}\n👥 ᴍᴇᴍʙᴇʀs: {count}\n📝 {desc}";
-const defaultGoodbyeMessage = "👋 ɢᴏᴏᴅʙʏᴇ {user} ғʀᴏᴍ {group}.\n📅 {date} ⏰ {time}\n👥 ᴍᴇᴍʙᴇʀs ʟᴇғᴛ: {count}\n📝 {desc}";
+const defaultWelcomeMessage = 
+`┏━━━━━━━━━━━━━━━━━━━━━━┓
+┃  👋 𝐍𝐄𝐖 𝐌𝐄𝐌𝐁𝐄𝐑 𝐉𝐎𝐈𝐍𝐄𝐃  🎉
+┣━━━━━━━━━━━━━━━━━━━━━━┫
+┃ 🧑‍💼 ᴜsᴇʀ: {user}
+┃ 📅 ᴊᴏɪɴᴇᴅ: {date} ⏰ {time}
+┃ 🧮 ᴍᴇᴍʙᴇʀs: {count}
+┃ 🏷️ ɢʀᴏᴜᴘ: {group}
+┣━━━━━━━━━━━━━━━━━━━━━━━
+┃ 📌 ᴅᴇsᴄʀɪᴘᴛɪᴏɴ:
+┃ {desc}
+┗━━━━━━━━━━━━━━━━━━━━━━┛`;
+const defaultGoodbyeMessage = 
+`┏━━━━━━━━━━━━━━━━━━━━━━┓
+┃  👋 𝐌𝐄𝐌𝐁𝐄𝐑 𝐋𝐄𝐅𝐓  😢
+┣━━━━━━━━━━━━━━━━━━━━━━
+┃ 🧑‍💼 ᴜsᴇʀ: {user}
+┃ 📅 ʟᴇғᴛ ᴀᴛ: {date} ⏰ {time}
+┃ 🧮 ʀᴇᴍᴀɪɴɪɴɢ: {count}
+┗━━━━━━━━━━━━━━━━━━━━━━━┛`;
 
 function formatMessage(template, userMention, groupName, extras = {}) {
   return template
@@ -67,8 +85,8 @@ cmd({
   if (args.length === 0) {
     const setting = goodbyeSettings[from];
     return reply(setting && setting.enabled
-      ? `✅ Goodbye is *ON*\n📝 Message:\n${setting.message}`
-      : "❌ Goodbye is *OFF*.");
+      ? `✅ ɢᴏᴏᴅʙʏᴇ ɪs *ᴏɴ*\n📝 ᴍᴇssᴀɢᴇ:\n${setting.message}`
+      : "❌ ɢᴏᴏᴅʙʏᴇ ɪs *ᴏғғ*.");
   }
 
   const option = args[0].toLowerCase();
@@ -86,8 +104,8 @@ cmd({
   saveSettings(settings);
 
   reply(option === "off"
-    ? "❌ Goodbye message disabled."
-    : `✅ Goodbye message ${option === "on" ? "enabled" : "set with custom text"}:\n${goodbyeSettings[from].message}`);
+    ? "❌ ɢᴏᴏᴅʙʏᴇ ᴍᴇssᴀɢᴇ ᴅɪsᴀʙʟᴇᴅ."
+    : `✅ ɢᴏᴏᴅʙʏᴇ ᴍᴇssᴀɢᴇ ${option === "on" ? "enabled" : "set with custom text"}:\n${goodbyeSettings[from].message}`);
 });
 
 // === Group Event Listener ===
@@ -148,8 +166,8 @@ function registerGroupMessages(conn) {
     if (update.action === "promote" || update.action === "demote") {
       for (let participant of update.participants) {
         const msg = update.action === "promote"
-          ? `🎉 @${participant.split("@")[0]} is now an admin!`
-          : `😔 @${participant.split("@")[0]} is no longer an admin.`;
+          ? `🎉 @${participant.split("@")[0]} ɪs ɴᴏᴡ ᴀɴ ᴀᴅᴍɪɴ!`
+          : `😔 @${participant.split("@")[0]} ɪs ɴᴏ ʟᴏɴɢᴇʀ ᴀɴ ᴀᴅᴍɪɴ.`;
         await conn.sendMessage(groupId, {
           text: msg,
           mentions: [participant],
