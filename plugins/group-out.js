@@ -2,21 +2,21 @@ const { cmd } = require('../command');
 
 cmd({
     pattern: "out",
-    alias: ["ck", "🦶"],
+    alias: ["ck", "🦶", "kik"],
     desc: "Removes all members with specific country code from the group",
-    category: "admin",
+    category: "group",
     react: "❌",
     filename: __filename
 },
 async (conn, mek, m, {
     from, q, isGroup, isBotAdmins, reply, groupMetadata, isCreator
 }) => {
-    if (!isGroup) return reply("❌ This command can only be used in groups.");
+    if (!isGroup) return reply("❌ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ ᴄᴀɴ ᴏɴʟʏ ʙᴇ ᴜsᴇᴅ ɪɴ ɢʀᴏᴜᴘs.");
 
     // Permission check using isCreator
     if (!isCreator) {
         return await conn.sendMessage(from, {
-            text: "*📛 This is an owner command.*"
+            text: "*📛 ᴛʜɪs ɪs ᴀɴ ᴏᴡɴᴇʀ ᴄᴏᴍᴍᴀɴᴅ.*"
         }, { quoted: mek });
     }
 
@@ -41,7 +41,7 @@ async (conn, mek, m, {
         const jids = targets.map(p => p.id);
         await conn.groupParticipantsUpdate(from, jids, "remove");
 
-        reply(`✅ Successfully removed ${targets.length} members with country code +${countryCode}`);
+        reply(`✅ sᴜᴄᴄᴇssғᴜʟʟʏ ʀᴇᴍᴏᴠᴇᴅ ${targets.length} ᴍᴇᴍʙᴇʀs ᴡɪᴛʜ ᴄᴏᴜɴᴛʀʏ ᴄᴏᴅᴇ +${countryCode}`);
     } catch (error) {
         console.error("Out command error:", error);
         reply("❌ Failed to remove members. Error: " + error.message);
