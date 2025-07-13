@@ -6,6 +6,7 @@ cmd({
     pattern: "selectbutton",
     alias: ["listbutton", "selbtn"],
     desc: "Send a select (list) button",
+    react: "🎴",
     category: "dev",
     filename: __filename
 }, async (conn, m, msg, { from, reply }) => {
