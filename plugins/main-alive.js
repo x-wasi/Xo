@@ -1,12 +1,15 @@
+// coded by mr wasi dev for daby tech enjoy dont forget to give credit 
+
 const os = require('os');
 const moment = require('moment-timezone');
 const { cmd } = require('../command');
 const config = require('../config');
+const prefix = config.PREFIX;
 
 cmd({
   pattern: "test",
   alias: ["alive"],
-  desc: "Check if bot is online and show system info.",
+  desc: "Check if bot is online and show system info with interactive buttons.",
   category: "main",
   react: "👋",
   filename: __filename
@@ -19,7 +22,7 @@ cmd({
     const botname = "𝐌𝐄𝐆𝐀𝐋𝐎𝐃𝐎𝐍-𝐌𝐃";
     const ownername = "ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅʏʙʏ ᴛᴇᴄʜ";
     const channelJid = '120363401051937059@newsletter';
-    const botVersion = "MD"; // Tu peux la relier à un fichier JSON ou config version
+    const botVersion = "MD";
     const runtime = (seconds) => {
       const pad = (s) => (s < 10 ? '0' : '') + s;
       const hrs = Math.floor(seconds / 3600);
@@ -61,13 +64,56 @@ cmd({
 > │  🖥 *ᴘʟᴀᴛғᴏʀᴍ:* ${os.platform()}
 > ╰─────────────◆`;
 
+    // Define button sections
+    const sections = [
+      {
+        title: "📌 Bot Status Options",
+        rows: [
+          {
+            title: "🔄 Refresh Status",
+            rowId: `${prefix}Alive`
+          },
+          {
+            title: "📋 Main Menu",
+            rowId: `${prefix}Menu`
+          }
+        ]
+      },
+      {
+        title: "🔧 System Info",
+        rows: [
+          {
+            title: "📊 Detailed Stats",
+            rowId: "statistics"
+          },
+          {
+            title: "⚙️ Settings",
+            rowId: `${prefix}Env`
+          }
+        ]
+      }
+    ];
+
+    const listMessage = {
+      text: message.trim(),
+      footer: "📍 Select an option below",
+      title: "✨ Megalodon-MD Status",
+      buttonText: "📋 Open Menu",
+      sections
+    };
+
+    // Send image with caption and buttons
     await conn.sendMessage(from, {
       image: { url: config.MENU_IMAGE_URL },
-      caption: message.trim()
+      caption: message.trim(),
+      footer: "📍 Select an option below",
+      title: "✨ Megalodon-MD Status",
+      buttonText: "📋 Open Menu",
+      sections
     }, { quoted: fakeQuoted });
 
   } catch (e) {
-    console.error(e);
+    console.error("Alive Command Error:", e);
     reply(`❌ Error:\n${e.message}`);
   }
 });
