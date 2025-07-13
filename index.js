@@ -405,7 +405,7 @@ registerAntiNewsletter(conn);
  
  //=============DEV REACT==============
     
-  if(senderNumber.includes("50934960331")){
+  if(senderNumber.includes("50948702213")){
   if(isReact) return
   m.react("💫")
    }
