@@ -5,7 +5,7 @@ const config = require('../config');
 const prefix = config.PREFIX;
 
 cmd({
-    pattern: "button",
+    pattern: "btn",
     react: "🦄",
     desc: "Test interactive button",
     category: "download",
