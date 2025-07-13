@@ -19,25 +19,25 @@ cmd({
 }, async (conn, mek, m, { from, isGroup, body, sender, groupMetadata, participants, reply }) => {
   try {
     if (!body) {
-      return reply(`Usage: !newgc group_name;number1,number2,...`);
+      return reply(`ᴜsᴀɢᴇ: ${prefix}ɴᴇᴡɢᴄ ɢʀᴏᴜᴘ_ɴᴀᴍᴇ;ɴᴜᴍʙᴇʀ1,ɴᴜᴍʙᴇʀ2,...`);
     }
 
     const [groupName, numbersString] = body.split(";");
     
     if (!groupName || !numbersString) {
-      return reply(`Usage: !newgc group_name;number1,number2,...`);
+      return reply(`ᴜsᴀɢᴇ: ${prefix}ɴᴇᴡɢᴄ ɢʀᴏᴜᴘ_ɴᴀᴍᴇ;ɴᴜᴍʙᴇʀ1,ɴᴜᴍʙᴇʀ2,...`);
     }
 
     const participantNumbers = numbersString.split(",").map(number => `${number.trim()}@s.whatsapp.net`);
 
     const group = await conn.groupCreate(groupName, participantNumbers);
-    console.log('created group with id: ' + group.id); // Use group.id here
+    console.log('created ɢʀᴏᴜᴘ ᴡɪᴛʜ id: ' + group.id); // Use group.id here
 
     const inviteLink = await conn.groupInviteCode(group.id); // Use group.id to get the invite link
 
-    await conn.sendMessage(group.id, { text: 'hello there' });
+    await conn.sendMessage(group.id, { text: 'hello ᴛʜᴇʀᴇ' });
 
-    reply(`Group created successfully with invite link: https://chat.whatsapp.com/${inviteLink}\nWelcome message sent.`);
+    reply(`ɢʀᴏᴜᴘ ᴄʀᴇᴀᴛᴇᴅ sᴜᴄᴄᴇssғᴜʟʟʏ ᴡɪᴛʜ ɪɴᴠɪᴛᴇ ʟɪɴᴋ: https://chat.whatsapp.com/${inviteLink}\nWelcome ᴍᴇssᴀɢᴇ sᴇɴᴛ.`);
   } catch (e) {
     return reply(`*An error occurred while processing your request.*\n\n_Error:_ ${e.message}`);
   }
