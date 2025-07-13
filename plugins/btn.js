@@ -11,18 +11,24 @@ async function getBuffer(url) {
 cmd({
     pattern: "btn",
     alias: ["imgbtn", "templatebtn"],
-    desc: "Send image with buttons in one message",
+    desc: "Send image then buttons",
     react: "🖼️",
     category: "main",
     filename: __filename
 }, async (conn, m, msg, { from, reply }) => {
     try {
+        // 1. Send image first
         const imageBuffer = await getBuffer("https://files.catbox.moe/x13xdq.jpg");
 
-        const message = {
+        await conn.sendMessage(from, {
             image: imageBuffer,
-            caption: "👋 *Welcome to MEGALODON-MD!*\n\n📍 Choose an option below:",
-            footer: "🦈 Powered by DybyTech",
+            caption: "🦈 *MEGALODON-MD*\n\nHere is your image preview!"
+        }, { quoted: m });
+
+        // 2. Send buttons separately
+        const buttonMessage = {
+            text: "👋 *Welcome to MEGALODON-MD!*",
+            footer: "📍 Select an option below",
             templateButtons: [
                 {
                     index: 1,
@@ -48,10 +54,10 @@ cmd({
             ]
         };
 
-        await conn.sendMessage(from, message, { quoted: m });
+        await conn.sendMessage(from, buttonMessage, { quoted: m });
 
     } catch (err) {
-        console.error("❌ Template Button Error:", err);
-        reply("❌ Failed to send image with buttons.");
+        console.error("❌ Button/Image Error:", err);
+        reply("❌ Failed to send image and buttons.");
     }
 });
