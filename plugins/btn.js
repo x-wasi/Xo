@@ -1,6 +1,7 @@
 const { cmd } = require('../command');
 const config = require('../config');
-const prefix = config.PREFIX
+const prefix = config.PREFIX;
+const { getBuffer } = require('../lib/functions'); // Make sure you have a helper to get image buffer (or use axios)
 
 cmd({
     pattern: "btn",
@@ -11,6 +12,8 @@ cmd({
     filename: __filename
 }, async (conn, m, msg, { from, reply }) => {
     try {
+        const image = await getBuffer("https://files.catbox.moe/x13xdq.jpg"); // Download image buffer
+
         const sections = [
             {
                 title: "📌 Main Options",
@@ -34,7 +37,7 @@ cmd({
                     },
                     {
                         title: "📜 All Menu",
-                        rowId: `${prefix}Menu` // ✅ fixed here
+                        rowId: `${prefix}Menu`
                     }
                 ]
             }
@@ -48,9 +51,16 @@ cmd({
             sections
         };
 
-        await conn.sendMessage(from, listMessage, { quoted: m });
+        await conn.sendMessage(from, {
+            image: image,
+            caption: listMessage.text,
+            footer: listMessage.footer,
+            title: listMessage.title,
+            buttonText: listMessage.buttonText,
+            sections: listMessage.sections
+        }, { quoted: m });
     } catch (err) {
         console.error("Select Button Error:", err);
-        reply("❌ Failed to send the select menu.");
+        reply("❌ Failed to send the select menu with image.");
     }
 });
