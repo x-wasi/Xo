@@ -10,63 +10,48 @@ async function getBuffer(url) {
 
 cmd({
     pattern: "btn",
-    alias: ["listbutton", "selbtn"],
-    desc: "Send a select (list) button",
-    react: "🎴",
+    alias: ["imgbtn", "templatebtn"],
+    desc: "Send image with interactive buttons",
+    react: "🖼️",
     category: "main",
     filename: __filename
 }, async (conn, m, msg, { from, reply }) => {
     try {
         const image = await getBuffer("https://files.catbox.moe/x13xdq.jpg");
 
-        // Send image first (optional)
-        await conn.sendMessage(from, {
-            image,
-            caption: "✨ ᴍᴇɢᴀʟᴏᴅᴏɴ-ᴍᴅ - ᴍᴀɪɴ ᴍᴇɴᴜ",
-        }, { quoted: m });
-
-        // Now send the list message separately
-        const sections = [
-            {
-                title: "📌 Main Options",
-                rows: [
-                    {
-                        title: "👤 ALIVE",
-                        rowId: `${prefix}Alive`
-                    },
-                    {
-                        title: "⚙️ Settings",
-                        rowId: `${prefix}Env`
+        const templateMessage = {
+            image: image,
+            caption: "👋 *Welcome to MEGALODON-MD!*\n\n📍 Select one of the options below.",
+            footer: "🦈 Powered by DybyTech",
+            templateButtons: [
+                {
+                    index: 1,
+                    quickReplyButton: {
+                        displayText: "📜 All Menu",
+                        id: `${prefix}menu`
                     }
-                ]
-            },
-            {
-                title: "🔧 Advanced Tools",
-                rows: [
-                    {
-                        title: "📊 Stats",
-                        rowId: "statistics"
-                    },
-                    {
-                        title: "📜 All Menu",
-                        rowId: `${prefix}Menu`
+                },
+                {
+                    index: 2,
+                    quickReplyButton: {
+                        displayText: "👤 Alive",
+                        id: `${prefix}alive`
                     }
-                ]
-            }
-        ];
-
-        const listMessage = {
-            text: "👋 *ᴡᴇʟᴄᴏᴍᴇ ᴛᴏ ᴛʜᴇ ɪɴᴛᴇʀᴀᴄᴛɪᴠᴇ ᴍᴇɴᴜ*",
-            footer: "📍 sᴇʟᴇᴄᴛ ᴀɴ ᴏᴘᴛɪᴏɴ ʙᴇʟᴏᴡ",
-            title: "✨ ᴍᴇɢᴀʟᴏᴅᴏɴ-ᴍᴅ ᴍᴇɴᴜ",
-            buttonText: "📋 ӨPΣП MΣПЦ",
-            sections
+                },
+                {
+                    index: 3,
+                    urlButton: {
+                        displayText: "🌐 Website",
+                        url: "https://example.com"
+                    }
+                }
+            ]
         };
 
-        await conn.sendMessage(from, listMessage, { quoted: m });
+        await conn.sendMessage(from, templateMessage, { quoted: m });
 
     } catch (err) {
-        console.error("Select Button Error:", err);
-        reply("❌ Failed to send menu.");
+        console.error("Template Button Error:", err);
+        reply("❌ Failed to send image with buttons.");
     }
 });
