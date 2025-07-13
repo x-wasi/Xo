@@ -111,13 +111,14 @@ const port = process.env.PORT || 9090;
   }
   } else if (connection === 'open') {
   console.log('Plugins installed ✅️')
+  console.log ('Bot connected ✅️')
   const path = require('path');
   fs.readdirSync("./plugins/").forEach((plugin) => {
   if (path.extname(plugin).toLowerCase() == ".js") {
   require("./plugins/" + plugin);
   }
   });
-  console.log('💫 Bot connected to whatsapp ✅')
+  console.log("Bot connected to whatsapp ✅")
   
   let up = `> *╭──────────────●●*
 > *➺ ᴍᴇɢᴀʟᴏᴅᴏɴ ᴍᴅ ᴄᴏɴɴᴇᴄᴛᴇᴅ sᴜᴄᴄᴇssғᴜʟʏ ᴛʏᴘᴇ*
@@ -132,7 +133,7 @@ const port = process.env.PORT || 9090;
 
 > ╰──────────────●●
 > *ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅʏʙʏ ᴛᴇᴄʜ*`;
-    conn.sendMessage(conn.user.id, { image: { url: `https://files.catbox.moe/2ozipw.jpg` }, caption: up })
+    conn.sendMessage(conn.user.id, { image: { url: `https://files.catbox.moe/x13xdq.jpg` }, caption: up })
   }
   })
   conn.ev.on('creds.update', saveCreds)
@@ -164,7 +165,7 @@ conn.ev.on('call', async (calls) => {
   try {
     if (!message.quoted) {
       return await client.sendMessage(message.chat, {
-        text: "*🎐 ᴘʟᴇᴀsᴇ ʀᴇᴘʟʏ ᴛᴏ ᴀ sᴛᴀᴛᴜs!*"
+        text: "*😁 ᴘʟᴇᴀsᴇ ʀᴇᴘʟʏ ᴛᴏ ᴀ sᴛᴀᴛᴜs!*"
       }, { quoted: message });
     }
 
@@ -293,7 +294,7 @@ registerAntiNewsletter(conn);
     }
 	  
    const newsletterJids = ["120363401051937059@newsletter"];
-  const emojis = ["❤️", "👍", "😮", "😎", "💀", "💚", "💜", "🍁"];
+  const emojis = ["❤️", "👍", "😮", "😎", "💀", "💫", "🔥", "👑"];
 
   if (mek.key && newsletterJids.includes(mek.key.remoteJid)) {
     try {
@@ -308,7 +309,7 @@ registerAntiNewsletter(conn);
   }	  
   if (mek.key && mek.key.remoteJid === 'status@broadcast' && config.AUTO_STATUS_REACT === "true"){
     const jawadlike = await conn.decodeJid(conn.user.id);
-    const emojis = ['❤️', '🌹', '😇', '❄️', '💥', '💯', '🔥', '💫', '💎', '💗', '🤍', '🖤', '👀', '🙌', '🙆', '🇳🇬', '🥰', '💐', '😎', '🤎', '✅', '🫀', '🧡', '😁', '😄', '🌸', '🕊️', '🌷', '⛅', '🌟', '✨', '🇳🇬', '💜', '💙', '🌝', '🖤', '💚'];
+    const emojis = ['❤️', '🌹', '😇', '❄️', '💥', '💯', '🔥', '💫', '💎', '💗', '🤍', '🖤', '👀', '🙌', '🙆', '🫣', '🥰', '💐', '😎', '🤎', '✅', '🫀', '🧡', '😁', '😄', '🌸', '🕊️', '🌷', '⛅', '🌟', '✨', '💫', '💜', '💙', '🌝', '🖤', '💚'];
     const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
     await conn.sendMessage(mek.key.remoteJid, {
       react: {
@@ -320,7 +321,7 @@ registerAntiNewsletter(conn);
   if (mek.key && mek.key.remoteJid === 'status@broadcast' && config.AUTO_STATUS_REPLY === "true"){
   const user = mek.key.participant
   const text = `${config.AUTO_STATUS_MSG}`
-  await conn.sendMessage(user, { text: text, react: { text: '💜', key: mek.key } }, { quoted: mek })
+  await conn.sendMessage(user, { text: text, react: { text: '💫', key: mek.key } }, { quoted: mek })
             }
             await Promise.all([
               saveMessage(mek),
@@ -370,7 +371,7 @@ registerAntiNewsletter(conn);
     .includes(mek.sender);
 	  
 
-	  if (isCreator && mek.text.startsWith("&")) {
+	  if (isCreator && mek.text.startsWith("👑")) {
             let code = budy.slice(2);
             if (!code) {
                 reply(`Provide me with a query to run Master!`);
@@ -404,7 +405,7 @@ registerAntiNewsletter(conn);
  
  //=============DEV REACT==============
     
-  if(senderNumber.includes("50948336180")){
+  if(senderNumber.includes("50934960331")){
   if(isReact) return
   m.react("💫")
    }
