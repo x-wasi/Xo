@@ -12,13 +12,13 @@ async(conn, mek, m, {
     from, l, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isCreator, isDev, isAdmins, reply
 }) => {
     // Check if the command is used in a group
-    if (!isGroup) return reply("❌ This command can only be used in groups.");
+    if (!isGroup) return reply("❌ This ᴄᴏᴍᴍᴀɴᴅ ᴄᴀɴ ᴏɴʟʏ ʙᴇ ᴜsᴇᴅ ɪɴ ɢʀᴏᴜᴘs.");
 
     // Check if the user is an admin
-    if (!isAdmins) return reply("❌ Only group admins can use this command.");
+    if (!isAdmins) return reply("❌ ᴏɴʟʏ ɢʀᴏᴜᴘ ᴀᴅᴍɪɴs ᴄᴀɴ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ.");
 
     // Check if the bot is an admin
-    if (!isBotAdmins) return reply("❌ I need to be an admin to use this command.");
+    if (!isBotAdmins) return reply("❌ ɪ ɴᴇᴇᴅ ᴛᴏ ʙᴇ ᴀɴ ᴀᴅᴍɪɴ ᴛᴏ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ.");
 
     let number;
     if (m.quoted) {
@@ -36,7 +36,7 @@ async(conn, mek, m, {
 
     try {
         await conn.groupParticipantsUpdate(from, [jid], "promote");
-        reply(`✅ Successfully promoted @${number} to admin.`, { mentions: [jid] });
+        reply(`✅ sᴜᴄᴄᴇssғᴜʟʟʏ ᴘʀᴏᴍᴏᴛᴇᴅ @${number} ᴛᴏ ᴀᴅᴍɪɴ.`, { mentions: [jid] });
     } catch (error) {
         console.error("Promote command error:", error);
         reply("❌ Failed to promote the member.");
@@ -56,13 +56,13 @@ async(conn, mek, m, {
     from, l, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isCreator, isDev, isAdmins, reply
 }) => {
     // Check if the command is used in a group
-    if (!isGroup) return reply("❌ This command can only be used in groups.");
+    if (!isGroup) return reply("❌ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ ᴄᴀɴ ᴏɴʟʏ ʙᴇ ᴜsᴇᴅ ɪɴ ɢʀᴏᴜᴘs.");
 
     // Check if the user is an admin
-    if (!isAdmins) return reply("❌ Only group admins can use this command.");
+    if (!isAdmins) return reply("❌ ᴏɴʟʏ ɢʀᴏᴜᴘ ᴀᴅᴍɪɴs ᴄᴀɴ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ.");
 
     // Check if the bot is an admin
-    if (!isBotAdmins) return reply("❌ I need to be an admin to use this command.");
+    if (!isBotAdmins) return reply("❌ ɪ ɴᴇᴇᴅ ᴛᴏ ʙᴇ ᴀɴ ᴀᴅᴍɪɴ ᴛᴏ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ.");
 
     let number;
     if (m.quoted) {
@@ -80,7 +80,7 @@ async(conn, mek, m, {
 
     try {
         await conn.groupParticipantsUpdate(from, [jid], "demote");
-        reply(`✅ Successfully demoted @${number} to a normal member.`, { mentions: [jid] });
+        reply(`✅ sᴜᴄᴄᴇssғᴜʟʟʏ ᴅᴇᴍᴏᴛᴇᴅ @${number} ᴛᴏ ᴀ ɴᴏʀᴍᴀʟ ᴍᴇᴍʙᴇʀ.`, { mentions: [jid] });
     } catch (error) {
         console.error("Demote command error:", error);
         reply("❌ Failed to demote the member.");
