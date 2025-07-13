@@ -16,13 +16,13 @@ async (conn, mek, m, {
     isAdmins, reply
 }) => {
     try {
-        if (!isGroup) return reply(`❌ This command only works in groups.`);
-        if (!isAdmins) return reply(`⛔ You must be a *Group Admin* to use this command.`);
-        if (!isBotAdmins) return reply(`❌ I need to be *admin* to reset the group link.`);
+        if (!isGroup) return reply(`❌ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ ᴏɴʟʏ ᴡᴏʀᴋs ɪɴ ɢʀᴏᴜᴘs.`);
+        if (!isAdmins) return reply(`⛔ ʏᴏᴜ ᴍᴜsᴛ ʙᴇ ᴀ *ɢʀᴏᴜᴘ ᴀᴅᴍɪɴ* ᴛᴏ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ.`);
+        if (!isBotAdmins) return reply(`❌ I ɴᴇᴇᴅ ᴛᴏ ʙᴇ *ᴀᴅᴍɪɴ* ᴛᴏ ʀᴇsᴇᴛ ᴛʜᴇ ɢʀᴏᴜᴘ ʟɪɴᴋ.`);
 
         await conn.groupRevokeInvite(from);
         await conn.sendMessage(from, {
-            text: `✅ *Group Link has been reset successfully!*`
+            text: `✅ *ɢʀᴏᴜᴘ ʟɪɴᴋ ʜᴀs ʙᴇᴇɴ ʀᴇsᴇᴛ sᴜᴄᴄᴇssғᴜʟʟʏ!*`
         }, { quoted: mek });
 
     } catch (err) {
