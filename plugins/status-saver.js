@@ -11,7 +11,7 @@ cmd({
   try {
     if (!match.quoted) {
       return await client.sendMessage(from, {
-        text: "*🍁 Please reply to a message!*"
+        text: "*🍁 ᴘʟᴇᴀsᴇ ʀᴇᴘʟʏ ᴛᴏ ᴀ ᴍᴇssᴀɢᴇ ᴏʀ sᴛᴀᴛᴜs!*"
       }, { quoted: message });
     }
 
@@ -44,7 +44,7 @@ cmd({
         break;
       default:
         return await client.sendMessage(from, {
-          text: "❌ Only image, video, and audio messages are supported"
+          text: "❌ ᴏɴʟʏ ɪᴍᴀɢᴇ, ᴠɪᴅᴇᴏ, ᴀɴᴅ ᴀᴜᴅɪᴏ ᴍᴇssᴀɢᴇs ᴀʀᴇ sᴜᴘᴘᴏʀᴛᴇᴅ"
         }, { quoted: message });
     }
 
