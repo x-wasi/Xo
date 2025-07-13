@@ -10,7 +10,7 @@ cmd({
 },
 async (conn, mek, m, { from, q, reply }) => {
     try {
-        if (!q) return reply("Please provide a word to define.\n\n📌 *Usage:* .define [word]");
+        if (!q) return reply("ᴘʟᴇᴀsᴇ ᴘʀᴏᴠɪᴅᴇ a ᴡᴏʀᴅ ᴛᴏ ᴅᴇғɪɴᴇ.\n\n📌 *ᴜsᴀɢᴇ:* .ᴅᴇғɪɴᴇ [ᴡᴏʀᴅ]");
 
         const word = q.trim();
         const url = `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`;
@@ -25,13 +25,13 @@ async (conn, mek, m, { from, q, reply }) => {
         const audio = definitionData.phonetics[0]?.audio || null;
 
         const wordInfo = `
-📖 *Word*: *${definitionData.word}*  
-🗣️ *Pronunciation*: _${phonetics}_  
-📚 *Definition*: ${definition}  
-✍️ *Example*: ${example}  
-📝 *Synonyms*: ${synonyms}  
+📖 *ᴡᴏʀᴅ*: *${definitionData.word}*  
+🗣️ *ᴘʀᴏɴᴜɴᴄɪᴀᴛɪᴏɴ*: _${phonetics}_  
+📚 *ᴅᴇғɪɴɪᴛɪᴏɴ*: ${definition}  
+✍️ *ᴇxᴀᴍᴘʟᴇ*: ${example}  
+📝 *sʏɴᴏɴʏᴍs*: ${synonyms}  
 
-🔗 *Powered By David X*`;
+> *ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅʏʙʏ ᴛᴇᴄʜ*`;
 
         if (audio) {
             await conn.sendMessage(from, { audio: { url: audio }, mimetype: 'audio/mpeg' }, { quoted: mek });
