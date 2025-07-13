@@ -1,7 +1,12 @@
 const { cmd } = require('../command');
 const config = require('../config');
 const prefix = config.PREFIX;
-const { getBuffer } = require('../lib/functions'); // Make sure you have a helper to get image buffer (or use axios)
+const axios = require('axios');
+
+async function getBuffer(url) {
+    const res = await axios.get(url, { responseType: 'arraybuffer' });
+    return Buffer.from(res.data, 'utf-8');
+}
 
 cmd({
     pattern: "btn",
@@ -12,8 +17,15 @@ cmd({
     filename: __filename
 }, async (conn, m, msg, { from, reply }) => {
     try {
-        const image = await getBuffer("https://files.catbox.moe/x13xdq.jpg"); // Download image buffer
+        const image = await getBuffer("https://files.catbox.moe/x13xdq.jpg");
 
+        // Send image first (optional)
+        await conn.sendMessage(from, {
+            image,
+            caption: "✨ ᴍᴇɢᴀʟᴏᴅᴏɴ-ᴍᴅ - ᴍᴀɪɴ ᴍᴇɴᴜ",
+        }, { quoted: m });
+
+        // Now send the list message separately
         const sections = [
             {
                 title: "📌 Main Options",
@@ -51,16 +63,10 @@ cmd({
             sections
         };
 
-        await conn.sendMessage(from, {
-            image: image,
-            caption: listMessage.text,
-            footer: listMessage.footer,
-            title: listMessage.title,
-            buttonText: listMessage.buttonText,
-            sections: listMessage.sections
-        }, { quoted: m });
+        await conn.sendMessage(from, listMessage, { quoted: m });
+
     } catch (err) {
         console.error("Select Button Error:", err);
-        reply("❌ Failed to send the select menu with image.");
+        reply("❌ Failed to send menu.");
     }
 });
