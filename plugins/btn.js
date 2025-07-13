@@ -1,49 +1,53 @@
 const { cmd } = require('../command');
-
+const prefix = config.PREFIX; 
 cmd({
-    pattern: "testbuttons",
-    alias: ["ibtn", "btnsample"],
-    desc: "Send a sample interactive button message",
-    react: "🎴",
-    category: "other",
+    pattern: "selectbutton",
+    alias: ["listbutton", "selbtn"],
+    desc: "Send a select (list) button",
+    category: "dev",
     filename: __filename
-}, async (conn, m, msg, { reply, from }) => {
+}, async (conn, m, msg, { from, reply }) => {
     try {
-        const interactiveButtons = [
+        const sections = [
             {
-                name: "quick_reply",
-                buttonParamsJson: JSON.stringify({
-                    display_text: "Quick Reply",
-                    id: "quick_reply_id"
-                })
+                title: "📌 Main Options",
+                rows: [
+                    {
+                        title: "👤 View Profile",
+                        rowId: "view_profile"
+                    },
+                    {
+                        title: "⚙️ Settings",
+                        rowId: "settings"
+                    }
+                ]
             },
             {
-                name: "cta_url",
-                buttonParamsJson: JSON.stringify({
-                    display_text: "Tap Here!",
-                    url: "https://www.example.com/"
-                })
-            },
-            {
-                name: "cta_copy",
-                buttonParamsJson: JSON.stringify({
-                    display_text: "Copy Code",
-                    id: "copy_code_id",
-                    copy_code: "12345"
-                })
+                title: "🔧 Advanced Tools",
+                rows: [
+                    {
+                        title: "📊 Stats",
+                        rowId: "statistics"
+                    },
+                    {
+                        title: "ALL MENU",
+                        rowId: "${prefix}menu"
+                    }
+                ]
             }
         ];
 
-        const interactiveMessage = {
-            text: "👋 *Hello World!*",
-            title: "🌟 This is the Title",
-            footer: "📌 This is the Footer",
-            interactiveButtons
+        const listMessage = {
+            text: "👋 *Welcome to the interactive menu*",
+            footer: "📍 Select an option below",
+            title: "✨ MEGALODON-MD Menu",
+            buttonText: "📋 Open Menu",
+            sections
         };
 
-        await conn.sendMessage(from, interactiveMessage, { quoted: m });
+        await conn.sendMessage(from, listMessage, { quoted: m });
     } catch (err) {
-        console.error("Button Test Error:", err);
-        reply("❌ Failed to send interactive buttons.");
+        console.error("Select Button Error:", err);
+        reply("❌ Failed to send the select menu.");
     }
 });
