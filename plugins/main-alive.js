@@ -1,4 +1,4 @@
-// coded by mr wasi dev for daby tech enjoy dont forget to give credit 
+// Coded by Mr Wasi Dev for Dyby Tech - Enjoy and don't forget to give credit ✨
 
 const os = require('os');
 const moment = require('moment-timezone');
@@ -13,16 +13,13 @@ cmd({
   category: "main",
   react: "👋",
   filename: __filename
-}, async (
-  conn, mek, m, {
-    from, pushname, reply
-  }
-) => {
+}, async (conn, mek, m, { from, pushname, reply }) => {
   try {
     const botname = "𝐌𝐄𝐆𝐀𝐋𝐎𝐃𝐎𝐍-𝐌𝐃";
-    const ownername = "ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅʏʙʏ ᴛᴇᴄʜ";
+    const ownername = `ᴘᴏᴡᴇʀᴇᴅ ʙʏ ${config.OWNER_NAME || "ᴅʏʙʏ ᴛᴇᴄʜ"}`;
     const channelJid = '120363401051937059@newsletter';
     const botVersion = "MD";
+
     const runtime = (seconds) => {
       const pad = (s) => (s < 10 ? '0' : '') + s;
       const hrs = Math.floor(seconds / 3600);
@@ -34,6 +31,7 @@ cmd({
     const uptime = runtime(process.uptime());
     const date = moment().tz("America/Port-au-Prince").format("dddd, MMMM Do YYYY");
     const time = moment().tz("America/Port-au-Prince").format("hh:mm:ss A");
+    const name = pushname || "there";
 
     const fakeQuoted = {
       key: {
@@ -52,7 +50,7 @@ cmd({
 
     const message = `
 > ╭─────────────◆
-> │  *👋 ʜᴇʟʟᴏ ${pushname}*
+> │  *👋 ʜᴇʟʟᴏ ${name}*
 > │
 > │  ✅ *ʙᴏᴛ sᴛᴀᴛᴜs:* _ᴏɴʟɪɴᴇ_
 > │  🔧 *ʙᴏᴛ ɴᴀᴍᴇ:* ${botname}
@@ -64,18 +62,17 @@ cmd({
 > │  🖥 *ᴘʟᴀᴛғᴏʀᴍ:* ${os.platform()}
 > ╰─────────────◆`;
 
-    // Define button sections
     const sections = [
       {
         title: "📌 Bot Status Options",
         rows: [
           {
             title: "🔄 Refresh Status",
-            rowId: `${prefix}Alive`
+            rowId: `${prefix}alive`
           },
           {
             title: "📋 Main Menu",
-            rowId: `${prefix}Menu`
+            rowId: `${prefix}menu`
           }
         ]
       },
@@ -84,28 +81,18 @@ cmd({
         rows: [
           {
             title: "📊 Detailed Stats",
-            rowId: "statistics"
+            rowId: `${prefix}stats`
           },
           {
             title: "⚙️ Settings",
-            rowId: `${prefix}Env`
+            rowId: `${prefix}env`
           }
         ]
       }
     ];
 
-    const listMessage = {
-      text: message.trim(),
-      footer: "📍 Select an option below",
-      title: "✨ Megalodon-MD Status",
-      buttonText: "📋 Open Menu",
-      sections
-    };
-
-    // Send image with caption and buttons
     await conn.sendMessage(from, {
-      image: { url: config.MENU_IMAGE_URL },
-      caption: message.trim(),
+      text: message.trim(),
       footer: "📍 Select an option below",
       title: "✨ Megalodon-MD Status",
       buttonText: "📋 Open Menu",
