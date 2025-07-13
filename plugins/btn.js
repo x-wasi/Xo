@@ -1,6 +1,4 @@
 const { cmd } = require('../command');
-const config = require('../config');
-const prefix = config.PREFIX;
 const axios = require('axios');
 
 async function getBuffer(url) {
@@ -8,62 +6,48 @@ async function getBuffer(url) {
     return Buffer.from(res.data, 'utf-8');
 }
 
-function delay(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
 cmd({
-    pattern: "btn",
-    alias: ["imgbtn", "templatebtn"],
-    desc: "Send image, wait, then send interactive buttons",
-    react: "🖼️",
-    category: "main",
+    pattern: "testbuttons",
+    alias: ["ibtn", "btnsample"],
+    desc: "Send a sample interactive button message with image",
+    category: "dev",
     filename: __filename
-}, async (conn, m, msg, { from, reply }) => {
+}, async (conn, m, msg, { reply, from }) => {
     try {
-        // 1. Get image buffer
-        const imageBuffer = await getBuffer("https://files.catbox.moe/x13xdq.jpg");
+        const image = await getBuffer("https://files.catbox.moe/x13xdq.jpg");
 
-        // 2. Send image first
-        await conn.sendMessage(from, {
-            image: imageBuffer,
-            caption: "🦈 *MEGALODON-MD*\n\nHere is your image preview!"
-        }, { quoted: m });
-
-        // 3. Wait for 2 seconds
-        await delay(2000);
-
-        // 4. Send message with template buttons
-        await conn.sendMessage(from, {
-            text: "👋 *Welcome to MEGALODON-MD!*",
-            footer: "📍 Select an option below",
+        const message = {
+            image: image,
+            caption: "👋 *Hello World!*\nChoose an option below.",
+            footer: "📌 This is the Footer",
             templateButtons: [
                 {
                     index: 1,
                     quickReplyButton: {
-                        displayText: "📜 All Menu",
-                        id: `${prefix}menu`
+                        displayText: "💬 Quick Reply",
+                        id: "quick_reply_id"
                     }
                 },
                 {
                     index: 2,
-                    quickReplyButton: {
-                        displayText: "👤 Alive",
-                        id: `${prefix}alive`
+                    urlButton: {
+                        displayText: "🌐 Tap Here!",
+                        url: "https://www.example.com/"
                     }
                 },
                 {
                     index: 3,
-                    urlButton: {
-                        displayText: "🌐 Website",
-                        url: "https://example.com"
+                    quickReplyButton: {
+                        displayText: "📋 Copy Code",
+                        id: "copy_code_id"
                     }
                 }
             ]
-        }, { quoted: m });
+        };
 
+        await conn.sendMessage(from, message, { quoted: m });
     } catch (err) {
-        console.error("❌ Error sending image or buttons:", err);
-        reply("❌ Failed to send image or buttons.");
+        console.error("❌ Button Test Error:", err);
+        reply("❌ Failed to send image with buttons.");
     }
 });
