@@ -4,6 +4,7 @@ cmd({
     pattern: "testbuttons",
     alias: ["ibtn", "btnsample"],
     desc: "Send a sample interactive button message",
+    react: "🎴",
     category: "other",
     filename: __filename
 }, async (conn, m, msg, { reply, from }) => {
