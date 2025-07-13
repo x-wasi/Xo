@@ -11,45 +11,44 @@ async function getBuffer(url) {
 cmd({
     pattern: "btn",
     alias: ["imgbtn", "templatebtn"],
-    desc: "Send image with interactive buttons",
-    react: "🎴",
+    desc: "Send image with buttons in one message",
+    react: "🖼️",
     category: "main",
     filename: __filename
 }, async (conn, m, msg, { from, reply }) => {
     try {
         const imageBuffer = await getBuffer("https://files.catbox.moe/x13xdq.jpg");
 
-        const templateMessage = {
-            templateMessage: {
-                hydratedTemplate: {
-                    imageMessage: { jpegThumbnail: imageBuffer }, // Thumbnail (small image)
-                    hydratedContentText: "👋 *Welcome to MEGALODON-MD!*\n\n📍 Choose an option below:",
-                    hydratedFooterText: "🦈 Powered by DybyTech",
-                    hydratedButtons: [
-                        {
-                            quickReplyButton: {
-                                displayText: "📜 All Menu",
-                                id: `${prefix}menu`
-                            }
-                        },
-                        {
-                            quickReplyButton: {
-                                displayText: "👤 Alive",
-                                id: `${prefix}alive`
-                            }
-                        },
-                        {
-                            urlButton: {
-                                displayText: "🌐 Website",
-                                url: "https://example.com"
-                            }
-                        }
-                    ]
+        const message = {
+            image: imageBuffer,
+            caption: "👋 *Welcome to MEGALODON-MD!*\n\n📍 Choose an option below:",
+            footer: "🦈 Powered by DybyTech",
+            templateButtons: [
+                {
+                    index: 1,
+                    quickReplyButton: {
+                        displayText: "📜 All Menu",
+                        id: `${prefix}menu`
+                    }
+                },
+                {
+                    index: 2,
+                    quickReplyButton: {
+                        displayText: "👤 Alive",
+                        id: `${prefix}alive`
+                    }
+                },
+                {
+                    index: 3,
+                    urlButton: {
+                        displayText: "🌐 Website",
+                        url: "https://example.com"
+                    }
                 }
-            }
+            ]
         };
 
-        await conn.sendMessage(from, templateMessage, { quoted: m });
+        await conn.sendMessage(from, message, { quoted: m });
 
     } catch (err) {
         console.error("❌ Template Button Error:", err);
