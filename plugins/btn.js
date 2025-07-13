@@ -7,9 +7,10 @@ async function getBuffer(url) {
 }
 
 cmd({
-    pattern: "testbuttons",
+    pattern: "btn",
     alias: ["ibtn", "btnsample"],
     desc: "Send a sample interactive button message with image",
+    react: "🎴",
     category: "dev",
     filename: __filename
 }, async (conn, m, msg, { reply, from }) => {
