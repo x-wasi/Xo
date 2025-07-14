@@ -16,6 +16,9 @@ cmd({
     const userNumber = m.sender.split("@")[0];
     const totalSession = Object.keys(await conn.chats.all()).length;
 
+    // Définir le nom du bot (depuis config.js ou fallback)
+    const botname = config.BOT_NAME || "ᴍᴇɢᴀʟᴏᴅᴏɴ-ᴍᴅ";
+
     const caption = `╭───『 ʜɪ ${pushName || "ᴜꜱᴇʀ"} 』───◆
 │ 💠 ʙᴏᴛ ɪꜱ ʀᴜɴɴɪɴɢ ꜱᴍᴏᴏᴛʜʟʏ
 │
@@ -26,12 +29,12 @@ cmd({
 ╰────────────────────◆
 
 🌐 ꜱɪᴛᴇ: https://meg-lodon-session.onrender.com 
-📌 ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴍᴇɢᴀʟᴏᴅᴏɴ-ᴍᴅ 💜`;
+📌 ᴘᴏᴡᴇʀᴇᴅ ʙʏ ${botname} 💜`;
 
     await conn.sendMessage(m.chat, {
-      image: { url: 'https://files.catbox.moe/7jylpj.jpg' }, // remplace avec ton image
+      image: { url: 'https://files.catbox.moe/7jylpj.jpg' },
       caption: caption,
-      footer: "ꜱᴜʟᴀ-ᴍᴅ ʙᴏᴛ | ᴅʏʙʏᴛᴇᴄʜ",
+      footer: "ᴍᴇɢᴀʟᴏᴅᴏɴ-ᴍᴅ | ᴅʏʙʏᴛᴇᴄʜ",
       buttons: [
         { buttonId: `${config.PREFIX}menu`, buttonText: { displayText: "↩️ ᴍᴇɴᴜ" }, type: 1 },
         { buttonId: `${config.PREFIX}owner`, buttonText: { displayText: "👑 ᴏᴡɴᴇʀ" }, type: 1 },
@@ -41,6 +44,8 @@ cmd({
     }, { quoted: m });
   } catch (e) {
     console.error(e);
-    await conn.sendMessage(m.chat, { text: "❌ ᴀɴ ᴇʀʀᴏʀ ᴏᴄᴄᴜʀʀᴇᴅ ᴡʜɪʟᴇ ꜱᴇɴᴅɪɴɢ ᴀʟɪᴠᴇ ᴍᴇɴᴜ." }, { quoted: m });
+    await conn.sendMessage(m.chat, {
+      text: "❌ ᴀɴ ᴇʀʀᴏʀ ᴏᴄᴄᴜʀʀᴇᴅ ᴡʜɪʟᴇ ꜱᴇɴᴅɪɴɢ ᴀʟɪᴠᴇ ᴍᴇɴᴜ."
+    }, { quoted: m });
   }
 });
