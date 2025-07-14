@@ -13,7 +13,7 @@ cmd({
   try {
     // Proper args handling
     const query = args.length > 0 ? args.join(" ") : null;
-    if (!query) return reply("Please provide a song name.\nExample: *.spotify Flowers by Miley Cyrus*");
+    if (!query) return reply("ᴘʟᴇᴀsᴇ ᴘʀᴏᴠɪᴅᴇ ᴀ sᴏɴɢ ɴᴀᴍᴇ.\nExample: *.sᴘᴏᴛɪғʏ ғʟᴏᴡᴇʀs ʙʏ ᴍɪʟᴇʏ ᴄʏʀᴜs*");
 
     // Search for track
     const searchApiUrl = `https://draculazxy-xyzdrac.hf.space/api/Spotify?q=${encodeURIComponent(query)}`;
@@ -27,11 +27,11 @@ cmd({
     // Extract song data
     const song = searchData.SONG || {};
     const spotifyInfo = `
-🎵 *Track:* ${song.title || 'N/A'}
-🎤 *Artist:* ${song.artist || 'N/A'}
-💿 *Album:* ${song.album || 'N/A'}
-📅 *Release Date:* ${song.release_date || 'N/A'}
-🔗 *Spotify URL:* ${song.spotify_url || 'Not available'}
+🎵 *ᴛʀᴀᴄᴋ:* ${song.title || 'N/A'}
+🎤 *ᴀʀᴛɪsᴛ:* ${song.artist || 'N/A'}
+💿 *ᴀʟʙᴜᴍ:* ${song.album || 'N/A'}
+📅 *ʀᴇʟᴇᴀsᴇ ᴅᴀᴛᴇ:* ${song.release_date || 'N/A'}
+🔗 *sᴘᴏᴛɪғʏ ᴜʀʟ:* ${song.spotify_url || 'Not available'}
 `.trim();
 
     // Send track info with cover art
