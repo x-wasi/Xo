@@ -12,13 +12,13 @@ cmd(
     try {
       if (!isCreator) {
         return await conn.sendMessage(from, {
-          text: "*📛 This is an owner command.*"
+          text: "*📛 ᴛʜɪs ɪs ᴀɴ ᴏᴡɴᴇʀ ᴄᴏᴍᴍᴀɴᴅ.*"
         }, { quoted: mek });
       }
 
-      if (!isGroup) return reply("_This command is for groups_");
-      if (!isBotAdmins) return reply("_I'm not admin_");
-      if (!args[0] && !quoted) return reply("_Mention user to add_");
+      if (!isGroup) return reply("_ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ ɪs ғᴏʀ ɢʀᴏᴜᴘs_");
+      if (!isBotAdmins) return reply("_ɪ'ᴍ ɴᴏᴛ ᴀᴅᴍɪɴ_");
+      if (!args[0] && !quoted) return reply("_ᴍᴇɴᴛɪᴏɴ ᴜsᴇʀ ᴛᴏ ᴀᴅᴅ_");
 
       let jid = m.mentionedJid?.[0] 
             || (m.quoted?.sender ?? null)
