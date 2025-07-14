@@ -4,7 +4,7 @@ cmd({
     pattern: "promote",
     alias: ["p", "makeadmin"],
     desc: "Promotes a member to group admin",
-    category: "admin",
+    category: "group",
     react: "⬆️",
     filename: __filename
 },
@@ -12,7 +12,7 @@ async(conn, mek, m, {
     from, l, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isCreator, isDev, isAdmins, reply
 }) => {
     // Check if the command is used in a group
-    if (!isGroup) return reply("❌ This ᴄᴏᴍᴍᴀɴᴅ ᴄᴀɴ ᴏɴʟʏ ʙᴇ ᴜsᴇᴅ ɪɴ ɢʀᴏᴜᴘs.");
+    if (!isGroup) return reply("❌ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ ᴄᴀɴ ᴏɴʟʏ ʙᴇ ᴜsᴇᴅ ɪɴ ɢʀᴏᴜᴘs.");
 
     // Check if the user is an admin
     if (!isAdmins) return reply("❌ ᴏɴʟʏ ɢʀᴏᴜᴘ ᴀᴅᴍɪɴs ᴄᴀɴ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ.");
@@ -26,7 +26,7 @@ async(conn, mek, m, {
     } else if (q && q.includes("@")) {
         number = q.replace(/[@\s]/g, ''); // If manually typing a number
     } else {
-        return reply("❌ Please reply to a message or provide a number to promote.");
+        return reply("❌ ᴘʟᴇᴀsᴇ ʀᴇᴘʟʏ ᴛᴏ ᴀ ᴍᴇssᴀɢᴇ ᴏʀ ᴘʀᴏᴠɪᴅᴇ ᴀ ɴᴜᴍʙᴇʀ ᴛᴏ ᴘʀᴏᴍᴏᴛᴇ.");
     }
 
     // Prevent promoting the bot itself
@@ -48,7 +48,7 @@ cmd({
     pattern: "demote",
     alias: ["d", "dismiss", "removeadmin"],
     desc: "Demotes a group admin to a normal member",
-    category: "admin",
+    category: "group",
     react: "⬇️",
     filename: __filename
 },
@@ -70,7 +70,7 @@ async(conn, mek, m, {
     } else if (q && q.includes("@")) {
         number = q.replace(/[@\s]/g, ''); // If manually typing a number
     } else {
-        return reply("❌ Please reply to a message or provide a number to demote.");
+        return reply("❌ ᴘʟᴇᴀsᴇ ʀᴇᴘʟʏ ᴛᴏ ᴀ ᴍᴇssᴀɢᴇ ᴏʀ ᴘʀᴏᴠɪᴅᴇ ᴀ ɴᴜᴍʙᴇʀ ᴛᴏ ᴅᴇᴍᴏᴛᴇ.");
     }
 
     // Prevent demoting the bot itself
