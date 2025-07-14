@@ -5,7 +5,7 @@ cmd({
   pattern: "play",
   alias: ["song", "ytplay"],
   desc: "Play audio from YouTube by song name.",
-  category: "downloader",
+  category: "download",
   react: "🎶",
   filename: __filename
 }, async (conn, m, msg, { text, args, prefix, command, reply }) => {
