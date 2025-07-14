@@ -15,7 +15,7 @@ cmd({
   reply
 }) => {
   if (!args[0]) {
-    return reply("❌ Where is the GitHub link?\n\nExample:\n.gitclone https://github.com/username/repository");
+    return reply("❌ ᴡʜᴇʀᴇ ɪs ᴛʜᴇ ɢɪᴛʜᴜʙ ʟɪɴᴋ?\n\nExample:\n.gitclone https://github.com/username/repository");
   }
 
   if (!/^(https:\/\/)?github\.com\/.+/.test(args[0])) {
@@ -43,7 +43,7 @@ cmd({
     const fileName = contentDisposition ? contentDisposition.match(/filename=(.*)/)[1] : `${repo}.zip`;
 
     // Notify user of the download
-    reply(`📥 *ᴅᴏᴡɴʟᴏᴀᴅɪɴɢ ʀᴇᴘᴏsɪᴛᴏʀʏ...*\n\n*ʀᴇᴘᴏsɪᴛᴏʀʏ:* ${username}/${repo}\n*ғɪʟᴇɴᴀᴍᴇ:* ${fileName}\n\n> *ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅʏʙʏ ᴛᴇᴄʜ`);
+    reply(`📥 *ᴅᴏᴡɴʟᴏᴀᴅɪɴɢ ʀᴇᴘᴏsɪᴛᴏʀʏ...*\n\n*ʀᴇᴘᴏsɪᴛᴏʀʏ:* ${username}/${repo}\n*ғɪʟᴇɴᴀᴍᴇ:* ${fileName}\n\n> *ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅʏʙʏ ᴛᴇᴄʜ*`);
 
     // Send the zip file to the user with custom contextInfo
     await conn.sendMessage(from, {
