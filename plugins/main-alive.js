@@ -1,51 +1,119 @@
-const { cmd } = require('../command');
-const { runtime } = require('../lib/functions');
+// coded by mr wasi dev for daby tech enjoy dont forget to give credit 
+
 const os = require('os');
+const moment = require('moment-timezone');
+const { cmd } = require('../command');
 const config = require('../config');
+const prefix = config.PREFIX;
 
 cmd({
-  pattern: "alive",
-  alias: ["botstatus", "status"],
-  desc: "Show styled alive menu",
+  pattern: "test",
+  alias: ["alive"],
+  desc: "Check if bot is online and show system info with interactive buttons.",
   category: "main",
-  react: "💠",
+  react: "👋",
   filename: __filename
-}, async (conn, m, msg, { pushName }) => {
+}, async (
+  conn, mek, m, {
+    from, pushname, reply
+  }
+) => {
   try {
+    const botname = "𝐌𝐄𝐆𝐀𝐋𝐎𝐃𝐎𝐍-𝐌𝐃";
+    const ownername = "ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅʏʙʏ ᴛᴇᴄʜ";
+    const channelJid = '120363401051937059@newsletter';
+    const botVersion = "MD";
+    const runtime = (seconds) => {
+      const pad = (s) => (s < 10 ? '0' : '') + s;
+      const hrs = Math.floor(seconds / 3600);
+      const mins = Math.floor((seconds % 3600) / 60);
+      const secs = Math.floor(seconds % 60);
+      return `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
+    };
+
     const uptime = runtime(process.uptime());
-    const userNumber = m.sender.split("@")[0];
-    const totalSession = Object.keys(await conn.chats.all()).length;
+    const date = moment().tz("America/Port-au-Prince").format("dddd, MMMM Do YYYY");
+    const time = moment().tz("America/Port-au-Prince").format("hh:mm:ss A");
 
-    // Définir le nom du bot (depuis config.js ou fallback)
-    const botname = config.BOT_NAME || "ᴍᴇɢᴀʟᴏᴅᴏɴ-ᴍᴅ";
+    const fakeQuoted = {
+      key: {
+        remoteJid: 'status@broadcast',
+        participant: '0@s.whatsapp.net'
+      },
+      message: {
+        newsletterAdminInviteMessage: {
+          newsletterJid: channelJid,
+          newsletterName: botname,
+          caption: ownername,
+          inviteExpiration: 0
+        }
+      }
+    };
 
-    const caption = `╭───『 ʜɪ ${pushName || "ᴜꜱᴇʀ"} 』───◆
-│ 💠 ʙᴏᴛ ɪꜱ ʀᴜɴɴɪɴɢ ꜱᴍᴏᴏᴛʜʟʏ
-│
-│ ⏱️ ᴜᴘᴛɪᴍᴇ: ${uptime}
-│ 🔧 *ʙᴏᴛ ɴᴀᴍᴇ:* ${botname}
-│ 👑 *ᴏᴡɴᴇʀ:* ${config.OWNER_NAME}
-│ 📱 ʏᴏᴜʀ ɴᴜᴍʙᴇʀ: ${userNumber}
-╰────────────────────◆
+    const message = `
+> ╭─────────────◆
+> │  *👋 ʜᴇʟʟᴏ ${pushname}*
+> │
+> │  ✅ *ʙᴏᴛ sᴛᴀᴛᴜs:* _ᴏɴʟɪɴᴇ_
+> │  🔧 *ʙᴏᴛ ɴᴀᴍᴇ:* ${botname}
+> │  👑 *ᴏᴡɴᴇʀ:* ${config.OWNER_NAME}
+> │  🧠 *ᴠᴇʀsɪᴏɴ:* ${botVersion}
+> │  ⏱ *ᴜᴘᴛɪᴍᴇ:* ${uptime}
+> │  📅 *ᴅᴀᴛᴇ:* ${date}
+> │  🕐 *ᴛɪᴍᴇ:* ${time}
+> │  🖥 *ᴘʟᴀᴛғᴏʀᴍ:* ${os.platform()}
+> ╰─────────────◆`;
 
-🌐 ꜱɪᴛᴇ: https://meg-lodon-session.onrender.com 
-📌 ᴘᴏᴡᴇʀᴇᴅ ʙʏ ${botname} 💜`;
+    // Define button sections
+    const sections = [
+      {
+        title: "📌 Bot Status Options",
+        rows: [
+          {
+            title: "🔄 Refresh Status",
+            rowId: `${prefix}Alive`
+          },
+          {
+            title: "📋 Main Menu",
+            rowId: `${prefix}Menu`
+          }
+        ]
+      },
+      {
+        title: "🔧 System Info",
+        rows: [
+          {
+            title: "📊 Detailed Stats",
+            rowId: "statistics"
+          },
+          {
+            title: "⚙️ Settings",
+            rowId: `${prefix}Env`
+          }
+        ]
+      }
+    ];
 
-    await conn.sendMessage(m.chat, {
-      image: { url: 'https://files.catbox.moe/7jylpj.jpg' },
-      caption: caption,
-      footer: "ᴍᴇɢᴀʟᴏᴅᴏɴ-ᴍᴅ | ᴅʏʙʏᴛᴇᴄʜ",
-      buttons: [
-        { buttonId: `${config.PREFIX}menu`, buttonText: { displayText: "↩️ ᴍᴇɴᴜ" }, type: 1 },
-        { buttonId: `${config.PREFIX}owner`, buttonText: { displayText: "👑 ᴏᴡɴᴇʀ" }, type: 1 },
-        { buttonId: `https://meg-lodon-session.onrender.com`, buttonText: { displayText: "🌐 ᴄʟɪᴄᴋ ʜᴇʀᴇ" }, type: 1 },
-      ],
-      headerType: 4
-    }, { quoted: m });
+    const listMessage = {
+      text: message.trim(),
+      footer: "📍 Select an option below",
+      title: "✨ Megalodon-MD Status",
+      buttonText: "📋 Open Menu",
+      sections
+    };
+
+    // Send image with caption and buttons
+    await conn.sendMessage(from, {
+      image: { url: config.MENU_IMAGE_URL },
+      caption: message.trim(),
+      footer: "📍 Select an option below",
+      title: "✨ Megalodon-MD Status",
+      buttonText: "📋 Open Menu",
+      sections
+    }, { quoted: fakeQuoted });
+
   } catch (e) {
-    console.error(e);
-    await conn.sendMessage(m.chat, {
-      text: "❌ ᴀɴ ᴇʀʀᴏʀ ᴏᴄᴄᴜʀʀᴇᴅ ᴡʜɪʟᴇ ꜱᴇɴᴅɪɴɢ ᴀʟɪᴠᴇ ᴍᴇɴᴜ."
-    }, { quoted: m });
+    console.error("Alive Command Error:", e);
+    reply(`❌ Error:\n${e.message}`);
   }
 });
