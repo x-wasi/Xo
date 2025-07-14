@@ -119,7 +119,6 @@ cmd({
 let antibotAction = "off"; // Default action is off
 let warnings = {}; // Store warning counts per user
 
-// Commande .antibot
 cmd({
     pattern: "antibot",
     react: "🫟",
@@ -133,30 +132,26 @@ cmd({
     }
 
     const action = q.toLowerCase();
-
-    // Autoriser "on" comme équivalent de "warn"
-    if (["on", "off", "warn", "delete", "kick"].includes(action)) {
-        antibotAction = (action === "on") ? "warn" : action;
-        return reply(`*✅ ᴀɴᴛɪʙᴏᴛ ᴀᴄᴛɪᴏɴ sᴇᴛ ᴛᴏ:* ${antibotAction.toUpperCase()}`);
+    if (["off", "warn", "delete", "kick"].includes(action)) {
+        antibotAction = action;
+        return reply(`*ᴀɴᴛɪʙᴏᴛ ᴀᴄᴛɪᴏɴ sᴇᴛ ᴛᴏ:* ${action.toUpperCase()}`);
     } else {
-        return reply(`*🫟 ɪɴᴠᴀʟɪᴅ ᴏᴘᴛɪᴏɴ!*\nUse: *ᴏғғ*, *ᴡᴀʀɴ*, *ᴅᴇʟᴇᴛᴇ*, *ᴋɪᴄᴋ*\n\n_Example: .ᴀɴᴛɪʙᴏᴛ ᴡᴀʀɴ_`);
+        return reply("*🫟 ᴇxᴀᴍᴘʟᴇ: . ᴀɴᴛɪ-ʙᴏᴛ ᴏғғ/ᴡᴀʀɴ/ᴅᴇʟᴇᴛᴇ/ᴋɪᴄᴋ*");
     }
 });
 
-// Détection des messages de bot (basé sur l'ID "31F") et action
 cmd({
     on: "body"
 }, async (conn, mek, m, { from, isGroup, sender, isBotAdmins, isAdmins, reply }) => {
-    if (!isGroup || antibotAction === "off") return; // Antibot désactivé ou non groupe
+    if (!isGroup || antibotAction === "off") return; // Check if antibot is enabled
 
-    const messageId = mek.key?.id;
-    if (!messageId || !messageId.startsWith("31F")) return; // Message non-bot ignoré
+    const messageId = mek.key.id;
+    if (!messageId || !messageId.startsWith("31F")) return; // Detect bot-generated messages
 
     if (!isBotAdmins) return reply("*_ɪ'ᴍ ɴᴏᴛ ᴀɴ ᴀᴅᴍɪɴ, sᴏ ɪ ᴄᴀɴ'ᴛ ᴛᴀᴋᴇ ᴀᴄᴛɪᴏɴ!_*");
-    if (isAdmins) return; // Ignorer les admins
+    if (isAdmins) return; // Ignore admins
 
-    // Supprimer le message détecté
-    await conn.sendMessage(from, { delete: mek.key });
+    await conn.sendMessage(from, { delete: mek.key }); // Delete the detected bot message
 
     switch (antibotAction) {
         case "kick":
@@ -166,15 +161,11 @@ cmd({
         case "warn":
             warnings[sender] = (warnings[sender] || 0) + 1;
             if (warnings[sender] >= 3) {
-                delete warnings[sender]; // Réinitialiser après expulsion
+                delete warnings[sender]; // Reset warning count after kicking
                 await conn.groupParticipantsUpdate(from, [sender], "remove");
             } else {
                 return reply(`⚠️ @${sender.split("@")[0]}, ᴡᴀʀɴɪɴɢ ${warnings[sender]}/3! ʙᴏᴛs ᴀʀᴇ ɴᴏᴛ ᴀʟʟᴏᴡᴇᴅ!`, { mentions: [sender] });
             }
-            break;
-
-        case "delete":
-            // Rien d’autre à faire, message déjà supprimé
             break;
     }
 });
