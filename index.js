@@ -118,16 +118,17 @@ const port = process.env.PORT || 9090;
   require("./plugins/" + plugin);
   }
   });
+	  console.log(LOG)
   
   let up = `> *╭──────────────●●*
 > *➺ ᴍᴇɢᴀʟᴏᴅᴏɴ ᴍᴅ ᴄᴏɴɴᴇᴄᴛᴇᴅ sᴜᴄᴄᴇssғᴜʟʏ ᴛʏᴘᴇ*
-> * ${prefix}ᴍᴇɴᴜ ᴛᴏ sᴇᴇ ᴛʜᴇ ғᴜʟʟ ᴄᴏᴍᴍᴀɴᴅ ʟɪsᴛ💫*
+> *${prefix}ᴍᴇɴᴜ ᴛᴏ sᴇᴇ ᴛʜᴇ ғᴜʟʟ ᴄᴏᴍᴍᴀɴᴅ ʟɪsᴛ💫*
 
 > *ᴊᴏɪɴ ᴏᴜʀ ᴡʜᴀᴛsᴀᴘᴘ ᴄʜᴀɴɴᴇʟ ғᴏʀ ᴜᴘᴅᴀᴛᴇs ʙᴏᴛ*
 
 > *https://whatsapp.com/channel/0029VbAdcIXJP216dKW1253g*
 
-> ➳ ᴘʀᴇғɪx 『${prefix}』
+> ➳ ᴘʀᴇғɪx 『 ${prefix} 』
 > ➳ ᴍᴏᴅᴇ 〔〔${mode}〕〕
 
 > ╰──────────────●●
