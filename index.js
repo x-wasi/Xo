@@ -118,7 +118,7 @@ const port = process.env.PORT || 9090;
   require("./plugins/" + plugin);
   }
   });
-	  console.log(LOG)
+	  console.log('Bot running')
   
   let up = `> *╭──────────────●●*
 > *➺ ᴍᴇɢᴀʟᴏᴅᴏɴ ᴍᴅ ᴄᴏɴɴᴇᴄᴛᴇᴅ sᴜᴄᴄᴇssғᴜʟʏ ᴛʏᴘᴇ*
