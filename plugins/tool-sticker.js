@@ -23,7 +23,7 @@ cmd(
     use: '<reply media or URL>',
     filename: __filename,
   },
-  async (conn, mek, m, { quoted, args, reply }) => {
+  async (conn, mek, m, { quoted, args, reply, pushname }) => {
     try {
       if (!mek.quoted) return reply('*Reply to a video or GIF to convert it to a sticker!*');
 
@@ -40,7 +40,7 @@ cmd(
 
       // Generate sticker metadata
       const sticker = new Sticker(webpBuffer, {
-        pack: config.STICKER_NAME || 'My Pack',
+        pack: `${pushname}`,
         author: '', // Leave blank or customize
         type: StickerTypes.FULL, // FULL for regular stickers
         categories: ['🤩', '🎉'], // Emoji categories
@@ -79,4 +79,3 @@ cmd({
         reply(`❌ ${error.message}`);
     }
 });
-
