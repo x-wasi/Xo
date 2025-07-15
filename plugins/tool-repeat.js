@@ -2,7 +2,7 @@ const config = require('../config')
 const { cmd, commands } = require('../command');
 
 cmd({
-    pattern: "spam",
+    pattern: "msg",
     desc: "Send a message multiple times (Owner Only)",
     category: "utility",
     react: "🔁",
