@@ -88,7 +88,7 @@ cmd({
   const input = args.join(" ");
   if (!input.includes('|')) {
     return await conn.sendMessage(from, {
-      text: `❌ ᴜsᴀɢᴇ: ${prefix}setmentionbot <media URL> | <message>\nExample: ${prefix}setmentionbot https://example.com/audio.mp3 | Hello @user! Bot uptime: {runtime}`
+      text: `❌ ᴜsᴀɢᴇ: ${prefix} setmentionbot <media URL> | <message>\nExample: ${prefix} setmentionbot https://example.com/audio.mp3 | Hello @user! Bot uptime: {runtime}`
     }, { quoted: m });
   }
 
