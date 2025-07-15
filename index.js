@@ -111,25 +111,24 @@ const port = process.env.PORT || 9090;
   }
   } else if (connection === 'open') {
   console.log('Plugins installed ✅️')
-  console.log ('Bot connected ✅️')
+  console.log ('Bot connected to whatsapp ✅️')
   const path = require('path');
   fs.readdirSync("./plugins/").forEach((plugin) => {
   if (path.extname(plugin).toLowerCase() == ".js") {
   require("./plugins/" + plugin);
   }
   });
-  console.log("Bot connected to whatsapp ✅")
   
   let up = `> *╭──────────────●●*
 > *➺ ᴍᴇɢᴀʟᴏᴅᴏɴ ᴍᴅ ᴄᴏɴɴᴇᴄᴛᴇᴅ sᴜᴄᴄᴇssғᴜʟʏ ᴛʏᴘᴇ*
-> *.ᴍᴇɴᴜ ᴛᴏ sᴇᴇ ᴛʜᴇ ғᴜʟʟ ᴄᴏᴍᴍᴀɴᴅ ʟɪsᴛ💫*
+> * ${prefix}ᴍᴇɴᴜ ᴛᴏ sᴇᴇ ᴛʜᴇ ғᴜʟʟ ᴄᴏᴍᴍᴀɴᴅ ʟɪsᴛ💫*
 
 > *ᴊᴏɪɴ ᴏᴜʀ ᴡʜᴀᴛsᴀᴘᴘ ᴄʜᴀɴɴᴇʟ ғᴏʀ ᴜᴘᴅᴀᴛᴇs ʙᴏᴛ*
 
 > *https://whatsapp.com/channel/0029VbAdcIXJP216dKW1253g*
 
-> ➳ ᴘʀᴇғɪx ${prefix}
-> ➳ ᴍᴏᴅᴇ ${mode}
+> ➳ ᴘʀᴇғɪx 『${prefix}』
+> ➳ ᴍᴏᴅᴇ 〔〔${mode}〕〕
 
 > ╰──────────────●●
 > *ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅʏʙʏ ᴛᴇᴄʜ*`;
