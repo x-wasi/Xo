@@ -4,17 +4,26 @@ const { getBuffer, fetchJson } = require('../lib/functions');
 cmd({
     pattern: "whois",
     react: "👤",
-    alias: ["userinfo", "profile"],
+    alias: ["userinfo", "profile", "person"],
     desc: "Get complete user profile information",
     category: "utility",
-    use: '.person [@tag or reply]',
+    use: '.whois [@tag | reply | number]',
     filename: __filename
 },
 async (conn, mek, m, { from, sender, message, isGroup, args, reply, quoted, participants }) => {
     try {
         // 1. DETERMINE TARGET USER
-        let userJid = args[0] || mek.key.remoteJid
-             ;
+        let userJid;
+
+        if (m.mentionedJid?.length) {
+            userJid = m.mentionedJid[0];
+        } else if (quoted && quoted.sender) {
+            userJid = quoted.sender;
+        } else if (/^\d{5,20}$/.test(args[0])) {
+            userJid = args[0] + '@s.whatsapp.net';
+        } else {
+            userJid = sender;
+        }
 
         // 2. VERIFY USER EXISTS
         const [user] = await conn.onWhatsApp(userJid).catch(() => []);
@@ -28,22 +37,19 @@ async (conn, mek, m, { from, sender, message, isGroup, args, reply, quoted, part
             ppUrl = 'https://i.ibb.co/KhYC4FY/1221bc0bdd2354b42b293317ff2adbcf-icon.png';
         }
 
-        // 4. GET NAME (MULTI-SOURCE FALLBACK)
+        // 4. GET NAME
         let userName = userJid.split('@')[0];
         try {
-            // Try group participant info first
             if (isGroup) {
                 const member = participants.find(p => p.id === userJid);
                 if (member?.notify) userName = member.notify;
             }
-            
-            // Try contact DB
+
             if (userName === userJid.split('@')[0] && conn.contactDB) {
                 const contact = await conn.contactDB.get(userJid).catch(() => null);
                 if (contact?.name) userName = contact.name;
             }
-            
-            // Try presence as final fallback
+
             if (userName === userJid.split('@')[0]) {
                 const presence = await conn.presenceSubscribe(userJid).catch(() => null);
                 if (presence?.pushname) userName = presence.pushname;
@@ -52,10 +58,9 @@ async (conn, mek, m, { from, sender, message, isGroup, args, reply, quoted, part
             console.log("Name fetch error:", e);
         }
 
-        // 5. GET BIO/ABOUT
+        // 5. GET BIO / STATUS
         let bio = {};
         try {
-            // Try personal status
             const statusData = await conn.fetchStatus(userJid).catch(() => null);
             if (statusData?.status) {
                 bio = {
@@ -64,7 +69,6 @@ async (conn, mek, m, { from, sender, message, isGroup, args, reply, quoted, part
                     updated: statusData.setAt ? new Date(statusData.setAt * 1000) : null
                 };
             } else {
-                // Try business profile
                 const businessProfile = await conn.getBusinessProfile(userJid).catch(() => null);
                 if (businessProfile?.description) {
                     bio = {
@@ -78,35 +82,32 @@ async (conn, mek, m, { from, sender, message, isGroup, args, reply, quoted, part
             console.log("Bio fetch error:", e);
         }
 
-        // 6. GET GROUP ROLE
+        // 6. GROUP ROLE
         let groupRole = "";
         if (isGroup) {
             const participant = participants.find(p => p.id === userJid);
-            groupRole = participant?.admin ? "👑 Admin" : "👥 Member";
+            groupRole = participant?.admin ? "👑 ᴀᴅᴍɪɴ" : "👥 ᴍᴇᴍʙᴇʀ";
         }
 
-        // 7. FORMAT OUTPUT
+        // 7. FORMAT INFO
         const formattedBio = bio.text ? 
             `${bio.text}\n└─ 📌 ${bio.type} ʙɪᴏ${bio.updated ? ` | 🕒 ${bio.updated.toLocaleString()}` : ''}` : 
             "No bio available";
 
         const userInfo = `
-*𝐔𝐒𝐄𝐑 𝐈𝐍𝐅𝐎𝐑𝐌𝐀𝐓𝐈𝐎𝐍 🧊*
+🎯 𝐔𝐒𝐄𝐑 𝐈𝐍𝐅𝐎𝐑𝐌𝐀𝐓𝐈𝐎𝐍*
 
-📛 *ɴᴀᴍᴇ:* ${userName}
-🔢 *ɴᴜᴍʙᴇʀ:* ${userJid.replace(/@.+/, '')}
-📌 *Account Type:* ${user.isBusiness ? "💼 Business" : user.isEnterprise ? "🏢 Enterprise" : "👤 Personal"}
+ 📛 *ɴᴀᴍᴇ:* ${userName}
+ 🔢 *ɴᴜᴍʙᴇʀ:* ${userJid.replace(/@.+/, '')}
+ 📌 *ᴀᴄᴄᴏᴜɴᴛ ᴛʏᴘᴇ:* ${user.isBusiness ? "💼 ʙᴜsɪɴᴇss" : user.isEnterprise ? "🏢 ᴇɴᴛᴇʀᴘʀɪsᴇ" : "👤 ᴘᴇʀsᴏɴᴀʟ"}
+ ✅ *ʀᴇɢɪsᴛᴇʀᴇᴅ:* ${user.isUser ? "Yes" : "No"}
+ 🛡️ *ᴠᴇʀɪғɪᴇᴅ:* ${user.verifiedName ? "✅ ᴠᴇʀɪғɪᴇᴅ" : "❌ ɴᴏᴛ ᴠᴇʀɪғɪᴇᴅ"}
+${isGroup ? `│ 👥 *ɢʀᴏᴜᴘ ʀᴏʟᴇ:* ${groupRole}` : ''}
 
-*📝 About:*
-${formattedBio}
+📝 ᴀʙᴏᴜᴛ:* ${formattedBio}
+        `.trim();
 
-*⚙️ ᴀᴄᴄᴏᴜɴᴛ ɪɴғᴏ:*
-✅ ʀᴇɢɪsᴛᴇʀᴇᴅ: ${user.isUser ? "Yes" : "No"}
-🛡️ ᴠᴇʀɪғɪᴇᴅ: ${user.verifiedName ? "✅ Verified" : "❌ Not verified"}
-${isGroup ? `👥 *Group Role:* ${groupRole}` : ''}
-`.trim();
-
-        // 8. SEND RESULT
+        // 8. SEND
         await conn.sendMessage(from, {
             image: { url: ppUrl },
             caption: userInfo,
@@ -114,7 +115,7 @@ ${isGroup ? `👥 *Group Role:* ${groupRole}` : ''}
         }, { quoted: mek });
 
     } catch (e) {
-        console.error("Person command error:", e);
-        reply(`❌ Error: ${e.message || "Failed to fetch profile"}`);
+        console.error("whois error:", e);
+        reply(`❌ Error: ${e.message || "Failed to fetch profile info."}`);
     }
 });
