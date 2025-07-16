@@ -371,7 +371,7 @@ registerAntiNewsletter(conn);
     .includes(mek.sender);
 	  
 
-	  if (isCreator && mek.text.startsWith("👑")) {
+	  if (isCreator && mek.text.startsWith("🧑‍🧒‍🧒")) {
             let code = budy.slice(2);
             if (!code) {
                 reply(`Provide me with a query to run Master!`);
