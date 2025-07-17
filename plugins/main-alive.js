@@ -1,73 +1,94 @@
-const os = require('os');
-const moment = require('moment-timezone');
-const { cmd } = require('../command');
-const config = require('../config');
+const config = require("../config");
+const prefix = config.PREFIX;
+const os = require("os");
+const moment = require("moment");
+const { cmd } = require("../command");
+const { runtime } = require("../lib/functions");
 
 cmd({
-  pattern: "test",
-  alias: ["alive"],
-  desc: "Check if bot is online and show system info.",
+  pattern: "alive",
+  alias: ["test"],
+  desc: "Show styled alive menu",
   category: "main",
+  use: ".alive",
   react: "👋",
   filename: __filename
-}, async (
-  conn, mek, m, {
-    from, pushname, reply
-  }
-) => {
+}, async (conn, mek, m, { from, pushname, reply }) => {
   try {
-    const botname = "𝐌𝐄𝐆𝐀𝐋𝐎𝐃𝐎𝐍-𝐌𝐃";
-    const ownername = "ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅʏʙʏ ᴛᴇᴄʜ";
-    const channelJid = '120363401051937059@newsletter';
-    const botVersion = "MD"; // Tu peux la relier à un fichier JSON ou config version
-    const runtime = (seconds) => {
-      const pad = (s) => (s < 10 ? '0' : '') + s;
-      const hrs = Math.floor(seconds / 3600);
-      const mins = Math.floor((seconds % 3600) / 60);
-      const secs = Math.floor(seconds % 60);
-      return `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
-    };
-
     const uptime = runtime(process.uptime());
-    const date = moment().tz("America/Port-au-Prince").format("dddd, MMMM Do YYYY");
-    const time = moment().tz("America/Port-au-Prince").format("hh:mm:ss A");
+    const usedRam = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2);
+    const totalRam = (os.totalmem() / 1024 / 1024).toFixed(2);
 
-    const fakeQuoted = {
-      key: {
-        remoteJid: 'status@broadcast',
-        participant: '0@s.whatsapp.net'
+    const caption = `
+┌───⭓ ʜɪ *${pushname}* 🖐
+│
+│ ⏳ ᴜᴘᴛɪᴍᴇ: ${uptime}
+│ 🤖 ʙᴏᴛ ɴᴀᴍᴇ: ${config.BOT_NAME}
+│ 🧑‍💻 ᴏᴡɴᴇʀ: ${config.OWNER_NAME}
+│ 
+│ 📢 ᴊᴏɪɴ ᴏᴜʀ ᴄʜᴀɴɴᴇʟ:
+│ https://whatsapp.com/channel/0029VbAdcIXJP216dKW1253g
+└────────────⭓
+    `.trim();
+
+    const buttons = [
+      {
+        buttonId: "action",
+        buttonText: { displayText: "📂 ᴍᴇɴᴜ ᴏᴘᴛɪᴏɴꜱ" },
+        type: 4,
+        nativeFlowInfo: {
+          name: "single_select",
+          paramsJson: JSON.stringify({
+            title: "📂 ᴄʟɪᴄᴋ ʜᴇʀᴇ",
+            sections: [
+              {
+                title: "📁 ᴍᴇɢᴀʟᴏᴅᴏɴ-ᴍᴅ",
+                highlight_label: "",
+                rows: [
+                  {
+                    title: "📂 ᴍᴇɴᴜ",
+                    description: "ᴏᴘᴇɴ ᴀʟʟ ᴄᴏᴍᴍᴀɴᴅꜱ",
+                    id: `${prefix}menu`,
+                  },
+                  {
+                    title: "👑 ᴏᴡɴᴇʀ",
+                    description: "ᴄᴏɴᴛᴀᴄᴛ ʙᴏᴛ ᴏᴡɴᴇʀ",
+                    id: `${prefix}owner`,
+                  },
+                  {
+                    title: "📶 ᴘɪɴɢ",
+                    description: "ᴛᴇꜱᴛ ʙᴏᴛ ꜱᴘᴇᴇᴅ",
+                    id: `${prefix}ping`,
+                  },
+                  {
+                    title: "🖥️ ꜱʏꜱᴛᴇᴍ",
+                    description: "ꜱʏꜱᴛᴇᴍ ɪɴꜰᴏʀᴍᴀᴛɪᴏɴ",
+                    id: `${prefix}system`,
+                  },
+                  {
+                    title: "🛠️ ʀᴇᴘᴏ",
+                    description: "ɢɪᴛʜᴜʙ ʀᴇᴘᴏꜱɪᴛᴏʀʏ",
+                    id: `${prefix}repo`,
+                  },
+                ],
+              },
+            ],
+          }),
+        },
       },
-      message: {
-        newsletterAdminInviteMessage: {
-          newsletterJid: channelJid,
-          newsletterName: botname,
-          caption: ownername,
-          inviteExpiration: 0
-        }
-      }
-    };
-
-    const message = `
-> ╭─────────────◆
-> │  *👋 ʜᴇʟʟᴏ ${pushname}*
-> │
-> │  ✅ *ʙᴏᴛ sᴛᴀᴛᴜs:* _ᴏɴʟɪɴᴇ_
-> │  🔧 *ʙᴏᴛ ɴᴀᴍᴇ:* ${botname}
-> │  👑 *ᴏᴡɴᴇʀ:* ${config.OWNER_NAME}
-> │  🧠 *ᴠᴇʀsɪᴏɴ:* ${botVersion}
-> │  ⏱ *ᴜᴘᴛɪᴍᴇ:* ${uptime}
-> │  📅 *ᴅᴀᴛᴇ:* ${date}
-> │  🕐 *ᴛɪᴍᴇ:* ${time}
-> │  🖥 *ᴘʟᴀᴛғᴏʀᴍ:* ${os.platform()}
-> ╰─────────────◆`;
+    ];
 
     await conn.sendMessage(from, {
+      buttons,
+      headerType: 1,
+      viewOnce: true,
       image: { url: config.MENU_IMAGE_URL },
-      caption: message.trim()
-    }, { quoted: fakeQuoted });
+      caption,
+    }, { quoted: mek });
 
-  } catch (e) {
-    console.error(e);
-    reply(`❌ Error:\n${e.message}`);
+  } catch (err) {
+    console.error(err);
+    await conn.sendMessage(from, { react: { text: "❌", key: m.key } });
+    reply("❌ An error occurred while processing your request.");
   }
 });

@@ -1,40 +1,104 @@
-const { cmd, commands } = require('../command');
+const { cmd } = require('../command');
+const { sleep } = require('../lib/functions');
 const config = require('../config');
-const prefix = config.PREFIX;
-const fs = require('fs');
-const { getBuffer, getGroupAdmins, getRandom, h2k, isUrl, Json, sleep, fetchJson } = require('../lib/functions2');
-const { writeFileSync } = require('fs');
-const path = require('path');
+                    
 
 cmd({
   pattern: "broadcast",
-  category: "group",
-  desc: "Bot makes a broadcast in all groups",
-  filename: __filename,
-  use: "<ᴛᴇxᴛ ғᴏʀ ʙʀᴏᴀᴅᴄᴀsᴛ.>"
-}, async (conn, mek, m, { q, isGroup, isCreator, reply }) => {
+  alias: ["bcgc"],
+  desc: "Broadcast a message to all groups (owner only)",
+  category: "owner",
+  react: "📢",
+  filename: __filename
+}, async (conn, m, msg, { text, prefix, command, isCreator, reply, isOwner }) => {
   try {
-    if (!isCreator) return reply("❌ ᴏɴʟʏ ᴛʜᴇ ᴏᴡɴᴇʀ ᴄᴀɴ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ!");
+    if (!isCreator && !isOwner) return reply("❌ *ᴏɴʟʏ ʙᴏᴛ ᴏᴡɴᴇʀ ᴄᴀɴ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ.*");
 
-    if (!q) return reply("❌ ᴘʀᴏᴠɪᴅᴇ ᴛᴇxᴛ ᴛᴏ ʙʀᴏᴀᴅᴄᴀsᴛ ɪɴ ᴀʟʟ ɢʀᴏᴜᴘs!");
+    if (!text) return reply(`❗ *ᴘʟᴇᴀsᴇ ᴇɴᴛᴇʀ ᴀ ᴍᴇssᴀɢᴇ ᴛᴏ ʙʀᴏᴀᴅᴄᴀsᴛ.*\n\nExample: ${prefix + command} ʜᴇʟʟᴏ ᴇᴠᴇʀʏᴏɴᴇ!`);
 
-    let allGroups = await conn.groupFetchAllParticipating();
-    let groupIds = Object.keys(allGroups); // Extract group IDs
+    const groupsData = await conn.groupFetchAllParticipating();
+    const groups = Object.entries(groupsData).map(entry => entry[1]);
+    const groupJids = groups.map(group => group.id);
 
-    reply(`📢 sᴇɴᴅɪɴɢ ʙʀᴏᴀᴅᴄᴀsᴛ ᴛᴏ ${groupIds.length} ɢʀᴏᴜᴘs...\n⏳ ᴇsᴛɪᴍᴀᴛᴇᴅ ᴛɪᴍᴇ: ${groupIds.length * 1.5} seconds`);
+    reply(`📢 sᴇɴᴅɪɴɢ ʙʀᴏᴀᴅᴄᴀsᴛ ᴛᴏ *${groupJids.length}* ɢʀᴏᴜᴘs...\n⏳ ᴇsᴛɪᴍᴀᴛᴇᴅ ᴛɪᴍᴇ: ~${(groupJids.length * 1.5).toFixed(1)} seconds`);
 
-    for (let groupId of groupIds) {
-      try {
-        await sleep(1500); // Avoid rate limits
-        await conn.sendMessage(groupId, { text: q }); // Sends only the provided text
-      } catch (err) {
-        console.log(`❌ Failed to send broadcast to ${groupId}:`, err);
-      }
+    for (const jid of groupJids) {
+      await sleep(1500);
+
+      const message = `\`\`\`\n${text}\n\`\`\`\n\n_ʙʀᴏᴀᴅᴄᴀsᴛ ғʀᴏᴍ ᴏᴡɴᴇʀ_`;
+
+      await conn.sendMessage(jid, {
+        text: message,
+        contextInfo: {
+          externalAdReply: {
+            showAdAttribution: true,
+            title: 'ʙʀᴏᴀᴅᴄᴀsᴛ ʙʏ ᴏᴡɴᴇʀ',
+            body: `To ${groupJids.length} groups`,
+            mediaType: 1,
+            thumbnailUrl: config.MENU_IMAGE_URL,
+            sourceUrl: global.link,
+            renderLargerThumbnail: true
+          }
+        }
+      });
     }
 
-    return reply(`✅ sᴜᴄᴄᴇssғᴜʟʟʏ sᴇɴᴛ ʙʀᴏᴀᴅᴄᴀsᴛ ᴛᴏ ${groupIds.length} ɢʀᴏᴜᴘs!`);
+    reply(`✅ *ʙʀᴏᴀᴅᴄᴀsᴛ sᴇɴᴛ ᴛᴏ ${groupJids.length} ɢʀᴏᴜᴘs sᴜᴄᴄᴇssғᴜʟʟʏ.*`);
+  } catch (e) {
+    console.error(e);
+    reply("❌ *An error occurred while broadcasting.*");
+  }
+});
 
-  } catch (err) {
-    await m.error(`❌ Error: ${err}\n\nCommand: broadcast`, err);
+
+// Broadcast pv
+
+
+cmd({
+  pattern: "bcpv",
+  alias: ["broadcastpv"],
+  desc: "Broadcast message to all private chats (owner only)",
+  category: "owner",
+  react: "📢",
+  filename: __filename
+}, async (conn, m, msg, { text, prefix, command, isCreator, reply, isOwner }) => {
+  try {
+    if (!isCreator && !isOwner) return reply("❌ *ᴏɴʟʏ ʙᴏᴛ ᴏᴡɴᴇʀ ᴄᴀɴ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ.*");
+
+    if (!text) return reply(`❗ *ᴘʟᴇᴀsᴇ ᴇɴᴛᴇʀ ᴀ ᴍᴇssᴀɢᴇ ᴛᴏ ʙʀᴏᴀᴅᴄᴀsᴛ.*\n\nExample: ${prefix + command} ʜᴇʟʟᴏ ᴇᴠᴇʀʏᴏɴᴇ!`);
+
+    const allChats = await conn.chats.all();
+    const privates = allChats.filter(chat => chat.id.endsWith('@s.whatsapp.net') && !chat.id.includes('-'));
+
+    reply(`📢 sᴇɴᴅɪɴɢ ʙʀᴏᴀᴅᴄᴀsᴛ ᴛᴏ *${privates.length}* ᴘʀɪᴠᴀᴛᴇ ᴄʜᴀᴛs...\n⏳ ᴇsᴛɪᴍᴀᴛᴇᴅ ᴛɪᴍᴇ: ~${(privates.length * 1.2).toFixed(1)} seconds`);
+
+    const start = Date.now();
+
+    for (const chat of privates) {
+      await sleep(1200);
+
+      const message = `\`\`\`\n${text}\n\`\`\`\n\n_ʙʀᴏᴀᴅᴄᴀsᴛ ғʀᴏᴍ ᴏᴡɴᴇʀ_`;
+
+      await conn.sendMessage(chat.id, {
+        text: message,
+        contextInfo: {
+          externalAdReply: {
+            showAdAttribution: true,
+            title: 'ʙʀᴏᴀᴅᴄᴀsᴛ ʙʏ ᴏᴡɴᴇʀ',
+            body: `sᴇɴᴛ ᴛᴏ ${privates.length} ᴘʀɪᴠᴀᴛᴇ ᴄʜᴀᴛs`,
+            mediaType: 1,
+            thumbnailUrl: config.MENU_IMAGE_URL,
+            sourceUrl: global.link,
+            renderLargerThumbnail: true
+          }
+        }
+      });
+    }
+
+    const end = ((Date.now() - start) / 1000).toFixed(1);
+    reply(`✅ *ʙʀᴏᴀᴅᴄᴀsᴛ sᴇɴᴛ ᴛᴏ ${privates.length} ᴘʀɪᴠᴀᴛᴇ ᴜsᴇʀs sᴜᴄᴄᴇssғᴜʟʟʏ ɪɴ ${end}s.*`);
+  } catch (e) {
+    console.error(e);
+    reply("❌ *An error occurred while broadcasting.*");
   }
 });

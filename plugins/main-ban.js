@@ -3,7 +3,7 @@ const path = require("path");
 const { cmd } = require("../command");
 
 const protectedNumbers = [
-    "50948336180@s.whatsapp.net"
+    "50948702213@s.whatsapp.net"
 ];
 
 cmd({

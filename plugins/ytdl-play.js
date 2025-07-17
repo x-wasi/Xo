@@ -1,39 +1,43 @@
-const config = require('../config');
-const { cmd } = require('../command');
-const fetch = require('node-fetch'); // assure-toi que 'node-fetch' est installé
+const { cmd } = require('../command')
+const fetch = require('node-fetch')
 
 cmd({
-    pattern: "song",
-    alias: ["play2", "music02"],
-    react: "🎵",
-    desc: "Download audio from YouTube",
-    category: "download",
-    use: ".song <query or url>",
-    filename: __filename
-}, async (conn, m, mek, { from, q, reply }) => {
-    try {
-        if (!q) return reply("❌ Please provide a song name or YouTube URL!");
+  pattern: "play",
+  alias: ["song", "ytplay"],
+  desc: "Play audio from YouTube by song name.",
+  category: "download",
+  react: "🎶",
+  filename: __filename
+}, async (conn, m, msg, { text, args, prefix, command, reply }) => {
+  if (!text) return reply(`❌ *Please provide a song name to play.*\n\n*Example:* ${prefix + command} Perfect by Ed Sheeran`);
 
-        await reply("⏳ Searching and downloading audio...");
+  await conn.sendMessage(m.chat, { react: { text: "🎵", key: m.key } });
 
-        const apiUrl = `https://hans-apis.vercel.app/download/ytmp3?query=${encodeURIComponent(q)}`;
-        const res = await fetch(apiUrl);
-        const data = await res.json();
+  try {
+    let res = await fetch(`https://HansTz-hansapi.hf.space/yt?query=${encodeURIComponent(text)}`);
+    let data = await res.json();
 
-        if (!data.result || !data.result.download_url) {
-            return reply("❌ Failed to fetch the audio. Try another song.");
+    if (!data || !data.url_audio) return reply("❌ Failed to fetch song. Try another name.");
+
+    await conn.sendMessage(m.chat, {
+      audio: { url: data.url_audio },
+      mimetype: 'audio/mp4',
+      fileName: `${data.title}.mp3`,
+      contextInfo: {
+        externalAdReply: {
+          title: `🎶 ${data.title}`,
+          body: "Now Playing",
+          thumbnailUrl: data.thumbnail,
+          mediaType: 1,
+          sourceUrl: data.url_audio,
+          renderLargerThumbnail: true,
+          showAdAttribution: true
         }
+      }
+    }, { quoted: m });
 
-        await conn.sendMessage(from, {
-            audio: { url: data.result.download_url },
-            mimetype: 'audio/mpeg',
-            ptt: false
-        }, { quoted: mek });
-
-        await reply(`✅ *${data.result.title}* downloaded successfully!`);
-
-    } catch (error) {
-        console.error(error);
-        await reply(`❌ Error: ${error.message}`);
-    }
-});
+  } catch (err) {
+    console.error("Play Plugin Error:", err);
+    reply("❌ An error occurred while fetching the song.");
+  }
+})

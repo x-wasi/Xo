@@ -26,7 +26,7 @@ cmd({
     alias: ["addsudo"],
     desc: "Add a temporary owner",
     category: "owner",
-    react: "🙂‍↔️",
+    react: "👑",
     filename: __filename
 }, async (conn, mek, m, { from, args, q, isCreator, reply, isOwner }) => {
     try {
@@ -236,7 +236,7 @@ cmd({
         const text = `> *𝐌𝐎𝐃𝐄 𝐒𝐄𝐓𝐓𝐈𝐍𝐆𝐒*\n\n> ᴄᴜʀʀᴇɴᴛ ᴍᴏᴅᴇ: *ᴘᴜʙʟɪᴄ*\n\nʀᴇᴘʟʏ ᴡɪᴛʜ:\n\n*1.* ᴛᴏ ᴇɴᴀʙʟᴇ ᴘᴜʙʟɪᴄ ᴍᴏᴅᴇ\n*2.* ᴛᴏ ᴇɴᴀʙʟᴇ ᴘʀɪᴠᴀᴛᴇ ᴍᴏᴅᴇ\n*3.* ᴛᴏ ᴇɴᴀʙʟᴇ ɪɴʙᴏx ᴍᴏᴅᴇ\n*4.* ᴛᴏ ᴇɴᴀʙʟᴇ ɢʀᴏᴜᴘs ᴍᴏᴅᴇ\n\n╭────────────────\n│ *ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅʏʙʏ ᴛᴇᴄʜ*\n╰─────────────────◆`;
 
         const sentMsg = await conn.sendMessage(from, {
-            image: { url: "https://files.catbox.moe/roubzi.jpg" },  // تصویر منوی مد
+            image: { url: config.MENU_IMAGE_URL },  // تصویر منوی مد
             caption: text
         }, { quoted: mek });
 
@@ -304,6 +304,7 @@ cmd({
 
 cmd({
     pattern: "auto-typing",
+    alias: ["typing", "autotyping"],
     description: "Enable or disable auto-typing feature.",
     category: "owner",
     filename: __filename
@@ -350,7 +351,7 @@ async (conn, mek, m, { from, args, isCreator, reply, isOwner }) => {
 //--------------------------------------------
 cmd({
     pattern: "auto-recording",
-    alias: ["autorecoding"],
+    alias: ["autorecoding", "recording"],
     description: "Enable or disable auto-recording feature.",
     category: "owner",
     filename: __filename
@@ -377,7 +378,7 @@ async (conn, mek, m, { from, args, isCreator, reply, isOwner }) => {
 //--------------------------------------------
 cmd({
     pattern: "auto-seen",
-    alias: ["autostatusview"],
+    alias: ["autostatusview", "autoviewstatus"],
     desc: "Enable or disable auto-viewing of statuses",
     category: "owner",
     filename: __filename
@@ -402,7 +403,7 @@ async (conn, mek, m, { from, args, isCreator, reply, isOwner }) => {
 //--------------------------------------------
 cmd({
     pattern: "status-react",
-    alias: ["statusreaction"],
+    alias: ["statusreaction", "statusreact", "reactstatus", "react-status"],
     desc: "Enable or disable auto-liking of statuses",
     category: "owner",
     filename: __filename
@@ -524,10 +525,10 @@ cmd({
         ? "Delete"
         : "Disabled";
 
-    const text = `> *𝐀𝐍𝐓𝐈𝐋𝐈𝐍𝐊 𝐒𝐄𝐓𝐓𝐈𝐍𝐆𝐒*\n\n> ᴄᴜʀʀᴇɴᴛ ᴍᴏᴅᴇ: *${currentMode}*\n\nʀᴇᴘʟʏ ᴡɪᴛʜ:\n\n*1.* ᴇɴᴀʙʟᴇ ᴀɴᴛɪʟɪɴᴋ => ᴡᴀʀɴ\n*2.* ᴇɴᴀʙʟᴇ ᴀɴᴛɪʟɪɴᴋ => Delete\n*3.* ᴇɴᴀʙʟᴇ ᴀɴᴛɪʟɪɴᴋ => ʀᴇᴍᴏᴠᴇ/ᴋɪᴄᴋ\n*4.* ᴅɪsᴀʙʟᴇ ᴀʟʟ ᴀɴᴛɪʟɪɴᴋ ᴍᴏᴅᴇs\n\n╭────────────────\n│ *ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅʏʙʏ ᴛᴇᴄʜ*\n╰─────────────────◆`;
+    const text = `> *𝐀𝐍𝐓𝐈𝐋𝐈𝐍𝐊 𝐒𝐄𝐓𝐓𝐈𝐍𝐆𝐒*\n\n> ᴄᴜʀʀᴇɴᴛ ᴍᴏᴅᴇ: *${currentMode}*\n\nʀᴇᴘʟʏ ᴡɪᴛʜ:\n\n*1.* ᴇɴᴀʙʟᴇ ᴀɴᴛɪʟɪɴᴋ => ᴡᴀʀɴ\n*2.* ᴇɴᴀʙʟᴇ ᴀɴᴛɪʟɪɴᴋ => ᴅᴇʟᴇᴛᴇ\n*3.* ᴇɴᴀʙʟᴇ ᴀɴᴛɪʟɪɴᴋ => ʀᴇᴍᴏᴠᴇ/ᴋɪᴄᴋ\n*4.* ᴅɪsᴀʙʟᴇ ᴀʟʟ ᴀɴᴛɪʟɪɴᴋ ᴍᴏᴅᴇs\n\n╭────────────────\n│ *ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅʏʙʏ ᴛᴇᴄʜ*\n╰─────────────────◆`;
 
     const sentMsg = await conn.sendMessage(from, {
-      image: { url: "https://files.catbox.moe/roubzi.jpg" },
+      image: { url: config.MENU_IMAGE_URL },
       caption: text
     }, { quoted: mek });
 
@@ -705,7 +706,7 @@ cmd({
                 `*╭────⬡ 𝐖𝐀𝐑𝐍𝐈𝐍𝐆 ⬡────*\n` +
                 `*├▢ ᴜsᴇʀ :* @${sender.split('@')[0]}!\n` +
                 `*├▢ ᴄᴏᴜɴᴛ : ${warningCount}*\n` +
-                `*├▢ ʀᴇᴀsᴏɴ : LINK SENDING*\n` +
+                `*├▢ ʀᴇᴀsᴏɴ : 𝐋𝐈𝐍𝐊 𝐒𝐄𝐍𝐃𝐈𝐍𝐆*\n` +
                 `*├▢ ᴡᴀʀɴ ʟɪᴍɪᴛ : 4*\n` +
                 `*╰────────────────*`,
           mentions: [sender]
@@ -831,7 +832,7 @@ cmd({
 
     if (containsBadWord && config.ANTI_BAD_WORD === "true") {
       await conn.sendMessage(from, { 'delete': m.key }, { 'quoted': m });
-      await conn.sendMessage(from, { 'text': "🚫⚠️ BAD WORDS NOT ALLOWED IN ⚠️🚫" }, { 'quoted': m });
+      await conn.sendMessage(from, { 'text': "🚫⚠️ 𝐁𝐀𝐃 𝐖𝐎𝐑𝐃𝐒 𝐍𝐎𝐓 𝐀𝐋𝐋𝐎𝐖𝐄𝐃 𝐈𝐍 ⚠️🚫" }, { 'quoted': m });
     }
   } catch (error) {
     console.error(error);
